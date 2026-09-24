@@ -118,15 +118,55 @@ PREAMBULE = r"""\version "2.24.3"
 """
 
 
+# Préambule des planches de référence.
+#
+# Deux réglages les distinguent des figures didactiques. La largeur de ligne est
+# *fixée* et la justification rétablie : sans cela, chaque gamme sortait à sa
+# largeur naturelle — 154 pt pour do majeur, 202 pt pour la dièse mineure
+# harmonique, dont l'armure est plus encombrante. Les mettre toutes à la largeur
+# de la colonne aurait alors imposé des facteurs d'échelle différents, et des
+# portées de tailles différentes sur une même page.
+#
+# 79 mm est la largeur de colonne du guide (0,48 × textwidth = 226,7 pt), à un
+# cheveu près pour que l'ajustement final soit un agrandissement infime plutôt
+# qu'une réduction.
+#
+# La taille de portée passe de 20 à 24 : les planches n'occupaient que les deux
+# tiers de leur page, la place était disponible.
+PREAMBULE_REF = r"""\version "2.24.3"
+%% Fichier produit par outils/generer.py — ne pas modifier à la main.
+#(set-global-staff-size 24)
+\paper {
+  indent = 0
+  ragged-right = ##f
+  %% Les trois doivent s'accorder : LilyPond rejette une largeur de ligne qui ne
+  %% s'ajuste pas aux marges et revient silencieusement à ses valeurs par défaut
+  %% (« margins do not fit with line-width »). D'où la largeur de page explicite.
+  paper-width = 81\mm
+  line-width = 79\mm
+  top-margin = 1\mm
+  bottom-margin = 1\mm
+  left-margin = 1\mm
+  right-margin = 1\mm
+  oddHeaderMarkup = ##f
+  evenHeaderMarkup = ##f
+  oddFooterMarkup = ##f
+  evenFooterMarkup = ##f
+  bookTitleMarkup = ##f
+  scoreTitleMarkup = ##f
+}
+"""
+
+
 def ly_notes(notes):
     return " ".join(n.lily() for n in notes)
 
 
-def ecrire(nom, contenu):
+def ecrire(nom, contenu, preambule=None):
     os.makedirs(DIR_LY, exist_ok=True)
     chemin = os.path.join(DIR_LY, nom + ".ly")
     with open(chemin, "w", encoding="utf-8") as f:
-        f.write(PREAMBULE + contenu)
+        f.write((preambule or PREAMBULE) + contenu)
     return chemin
 
 
@@ -322,7 +362,8 @@ def ecrire_lilypond():
             mode = "major" if col == 1 else "minor"
             slug = txt.replace("#", "d").replace("b", "b").lower()
             produits.append(ecrire(f"{prefixe}-{slug}",
-                                   portee(notes, armure, mode)))
+                                   portee(notes, armure, mode),
+                                   preambule=PREAMBULE_REF))
 
     return produits
 

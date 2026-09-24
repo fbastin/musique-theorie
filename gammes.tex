@@ -79,10 +79,15 @@
 \usepackage[export]{adjustbox}
 
 % ---- Gamme de référence, pour les planches finales -------------------
+% Les gravures de référence sortent toutes à 224 pt de large (largeur de ligne
+% fixée côté LilyPond), si bien que `width` leur applique à toutes le même
+% facteur d'échelle. Avec des largeurs naturelles disparates — elles allaient de
+% 154 à 202 pt selon l'encombrement de l'armure — la même commande aurait donné
+% des portées de tailles différentes sur une même page.
 \newcommand{\gammeref}[2]{%
   \parbox[t]{0.48\linewidth}{%
     \small\textbf{\color{navy}#2}\\[2pt]
-    \includegraphics[max width=\linewidth]{#1.cropped.pdf}\\[6pt]}%
+    \includegraphics[width=\linewidth]{#1.cropped.pdf}\\[6pt]}%
   \hfill}
 
 \setlist{itemsep=2pt, topsep=4pt, parsep=0pt}

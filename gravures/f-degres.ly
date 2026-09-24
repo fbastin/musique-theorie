@@ -17,11 +17,12 @@
 \score {
   <<
     \new Staff {
+      \accidentalStyle forget
       \clef treble \key c \major \omit Staff.TimeSignature \cadenzaOn
       c' d' e' f' g' a' b' c''
       \bar "|."
     }
-    \addlyrics { to -- ni -- que sus -- to -- ni -- que mé -- diante sous -- do -- mi -- nante do -- mi -- nante sus -- do -- mi -- nante sen -- si -- ble to -- ni -- que }
+    \addlyrics { tonique "sus-tonique" médiante "sous-dominante" dominante "sus-dominante" sensible tonique }
   >>
   \layout {
     \context {

@@ -21,6 +21,14 @@
     \override HorizontalBracketText.font-size = #-3
     \override HorizontalBracketText.font-shape = #'italic
   } {
+    %% Sans barres de mesure, une altération reste en vigueur jusqu'à la fin de
+    %% la figure : le ré bémol du tétracorde phrygien n'était pas réimprimé sur
+    %% la ligne du tétracorde harmonique, qui se lisait donc « do ré mi fa » —
+    %% l'orthographe du tétracorde majeur. Même effet sur la mineure mélodique,
+    %% dont le sol dièse disparaissait et qui se lisait en mode dorien.
+    %% `forget` réimprime chaque altération par rapport à l'armure, sans
+    %% mémoire de ce qui précède : chaque ligne se lit alors seule.
+    \accidentalStyle forget
     \clef treble
     \omit Staff.TimeSignature
     \cadenzaOn

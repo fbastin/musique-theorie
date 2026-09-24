@@ -200,6 +200,14 @@ ENTETE_PORTEE = r"""\score {
     \override HorizontalBracketText.font-size = #-3
     \override HorizontalBracketText.font-shape = #'italic
   } {
+    %% Sans barres de mesure, une altération reste en vigueur jusqu'à la fin de
+    %% la figure : le ré bémol du tétracorde phrygien n'était pas réimprimé sur
+    %% la ligne du tétracorde harmonique, qui se lisait donc « do ré mi fa » —
+    %% l'orthographe du tétracorde majeur. Même effet sur la mineure mélodique,
+    %% dont le sol dièse disparaissait et qui se lisait en mode dorien.
+    %% `forget` réimprime chaque altération par rapport à l'armure, sans
+    %% mémoire de ce qui précède : chaque ligne se lit alors seule.
+    \accidentalStyle forget
     \clef treble
     \omit Staff.TimeSignature
     \cadenzaOn
@@ -302,9 +310,13 @@ def figure_seconde_augmentee():
     return ENTETE_PORTEE + corps + PIED_PORTEE
 
 
-DEGRES_FR = ["to -- ni -- que", "sus -- to -- ni -- que", "mé -- diante",
-             "sous -- do -- mi -- nante", "do -- mi -- nante",
-             "sus -- do -- mi -- nante", "sen -- si -- ble", "to -- ni -- que"]
+# Un libellé par note, et non un découpage en syllabes : dans LilyPond, chaque
+# syllabe séparée par `--` consomme une note. Les vingt-six syllabes des huit
+# noms se répartissaient donc sur les huit notes, et la figure affichait
+# « to – ni – que sus – to – ni – que mé ». Les noms composés sont mis entre
+# guillemets pour que le trait d'union ne soit pas lu comme un séparateur.
+DEGRES_FR = ['tonique', '"sus-tonique"', 'médiante', '"sous-dominante"',
+             'dominante', '"sus-dominante"', 'sensible', 'tonique']
 
 
 def figure_degres():
@@ -314,6 +326,7 @@ def figure_degres():
     return r"""\score {
   <<
     \new Staff {
+      \accidentalStyle forget
       \clef treble \key c \major \omit Staff.TimeSignature \cadenzaOn
       %s
       \bar "|."

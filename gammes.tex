@@ -369,23 +369,39 @@ majeure — ce que son usage confirme.
 \input{gravures/tables.tex}
 
 % =====================================================================
+% Chaque famille tient sur une page et une seule : on compare les quinze
+% armures d'un coup d'œil, sans tourner la page au milieu du groupe. D'où un
+% saut avant chaque sous-section — et `samepage`, qui interdit une coupure si
+% la planche venait à déborder après une retouche des gravures.
+%
+% Le saut précède le titre de *section* et non la première sous-section :
+% placé après, il laissait « Les gammes gravées » seul en bas de la page
+% précédente, sans rien sous lui.
+\clearpage
 \section{Les gammes gravées}
 
 \subsection{Les quinze gammes majeures}
-
+\begin{samepage}
 \input{gravures/planche-majeures.tex}
+\end{samepage}
 
+\clearpage
 \subsection{Les quinze gammes mineures naturelles}
-
+\begin{samepage}
 \input{gravures/planche-min-nat.tex}
+\end{samepage}
 
+\clearpage
 \subsection{Les quinze gammes mineures harmoniques}
-
+\begin{samepage}
 \input{gravures/planche-min-harm.tex}
+\end{samepage}
 
+\clearpage
 \subsection{Les quinze gammes mineures mélodiques}
-
+\begin{samepage}
 \input{gravures/planche-min-mel.tex}
+\end{samepage}
 
 % =====================================================================
 \section{Les fichiers MusicXML}

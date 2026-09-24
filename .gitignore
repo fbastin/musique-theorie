@@ -1,0 +1,25 @@
+## LaTeX : fichiers auxiliaires
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+## LilyPond : intermédiaires de gravure
+# `lilypond -dcrop` produit, à côté du PDF rogné que le guide inclut, une
+# version non rognée et un PNG dont personne ne se sert.
+gravures/*.eps
+gravures/*.png
+gravures/*.ps
+gravures/*.midi
+gravures/*.mid
+# Les PDF rognés, eux, sont suivis : ils permettent de compiler gammes.tex
+# sans avoir LilyPond installé.
+
+## Python
+__pycache__/
+*.pyc

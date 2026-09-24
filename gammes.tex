@@ -1,0 +1,444 @@
+%% =============================================================
+%%  Les gammes — construction par tétracordes
+%%  Guide de référence, composé en LaTeX, gravures LilyPond
+%% =============================================================
+%%
+%%  Les figures (gravures/*.cropped.pdf) et les tableaux
+%%  (gravures/*.tex) sont produits par outils/generer.py, qui les
+%%  dérive d'un modèle de hauteurs unique — le même que celui des
+%%  fichiers MusicXML. Voir le colophon en dernière page.
+%%
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[top=2.2cm,bottom=2.4cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{hyperref}
+
+\graphicspath{{gravures/}}
+
+% ---- Couleurs, reprises du document des accords de guitare ---------
+\definecolor{navy}{RGB}{18,50,105}
+\definecolor{lightnavy}{RGB}{235,241,255}
+\definecolor{mygray}{RGB}{110,110,110}
+\definecolor{accent}{RGB}{150,40,30}
+
+\hypersetup{colorlinks=true, linkcolor=navy, urlcolor=navy,
+  pdftitle={Les gammes — construction par tétracordes},
+  pdfauthor={Fabian Bastin}}
+
+% ---- En-tête et pied -----------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small\bfseries\textcolor{navy}{Les gammes}}
+\fancyhead[R]{\small\textcolor{mygray}{\thepage}}
+\fancyfoot[C]{\small\textcolor{mygray}{Construction par tétracordes}}
+
+% ---- Titres de section ---------------------------------------------
+\newcommand{\navysect}[1]{%
+  \colorbox{navy}{%
+    \parbox[c][17pt]{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \color{white}\hspace{6pt}\bfseries\normalsize #1}}%
+}
+\titleformat{\section}[block]{\normalfont}{}{0pt}{\navysect}
+\titlespacing*{\section}{0pt}{16pt}{10pt}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries\color{navy}}{\thesubsection}{0.6em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{5pt}
+
+% ---- Encadré de remarque -------------------------------------------
+\newmdenv[linecolor=navy, linewidth=0.5pt, backgroundcolor=lightnavy,
+  innertopmargin=6pt, innerbottommargin=6pt,
+  innerleftmargin=8pt, innerrightmargin=8pt,
+  skipabove=8pt, skipbelow=8pt]{remarque}
+
+% ---- Figure gravée ---------------------------------------------------
+% Les gravures sont rognées au trait par LilyPond ; on les centre sans
+% cadre, avec une légende discrète.
+\newcommand{\gravure}[2]{%
+  \begin{center}
+    \includegraphics[max width=\linewidth]{#1.cropped.pdf}\\[2pt]
+    {\small\itshape\color{mygray} #2}
+  \end{center}%
+}
+
+% `max width` vient de adjustbox ; à défaut, on se rabat sur width.
+\usepackage[export]{adjustbox}
+
+% ---- Gamme de référence, pour les planches finales -------------------
+\newcommand{\gammeref}[2]{%
+  \parbox[t]{0.48\linewidth}{%
+    \small\textbf{\color{navy}#2}\\[2pt]
+    \includegraphics[max width=\linewidth]{#1.cropped.pdf}\\[6pt]}%
+  \hfill}
+
+\setlist{itemsep=2pt, topsep=4pt, parsep=0pt}
+
+\begin{document}
+
+% =====================================================================
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries\color{navy} Les gammes\par}
+\vspace{0.6cm}
+{\LARGE\color{navy} Construction par tétracordes\par}
+\vspace{1.4cm}
+{\large Majeures, mineures naturelles, harmoniques et mélodiques\par}
+\vspace{0.4cm}
+{\large Les quinze tonalités\par}
+\vspace{2.5cm}
+\includegraphics[width=0.62\linewidth]{f-do-majeur.cropped.pdf}
+\vfill
+{\small\color{mygray}
+Gravures LilyPond, composition \LaTeX.\\
+Fichiers MusicXML joints.\par}
+\vspace{1cm}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Avant-propos}
+
+Ce guide explique comment les gammes se construisent, plutôt que de les
+énumérer. Le fil conducteur est le \emph{tétracorde} : un groupe de quatre
+notes qui, répété et transposé, engendre la gamme majeure, explique le cycle
+des quintes et rend les trois gammes mineures comparables entre elles.
+
+L'approche a un avantage pratique. Retenir sept intervalles par gamme et
+quatre familles de gammes fait vingt-huit choses à mémoriser ; retenir quatre
+tétracordes et la règle qui les assemble en fait cinq. Les tableaux de la
+section~\ref{sec:reference} restent disponibles pour vérifier, mais ils
+devraient devenir superflus.
+
+\begin{remarque}
+\textbf{Conventions.} Les hauteurs sont nommées en français
+(\emph{do, ré, mi, fa, sol, la, si}). Le demi-ton est le plus petit
+intervalle du système tempéré ; le ton en vaut deux. Les degrés d'une gamme
+sont numérotés de 1 à 7 à partir de la tonique.
+\end{remarque}
+
+Les fichiers \texttt{MusicXML} qui accompagnent ce document contiennent les
+soixante gammes, lisibles par MuseScore, Finale, Sibelius ou tout autre
+éditeur de partitions. La section~\ref{sec:musicxml} explique ce qu'ils
+contiennent.
+
+% =====================================================================
+\section{Le matériau : tons et demi-tons}
+
+L'octave tempérée se divise en douze demi-tons égaux. La notation, elle,
+ne dispose que de \emph{sept} lettres — do, ré, mi, fa, sol, la, si — qu'il
+faut donc altérer pour atteindre les cinq hauteurs restantes.
+
+Ce décalage entre douze sons et sept noms n'est pas un défaut : c'est lui qui
+permet d'écrire une gamme. Une gamme heptatonique emploie chaque lettre
+\emph{une fois et une seule}. C'est la raison pour laquelle on écrit
+\emph{fa dièse} en sol majeur et jamais \emph{sol bémol}, bien que les deux
+sonnent identiquement sur un piano : la lettre \emph{sol} est déjà prise par
+le cinquième degré.
+
+\begin{remarque}
+Cette règle a une conséquence que l'on rencontre plus loin : certaines
+gammes exigent des \emph{doubles dièses}. En ré dièse mineur harmonique, le
+septième degré s'écrit \emph{do double dièse} — et non \emph{ré}, déjà
+occupé par la tonique.
+\end{remarque}
+
+% =====================================================================
+\section{Le tétracorde}
+
+Un \textbf{tétracorde} est un groupe de quatre notes conjointes couvrant une
+quarte juste, soit cinq demi-tons. Trois intervalles suffisent donc à le
+décrire entièrement. Le mot vient du grec \emph{tetrachordon}, « quatre
+cordes » : c'est l'unité de base de la théorie grecque, dont la nôtre
+descend.
+
+Quatre types suffisent pour tout ce qui suit.
+
+\begin{center}
+\input{gravures/tetracordes-types.tex}
+\end{center}
+
+\gravure{f-quatre-tetracordes}{Les quatre tétracordes, tous à partir de do.}
+
+Le tétracorde \emph{lydien} figure dans le tableau pour mémoire : couvrant
+un triton et non une quarte juste, il ne sert pas à l'assemblage décrit ici.
+
+% =====================================================================
+\section{La gamme majeure}
+
+\subsection{Deux tétracordes et un ton}
+
+\textbf{Une gamme majeure est faite de deux tétracordes majeurs, séparés par
+un ton.} Ce ton n'appartient à aucun des deux ; on l'appelle
+\emph{ton disjonctif}.
+
+\gravure{f-do-majeur}{Do majeur : deux tétracordes majeurs identiques,
+séparés par le ton disjonctif fa--sol.}
+
+Les deux tétracordes sont \emph{identiques} en intervalles : ton, ton,
+demi-ton. La gamme majeure est donc une structure symétrique, ce que sa suite
+d'intervalles — ton, ton, demi-ton, \textbf{ton}, ton, ton, demi-ton — cache
+plutôt qu'elle ne le montre. Vue ainsi, la position des deux demi-tons n'est
+plus à mémoriser : ils tombent nécessairement entre les degrés 3 et 4, et
+entre les degrés 7 et 8, parce que chaque tétracorde finit par un demi-ton.
+
+\subsection{Les degrés et leurs noms}
+
+\gravure{f-degres}{Les sept degrés de do majeur et leur nom français.}
+
+Chaque degré porte un nom qui décrit sa fonction, non sa hauteur :
+
+\begin{itemize}
+  \item \textbf{tonique} (1) — le centre de gravité, celui sur lequel la
+    gamme se repose ;
+  \item \textbf{sus-tonique} (2) — au-dessus de la tonique ;
+  \item \textbf{médiante} (3) — à mi-chemin entre tonique et dominante ;
+    c'est elle qui décide du caractère majeur ou mineur ;
+  \item \textbf{sous-dominante} (4) — une quinte \emph{au-dessous} de la
+    tonique, et non « sous la dominante » comme le nom le suggère ;
+  \item \textbf{dominante} (5) — le degré le plus fort après la tonique ;
+  \item \textbf{sus-dominante} (6) — au-dessus de la dominante ;
+  \item \textbf{sensible} (7) — à un demi-ton sous la tonique, vers laquelle
+    elle attire l'oreille.
+\end{itemize}
+
+\begin{remarque}
+\textbf{Sensible ou sous-tonique ?} Le septième degré ne s'appelle
+\emph{sensible} que s'il se trouve à un \emph{demi-ton} de la tonique. S'il
+en est à un ton entier — ce qui arrive en mineur naturel — on parle de
+\textbf{sous-tonique}, et l'attraction vers la tonique disparaît. Cette
+distinction, propre à la terminologie française, explique à elle seule
+l'existence de la gamme mineure harmonique (section~\ref{sec:mineures}).
+\end{remarque}
+
+% =====================================================================
+\section{Le cycle des quintes, conséquence du tétracorde}
+
+\subsection{Le mécanisme}
+
+Voici l'observation qui fait tout le reste :
+
+\begin{remarque}
+\textbf{Le tétracorde supérieur d'une gamme majeure est le tétracorde
+inférieur de la gamme située une quinte au-dessus.}
+\end{remarque}
+
+Le tétracorde supérieur de do majeur est \emph{sol--la--si--do}. Or c'est
+exactement le tétracorde inférieur de sol majeur. Il ne reste qu'à lui
+adjoindre un tétracorde majeur à partir de ré — \emph{ré--mi--fa dièse--sol} —
+et la gamme de sol majeur est complète.
+
+\gravure{f-chaine-quintes}{Le tétracorde supérieur de do majeur devient le
+tétracorde inférieur de sol majeur. Le fa dièse n'est pas un choix : il est
+imposé par la structure du tétracorde.}
+
+Le fa dièse n'a pas été décidé. Il est \emph{exigé} : sans lui, le second
+tétracorde de sol majeur serait ré--mi--fa--sol, c'est-à-dire un tétracorde
+mineur, et la gamme ne serait plus majeure. Chaque quinte ascendante ajoute
+ainsi exactement une altération, et toujours la même.
+
+\subsection{L'ordre des altérations}
+
+En montant de quinte en quinte à partir de do, les dièses apparaissent dans
+un ordre fixe :
+
+\begin{center}
+\textbf{fa\ \ do\ \ sol\ \ ré\ \ la\ \ mi\ \ si}
+\end{center}
+
+En descendant de quinte en quinte — ce qui revient à monter de quarte — ce
+sont les bémols, dans l'ordre exactement inverse :
+
+\begin{center}
+\textbf{si\ \ mi\ \ la\ \ ré\ \ sol\ \ do\ \ fa}
+\end{center}
+
+\subsection{Enharmonies}
+
+Aux extrémités du cycle, trois paires de tonalités désignent les mêmes sons
+sous deux écritures différentes :
+
+\begin{center}
+\begin{tabular}{@{}l c l@{}}
+\toprule
+\textbf{Écriture en dièses} & & \textbf{Écriture en bémols} \\
+\midrule
+si majeur (5 dièses) & = & do bémol majeur (7 bémols) \\
+fa dièse majeur (6 dièses) & = & sol bémol majeur (6 bémols) \\
+do dièse majeur (7 dièses) & = & ré bémol majeur (5 bémols) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Le choix entre les deux relève de la commodité de lecture et du contexte
+harmonique, non du son : on préfère l'armure la plus légère, sauf si la
+tonalité voisine impose l'autre.
+
+% =====================================================================
+\section{Les gammes mineures}
+\label{sec:mineures}
+
+\subsection{La mineure naturelle, ou relative}
+
+À toute gamme majeure correspond une gamme mineure qui emploie exactement les
+mêmes notes, mais prend pour tonique son \emph{sixième degré}. À do majeur
+répond la mineure ; l'armure est la même, le centre de gravité a changé.
+
+En tétracordes, la mineure naturelle se lit : tétracorde \emph{mineur}, ton
+disjonctif, tétracorde \emph{phrygien}.
+
+\subsection{Pourquoi elle ne suffit pas}
+
+La mineure naturelle a un défaut, et il est harmonique. Son septième degré
+est à un \emph{ton} de la tonique : c'est une sous-tonique, pas une sensible.
+L'attraction vers la tonique disparaît, et l'accord bâti sur la dominante
+devient mineur — en la mineure, mi--sol--si au lieu de mi--sol\#--si. La
+cadence parfaite, qui fait reposer une phrase, perd sa force.
+
+\subsection{La mineure harmonique}
+
+La solution est directe : on hausse le septième degré d'un demi-ton. La
+sensible réapparaît, l'accord de dominante redevient majeur, la cadence
+retrouve son effet. C'est de cet usage harmonique que la gamme tire son nom.
+
+Le prix à payer se voit entre les degrés 6 et 7 :
+
+\gravure{f-seconde-augmentee}{La mineure harmonique de la : entre fa et
+sol dièse s'ouvre une seconde augmentée — un ton et demi entre deux degrés
+voisins.}
+
+Cet intervalle d'un ton et demi entre deux notes conjointes est la
+signature sonore de la gamme. Il donne son caractère à une bonne part de la
+musique d'Europe de l'Est et du Moyen-Orient — et il est réputé malcommode
+à chanter.
+
+\subsection{La mineure mélodique}
+
+D'où la troisième forme : pour effacer la seconde augmentée, on hausse aussi
+le \emph{sixième} degré. La montée devient régulière. À la descente, la
+sensible n'a plus de rôle — rien n'attire vers une tonique qu'on quitte — et
+l'on revient à la forme naturelle.
+
+\gravure{f-la-mineures}{Les trois formes de la mineure de la : naturelle,
+harmonique, mélodique ascendante.}
+
+\begin{remarque}
+En jazz, la forme ascendante s'emploie dans les deux sens ; on la nomme
+alors \emph{mineure mélodique réelle}. Ce n'est pas une gamme différente,
+c'est un usage différent de la même.
+\end{remarque}
+
+\subsection{Les quatre gammes en un tableau}
+
+C'est ici que le détour par les tétracordes se rentabilise. Les quatre
+gammes ne diffèrent que par leur tétracorde \emph{supérieur} — le tétracorde
+inférieur est majeur pour la majeure, mineur pour les trois mineures, et
+c'est tout.
+
+\begin{center}
+\input{gravures/tetracordes-gammes.tex}
+\end{center}
+
+Le fait remarquable est la dernière ligne : \textbf{la mineure mélodique
+ascendante est faite d'un tétracorde mineur et d'un tétracorde majeur}. Elle
+est donc, littéralement, à mi-chemin entre la mineure naturelle et la
+majeure — ce que son usage confirme.
+
+% =====================================================================
+\section{Tableaux de référence}
+\label{sec:reference}
+
+\subsection{Gammes majeures}
+
+\input{gravures/tables.tex}
+
+% =====================================================================
+\section{Les gammes gravées}
+
+\subsection{Les quinze gammes majeures}
+
+\input{gravures/planche-majeures.tex}
+
+\subsection{Les quinze gammes mineures naturelles}
+
+\input{gravures/planche-min-nat.tex}
+
+\subsection{Les quinze gammes mineures harmoniques}
+
+\input{gravures/planche-min-harm.tex}
+
+\subsection{Les quinze gammes mineures mélodiques}
+
+\input{gravures/planche-min-mel.tex}
+
+% =====================================================================
+\section{Les fichiers MusicXML}
+\label{sec:musicxml}
+
+Cinq fichiers accompagnent ce guide. Ils s'ouvrent dans MuseScore (libre),
+Finale, Sibelius, Dorico, ou tout éditeur lisant le format MusicXML~4.0.
+
+\begin{center}
+\begin{tabular}{@{}l l@{}}
+\toprule
+\textbf{Fichier} & \textbf{Contenu} \\
+\midrule
+\texttt{gammes-majeures.musicxml} & Les 15 tonalités majeures \\
+\texttt{gammes-mineures-naturelles.musicxml} & Les 15 mineures naturelles \\
+\texttt{gammes-mineures-harmoniques.musicxml} & Les 15 mineures harmoniques \\
+\texttt{gammes-mineures-melodiques.musicxml} & Les 15 mineures mélodiques \\
+\texttt{tetracordes.musicxml} & Les cinq tétracordes, sur do \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Chaque gamme y figure \emph{montante puis descendante}, en noires, avec son
+armure et son nom. Les mineures mélodiques descendent sous leur forme
+naturelle : c'est la seule façon de rendre leur asymétrie visible, et elle
+saute aux yeux par contraste avec les autres familles, qui descendent comme
+elles montent.
+
+\begin{remarque}
+Les altérations imprimées suivent l'usage : une altération ne s'écrit que si
+elle contredit l'armure en vigueur, et un bécarre apparaît là où elle
+l'annule. Un fichier engendré sans cette règle afficherait un dièse à chaque
+note dièsée, ce qu'aucun éditeur n'imprimerait.
+\end{remarque}
+
+% =====================================================================
+\section*{Colophon}
+\addcontentsline{toc}{section}{Colophon}
+
+Les gravures musicales sont produites par \textbf{LilyPond}, la composition
+par \textbf{\LaTeX}. Les figures, les tableaux de référence et les fichiers
+MusicXML sont tous dérivés d'un unique modèle de hauteurs, le module
+\texttt{outils/gammes.py} : une hauteur y est un couple (lettre, altération)
+et non un numéro de demi-ton, ce qui permet d'obtenir si dièse majeur ou ré
+dièse mineur harmonique — avec son double dièse — sans cas particulier.
+
+Écrire le guide et les fichiers MusicXML séparément aurait garanti qu'ils
+finissent par se contredire. Pour régénérer l'ensemble :
+
+\begin{center}
+\texttt{python3 outils/generer.py}\\
+\texttt{lilypond -dcrop --formats=pdf gravures/*.ly}\\
+\texttt{pdflatex gammes.tex}
+\end{center}
+
+\end{document}

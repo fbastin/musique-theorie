@@ -15,8 +15,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from gammes import (GAMMES, TETRACORDES, TONALITES, Note, gamme, intervalles,
-                    note_de, octave_depart, tetracorde)
+from gammes import (GAMMES, ORDRE_BEMOLS, ORDRE_DIESES, TETRACORDES, TONALITES,
+                    Note, gamme, intervalles, note_de, octave_depart,
+                    tetracorde)
 import musicxml
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -345,6 +346,74 @@ def figure_degres():
 """ % (notes, " ".join(DEGRES_FR))
 
 
+# Rouge de l'accent du guide (\definecolor{accent}{RGB}{150,40,30}).
+ACCENT_LY = "#(rgb-color 0.588 0.157 0.118)"
+
+# Une armure est un seul objet graphique : LilyPond ne sait pas en colorer un
+# signe isolé. On la dessine donc deux fois, superposées — entière en couleur,
+# puis sans le nouveau signe, en noir. Seul ce dernier reste coloré.
+#
+# La superposition tombe juste parce que le nouveau signe est toujours le
+# dernier de l'armure : les autres gardent leur place quand on le retire.
+ARMURE_COLOREE = r"""#(define (armure-nouveau-signe pas couleur)
+   (lambda (grob)
+     (let* ((alist (ly:grob-property grob 'alteration-alist))
+            (reste (filter (lambda (e) (not (eqv? (car e) pas))) alist))
+            (tout (stencil-with-color
+                   (ly:key-signature-interface::print grob) couleur)))
+       (if (null? reste)
+           tout
+           (begin
+             (ly:grob-set-property! grob 'alteration-alist reste)
+             (let ((ancien (ly:key-signature-interface::print grob)))
+               (ly:grob-set-property! grob 'alteration-alist alist)
+               (ly:stencil-add tout ancien)))))))
+
+"""
+
+
+def figure_chaine(sens):
+    """
+    Les huit gammes d'une chaîne de quintes, une par ligne, de do à sept
+    altérations. Vers les dièses si `sens` = 1, vers les bémols si `sens` = -1.
+
+    Chaque gamme porte sa propre armure. Le signe que la construction vient
+    d'y ajouter est en couleur, comme la note qu'il affecte ; celle-ci ne
+    porte pas d'altération, puisque l'armure la donne déjà. La chaîne vient
+    de `chaine_tetracordes`, qui a vérifié qu'une seule note change à chaque
+    étape.
+    """
+    # La sensible vers les dièses, la sous-dominante vers les bémols.
+    degre = 6 if sens > 0 else 3
+    corps = ("    \\set Staff.printKeyCancellation = ##f\n"
+             "    \\set Staff.explicitKeySignatureVisibility = #end-of-line-invisible\n")
+    chaine = chaine_tetracordes(sens)
+    for i, (g, alteree) in enumerate(chaine):
+        t = Note(g[0].lettre, g[0].alt, octave_depart(g[0]))
+        notes = [n.lily() for n in gamme(t, "majeure")]
+        nom = t.nom_fr()
+        corps += "    \\set Staff.%s = \\markup \\small \"%s\"\n" % (
+            "instrumentName" if i == 0 else "shortInstrumentName", nom)
+        if alteree is not None:
+            notes[degre] = ("\\tweak color %s \\tweak Stem.color %s %s"
+                            % (ACCENT_LY, ACCENT_LY, notes[degre]))
+            corps += ("    \\once \\override Staff.KeySignature.stencil = "
+                      "#(armure-nouveau-signe %d %s)\n"
+                      % (alteree.idx, ACCENT_LY[1:]))
+        corps += "    \\key %s \\major\n" % _lily_tonique(sens * i, "major")
+        for moitie, libelle in ((notes[0:4], "inférieur"), (notes[4:8], "supérieur")):
+            corps += (crochet(libelle) + "    " + moitie[0] + "\\startGroup "
+                      + " ".join(moitie[1:3]) + " " + moitie[3] + "\\stopGroup\n")
+        if i < len(chaine) - 1:
+            corps += "    \\bar \"\" \\break\n"
+    # Le nom de la gamme en marge exige un retrait ; `indent` vaut 0 dans le
+    # préambule commun, on le rétablit pour cette figure seulement.
+    pied = PIED_PORTEE.replace(
+        "  \\layout {\n",
+        "  \\layout {\n    indent = 18\\mm\n    short-indent = 18\\mm\n", 1)
+    return ARMURE_COLOREE + ENTETE_PORTEE + corps + pied
+
+
 FIGURES = {
     "f-do-majeur": figure_do_majeur,
     "f-quatre-tetracordes": figure_quatre_tetracordes,
@@ -352,6 +421,8 @@ FIGURES = {
     "f-la-mineures": figure_la_mineures,
     "f-seconde-augmentee": figure_seconde_augmentee,
     "f-degres": figure_degres,
+    "f-chaine-dieses": lambda: figure_chaine(1),
+    "f-chaine-bemols": lambda: figure_chaine(-1),
 }
 
 
@@ -466,6 +537,47 @@ def ecrire_table_tetracordes():
             f.write("\n".join(bloc) + "\n")
         chemins.append(chemin)
     return chemins
+
+
+def _meme_hauteur_ecrite(a, b):
+    """Même lettre, même altération ; l'octave est indifférente."""
+    return a.lettre == b.lettre and a.alt == b.alt
+
+
+def chaine_tetracordes(sens):
+    """
+    Refait la construction de proche en proche, à partir de do majeur.
+
+    Vers les dièses (`sens` = 1), le tétracorde supérieur devient l'inférieur
+    de la gamme une quinte au-dessus ; vers les bémols (`sens` = -1),
+    l'inférieur devient le supérieur de la gamme une quinte au-dessous. Le
+    tétracorde à bâtir reprend les lettres de l'ancienne gamme — degrés 2 à 5
+    vers les dièses, 4 à 7 vers les bémols — et une seule de ses notes doit
+    changer pour qu'il soit majeur. On vérifie que c'est bien le cas, et
+    laquelle.
+
+    Renvoie la liste des (gamme, note altérée). L'ordre des altérations n'est
+    donc pas recopié : il est *retrouvé*, puis comparé à celui des armures.
+    """
+    g = gamme(note_de("C", 4), "majeure")
+    chaine = [(g, None)]
+    for _ in range(7):
+        if sens > 0:
+            ng = gamme(g[4], "majeure")
+            garde, herite = ng[0:4], g[4:8]
+            cree, lettres, pos = ng[4:8], g[1:5], 2   # la 3e note, future sensible
+        else:
+            ng = gamme(g[3], "majeure")
+            garde, herite = ng[4:8], g[0:4]
+            cree, lettres, pos = ng[0:4], g[3:7], 3   # la 4e, future sous-dominante
+        assert all(map(_meme_hauteur_ecrite, garde, herite))
+        diff = [i for i in range(4) if not _meme_hauteur_ecrite(cree[i], lettres[i])]
+        assert diff == [pos] and cree[pos].alt - lettres[pos].alt == sens, diff
+        chaine.append((ng, cree[pos]))
+        g = ng
+    trouve = "".join(n.lettre for _, n in chaine[1:])
+    assert trouve == (ORDRE_DIESES if sens > 0 else ORDRE_BEMOLS), trouve
+    return chaine
 
 
 def ecrire_planches():

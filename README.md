@@ -7,10 +7,13 @@ Les diagrammes d'accords de guitare vivent dans un dépôt séparé,
 
 ## Documents
 
+Deux guides, à lire dans cet ordre : le second emploie les intervalles que le
+premier définit.
+
 | Fichier | Contenu |
 | --- | --- |
-| `gammes.tex` / `.pdf` | **Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, et les trois formes de la gamme mineure. Les quinze tonalités sont tabulées et gravées en annexe. |
-| `intervalles.tex` / `.pdf` | **Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
+| `intervalles.tex` / `.pdf` | **1. Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
+| `gammes.tex` / `.pdf` | **2. Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, et les trois formes de la gamme mineure. Les quinze tonalités sont tabulées et gravées en annexe. |
 
 ## Partitions (MusicXML)
 

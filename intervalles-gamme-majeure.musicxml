@@ -2,7 +2,7 @@
 <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
 <score-partwise version="4.0">
   <work>
-    <work-title>Tétracordes</work-title>
+    <work-title>Les intervalles de la gamme majeure</work-title>
   </work>
   <identification>
     <creator type="composer">Fabian Bastin</creator>
@@ -12,12 +12,12 @@
       <encoding-date>2026-09-26</encoding-date>
     </encoding>
     <miscellaneous>
-      <miscellaneous-field name="description">Les cinq types de tétracordes, tous à partir de do, pour comparer leurs intervalles à vue.</miscellaneous-field>
+      <miscellaneous-field name="description">De la tonique de do majeur à chacun de ses degrés : tous majeurs ou justes.</miscellaneous-field>
     </miscellaneous>
   </identification>
   <part-list>
     <score-part id="P1">
-      <part-name>Gammes</part-name>
+      <part-name>Intervalles</part-name>
     </score-part>
   </part-list>
   <part id="P1">
@@ -30,7 +30,7 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <words font-weight="bold">tétracorde majeur</words>
+          <words font-weight="bold">seconde majeure</words>
         </direction-type>
       </direction>
       <note>
@@ -53,7 +53,7 @@
       </note>
       <note>
         <pitch>
-          <step>E</step>
+          <step>C</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
@@ -61,10 +61,17 @@
         <type>quarter</type>
       </note>
       <note>
+        <chord/>
         <pitch>
-          <step>F</step>
+          <step>D</step>
           <octave>4</octave>
         </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -80,7 +87,7 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <words font-weight="bold">tétracorde mineur</words>
+          <words font-weight="bold">tierce majeure</words>
         </direction-type>
       </direction>
       <note>
@@ -94,7 +101,7 @@
       </note>
       <note>
         <pitch>
-          <step>D</step>
+          <step>E</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
@@ -102,21 +109,26 @@
         <type>quarter</type>
       </note>
       <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <chord/>
         <pitch>
           <step>E</step>
-          <alter>-1</alter>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <accidental>flat</accidental>
       </note>
       <note>
-        <pitch>
-          <step>F</step>
-          <octave>4</octave>
-        </pitch>
+        <rest/>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -132,7 +144,7 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <words font-weight="bold">tétracorde phrygien</words>
+          <words font-weight="bold">quarte juste</words>
         </direction-type>
       </direction>
       <note>
@@ -146,31 +158,34 @@
       </note>
       <note>
         <pitch>
-          <step>D</step>
-          <alter>-1</alter>
+          <step>F</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <accidental>flat</accidental>
       </note>
       <note>
         <pitch>
-          <step>E</step>
-          <alter>-1</alter>
+          <step>C</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <accidental>flat</accidental>
       </note>
       <note>
+        <chord/>
         <pitch>
           <step>F</step>
           <octave>4</octave>
         </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -186,7 +201,7 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <words font-weight="bold">tétracorde harmonique</words>
+          <words font-weight="bold">quinte juste</words>
         </direction-type>
       </direction>
       <note>
@@ -200,18 +215,7 @@
       </note>
       <note>
         <pitch>
-          <step>D</step>
-          <alter>-1</alter>
-          <octave>4</octave>
-        </pitch>
-        <duration>1</duration>
-        <voice>1</voice>
-        <type>quarter</type>
-        <accidental>flat</accidental>
-      </note>
-      <note>
-        <pitch>
-          <step>E</step>
+          <step>G</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
@@ -220,9 +224,25 @@
       </note>
       <note>
         <pitch>
-          <step>F</step>
+          <step>C</step>
           <octave>4</octave>
         </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
@@ -238,7 +258,7 @@
       </attributes>
       <direction placement="above">
         <direction-type>
-          <words font-weight="bold">tétracorde lydien</words>
+          <words font-weight="bold">sixte majeure</words>
         </direction-type>
       </direction>
       <note>
@@ -252,7 +272,7 @@
       </note>
       <note>
         <pitch>
-          <step>D</step>
+          <step>A</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
@@ -261,7 +281,46 @@
       </note>
       <note>
         <pitch>
-          <step>E</step>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>A</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="6">
+      <attributes>
+        <divisions>1</divisions>
+        <key><fifths>0</fifths><mode>major</mode></key>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">septième majeure</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
@@ -270,14 +329,94 @@
       </note>
       <note>
         <pitch>
-          <step>F</step>
-          <alter>1</alter>
+          <step>B</step>
           <octave>4</octave>
         </pitch>
         <duration>1</duration>
         <voice>1</voice>
         <type>quarter</type>
-        <accidental>sharp</accidental>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>B</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="7">
+      <attributes>
+        <divisions>1</divisions>
+        <key><fifths>0</fifths><mode>major</mode></key>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">octave</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <rest/>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
       </note>
       <barline location="right">
         <bar-style>light-light</bar-style>

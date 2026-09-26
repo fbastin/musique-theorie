@@ -8,8 +8,8 @@
     <creator type="composer">Fabian Bastin</creator>
     <rights>Licence MIT</rights>
     <encoding>
-      <software>outils/gammes.py — dépôt guitar_chords</software>
-      <encoding-date>2026-09-24</encoding-date>
+      <software>dépôt musique-theorie, dossier outils</software>
+      <encoding-date>2026-09-26</encoding-date>
     </encoding>
     <miscellaneous>
       <miscellaneous-field name="description">Les quinze tonalités mineures sous leur forme naturelle : mêmes notes que la majeure relative, tonique différente.</miscellaneous-field>

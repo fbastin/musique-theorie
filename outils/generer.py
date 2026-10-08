@@ -124,7 +124,7 @@ PREAMBULE = r"""\version "2.24.3"
 #
 # Deux réglages les distinguent des figures didactiques. La largeur de ligne est
 # *fixée* et la justification rétablie : sans cela, chaque gamme sortait à sa
-# largeur naturelle — 154 pt pour do majeur, 202 pt pour la dièse mineure
+# largeur naturelle — 154 pt pour do majeur, 202 pt pour la dièse mineur
 # harmonique, dont l'armure est plus encombrante. Les mettre toutes à la largeur
 # de la colonne aurait alors imposé des facteurs d'échelle différents, et des
 # portées de tailles différentes sur une même page.

@@ -14,7 +14,7 @@ intervalles — des rapports de fréquences — et se lit après le premier.
 | Fichier | Contenu |
 | --- | --- |
 | `intervalles.tex` / `.pdf` | **1. Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
-| `gammes.tex` / `.pdf` | **2. Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, et les trois formes de la gamme mineure. Les quinze tonalités sont tabulées et gravées en annexe. |
+| `gammes.tex` / `.pdf` | **2. Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, les trois formes de la gamme mineure, et la lecture d'une armure (le dernier dièse est la sensible, l'avant-dernier bémol la tonique, le relatif un ton sous le dernier dièse), démontrée. Les quinze tonalités sont tabulées et gravées en annexe. |
 | `frequences.tex` / `.pdf` | **3. Les fréquences — de l'octave au comma.** Une note comme fréquence, un intervalle comme rapport : l'octave 2/1, la série des harmoniques, les cents, le ton et ses deux demi-tons, les commas pythagoricien et syntonique, les tempéraments jusqu'au tempérament égal. Chaque idée se vérifie à l'oreille avec le [synthétiseur](https://www.slashbin.net/musique/synth.php) de slashbin.net. |
 
 ## Partitions (MusicXML)

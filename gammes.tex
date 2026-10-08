@@ -228,6 +228,7 @@ gamme majeure est donc \textbf{gamme diatonique majeure} ; l'usage l'abrège
 en « gamme majeure », et ce guide fait de même.
 
 \subsection{Les degrés et leurs noms}
+\label{sec:degres}
 
 \gravure{f-degres}{Les sept degrés de do majeur et leur nom français.}
 
@@ -384,6 +385,8 @@ descendante : si, mi, la, ré, sol, do, fa.
 est la \emph{sensible} de la tonalité : un demi-ton au-dessus, on trouve la
 tonique. Le dernier bémol de l'armure est sa \emph{sous-dominante} : une
 quarte au-dessous, on trouve la tonique — c'est aussi l'avant-dernier bémol.
+La section~\ref{sec:armure} en tire le relatif mineur et le moyen de trancher
+entre majeur et mineur.
 \end{remarque}
 
 Les deux procédés sont exactement inverses : l'un fait du tétracorde
@@ -503,6 +506,172 @@ cinq tons et deux demi-tons, mais mal répartis : entre les degrés 2--3 et
 emploient toutefois \emph{diatonique} au sens large, pour toute gamme de
 sept notes conjointes qui prend chaque lettre une fois, par opposition à
 \emph{chromatique} ; en ce sens, les trois mineures sont diatoniques.
+\end{remarque}
+
+% =====================================================================
+\section{Lire une armure}
+\label{sec:armure}
+
+Une armure ne désigne pas une tonalité, mais deux : une majeure et sa relative
+mineure, qui emploient les mêmes notes. Les retrouver demande trois règles, et
+trancher entre les deux demande de regarder la partition. Aucune de ces règles
+n'est à apprendre telle quelle : toutes découlent de la construction par
+tétracordes.
+
+\subsection{Avec des dièses : le dernier dièse est la sensible}
+
+\begin{remarque}
+\textbf{Le dernier dièse de l'armure est la sensible de la tonalité majeure.}
+La tonique se trouve donc un demi-ton au-dessus du dernier dièse, sur la
+lettre suivante.
+\end{remarque}
+
+Les dièses s'écrivent toujours dans le même ordre : fa, do, sol, ré, la, mi,
+si. Il suffit de repérer le dernier, le plus à droite, et de monter d'un
+demi-ton.
+
+\begin{center}
+\input{gravures/armures-dieses.tex}
+\end{center}
+
+\paragraph{Pourquoi.} Trois faits établis plus haut suffisent.
+\begin{enumerate}
+  \item Chaque quinte ascendante garde tous les dièses de la gamme précédente
+    et en ajoute exactement un (section~\ref{sec:mecanisme}). Ce nouveau dièse
+    est celui de la note qu'il faut hausser pour que le nouveau tétracorde
+    supérieur soit majeur : sa troisième note, c'est-à-dire le septième degré
+    de la gamme, sa \emph{sensible}.
+  \item L'armure écrit les dièses dans l'ordre où le cycle les ajoute. Le plus
+    à droite est donc le dernier ajouté : la sensible.
+  \item La sensible est à un demi-ton sous la tonique
+    (section~\ref{sec:degres}). Et comme une gamme emploie chaque lettre une
+    fois et une seule, la tonique porte nécessairement la lettre qui suit celle
+    de la sensible.
+\end{enumerate}
+
+Le troisième point évite un piège à six dièses. Le dernier est mi dièse, et la
+tonique est \emph{fa dièse}, pas fa : fa sonne comme mi dièse (c'est la même
+touche du piano), si bien que le demi-ton au-dessus de mi dièse est fa dièse.
+Compter sur la lettre suivante règle la question sans y penser.
+
+\subsection{Le relatif mineur : un ton sous le dernier dièse}
+
+La relative mineure prend pour tonique le sixième degré de la gamme majeure
+(section~\ref{sec:mineures}). Or le tétracorde supérieur d'une gamme majeure
+finit par un ton puis un demi-ton : le sixième degré est un ton sous le
+septième, qui est un demi-ton sous l'octave. D'où :
+
+\begin{remarque}
+\textbf{La tonique du relatif mineur est un ton sous le dernier dièse}, sur
+la lettre précédente. Cela revient à descendre d'une tierce mineure — un ton
+et un demi-ton — sous la tonique majeure.
+\end{remarque}
+
+Avec trois dièses, le dernier est sol dièse. Un ton plus bas, sur la lettre
+fa, on trouve fa dièse : l'armure est celle de la majeur et de fa dièse
+mineur.
+
+\subsection{Majeur ou mineur ?}
+
+L'armure seule ne permet pas de trancher, puisque la majeure et sa relative ont
+exactement la même. C'est la partition qui décide, par deux indices.
+
+\begin{itemize}
+  \item \textbf{Une altération accidentelle qui revient.} Un morceau mineur
+    emploie presque toujours la forme harmonique ou mélodique, qui hausse le
+    septième degré pour en faire une sensible
+    (section~\ref{sec:mineures}). Cette sensible n'est jamais dans l'armure :
+    elle s'écrit à chaque fois. Avec un dièse à l'armure, des ré dièse
+    fréquents désignent mi mineur.
+  \item \textbf{La dernière note}, et plus sûrement la dernière note de la
+    basse, est presque toujours la tonique.
+\end{itemize}
+
+L'altération à guetter se prévoit. La sensible du mineur est un demi-ton sous
+sa tonique, le sixième degré de la majeure : c'est donc la \emph{dominante de
+la majeure, haussée d'un demi-ton} — en sol majeur, ré devient ré dièse. Selon
+l'armure, elle s'écrit avec un dièse, avec un bécarre quand elle annule un
+bémol de l'armure (si bécarre en do mineur), ou avec un double dièse quand elle
+hausse une note déjà dièsée (sol double dièse en la dièse mineur). Les
+tableaux de cette section la donnent dans la dernière colonne.
+
+\begin{remarque}
+Une seule occurrence ne suffit pas. La même altération sert aussi, dans un
+morceau majeur, à passer brièvement par le relatif mineur. C'est sa
+\emph{récurrence}, jointe à la note finale, qui décide.
+\end{remarque}
+
+\subsection{Avec des bémols : l'avant-dernier bémol est la tonique}
+
+\begin{remarque}
+\textbf{Le dernier bémol de l'armure est la sous-dominante ; l'avant-dernier
+est la tonique.} Avec un seul bémol, il n'y a pas d'avant-dernier : la
+tonalité est fa majeur, et sa relative ré mineur.
+\end{remarque}
+
+\begin{center}
+\input{gravures/armures-bemols.tex}
+\end{center}
+
+\paragraph{Pourquoi.} La construction vers les bémols
+(section~\ref{sec:mecanisme}) ajoute à chaque quinte descendante un bémol, et
+un seul : celui de la note qu'il faut abaisser pour que le nouveau tétracorde
+inférieur soit majeur, et qui devient la \emph{sous-dominante} de la nouvelle
+gamme. Le dernier bémol, le plus à droite, est donc la sous-dominante, et la
+tonique se trouve une quarte juste au-dessous.
+
+Reste à voir pourquoi cette tonique est justement l'avant-dernier bémol. Les
+bémols s'enchaînent de quinte en quinte descendante — si, mi, la, ré… —, donc
+chacun est une quinte \emph{au-dessus} du suivant. L'avant-dernier bémol est
+ainsi une quinte au-dessus du dernier, ce qui, à l'octave près, revient à une
+quarte au-dessous : c'est la tonique. Avec un seul bémol, la tonique fa n'est
+pas altérée, et l'astuce n'a rien à montrer.
+
+Le relatif mineur se trouve comme en dièses : une tierce mineure sous la
+tonique majeure.
+
+\subsection{Les trois règles sur une seule ligne}
+
+Les trois règles se lisent d'un coup sur la ligne des quintes. Rangées de quinte
+en quinte, les sept notes de do majeur donnent fa, do, sol, ré, la, mi, si :
+six quintes justes, de la sous-dominante à la sensible, soit les degrés 4, 1, 5,
+2, 6, 3, 7 dans cet ordre. Toute gamme majeure étant une transposition de do
+majeur, ses notes occupent de même \emph{sept cases consécutives} de cette
+ligne, avec les mêmes degrés aux mêmes places.
+
+Prolongée, la ligne passe à droite de si par fa dièse, do dièse, sol dièse…, et
+à gauche de fa par si bémol, mi bémol, la bémol… : exactement l'ordre des
+dièses, et celui des bémols lu de droite à gauche. Monter la tonique d'une
+quinte décale la fenêtre d'une case vers la droite, la descendre d'une quinte,
+d'une case vers la gauche. Depuis do majeur, chaque case gagnée vers la droite
+est un dièse de plus, et chaque case gagnée vers la gauche, un bémol de plus.
+
+\begin{center}
+\input{gravures/armures-quintes.tex}\par\vspace{4pt}
+{\small\itshape\color{mygray} La ligne des quintes et deux fenêtres de sept
+cases. Sous chaque note, son degré dans la gamme ; en gras, les notes altérées
+par l'armure ; en couleur, celles que désignent les règles.}
+\end{center}
+
+\begin{itemize}
+  \item \textbf{En dièses}, une tonalité à $n$ dièses est la fenêtre de do
+    majeur décalée de $n$ cases vers la droite. Ses dièses sont ses $n$
+    dernières cases, et la toute dernière — le dernier dièse — porte le
+    degré~7 : la sensible.
+  \item \textbf{En bémols}, la fenêtre est décalée vers la gauche, et les
+    bémols occupent ses premières cases. Le dernier bémol est la première case,
+    le degré~4 ; l'avant-dernier, la deuxième case, le degré~1 : la tonique.
+  \item \textbf{Le relatif mineur}, degré~6, est deux cases à gauche de la
+    sensible : deux quintes plus bas, soit un ton à l'octave près. Sol dièse,
+    do dièse, fa dièse : fa dièse mineur est la relative de la majeur.
+\end{itemize}
+
+\begin{remarque}
+Les tableaux de cette section sont produits par \texttt{outils/generer.py},
+qui vérifie chacune de ces règles sur les quinze tonalités avant de les
+écrire : position du dernier dièse et des deux derniers bémols, tierce mineure
+du relatif, sensible du mineur, et fenêtre de sept cases sur la ligne des
+quintes.
 \end{remarque}
 
 % =====================================================================

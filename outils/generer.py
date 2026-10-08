@@ -15,9 +15,10 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from gammes import (GAMMES, ORDRE_BEMOLS, ORDRE_DIESES, TETRACORDES, TONALITES,
-                    Note, gamme, intervalles, note_de, octave_depart,
-                    tetracorde)
+from gammes import (GAMMES, NOMS_FR, ORDRE_BEMOLS, ORDRE_DIESES, TETRACORDES,
+                    TONALITES, Note, armure_notes, gamme, intervalles, note_de,
+                    octave_depart, tetracorde)
+from intervalles import analyser, au_dessus
 import musicxml
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -580,6 +581,198 @@ def chaine_tetracordes(sens):
     return chaine
 
 
+# ---------------------------------------------------------------------------
+# Lire une armure
+# ---------------------------------------------------------------------------
+def _meme_note(a, b):
+    return _meme_hauteur_ecrite(a, b)
+
+
+def _quinte(n):
+    """La quinte juste au-dessus, ramenée à l'octave 4 : seule l'écriture compte."""
+    q = au_dessus(n, 5, "juste")
+    return Note(q.lettre, q.alt, 4)
+
+
+# Degrés d'une gamme majeure rangée de quinte en quinte : fa do sol ré la mi si
+# pour do majeur. La thèse de la dernière sous-section de « Lire une armure ».
+DEGRES_EN_QUINTES = (4, 1, 5, 2, 6, 3, 7)
+
+
+def ligne_des_quintes(depart="Fb", longueur=21):
+    """De fa bémol à si dièse : toutes les notes des quinze armures, en quintes."""
+    ligne = [note_de(depart, 4)]
+    while len(ligne) < longueur:
+        ligne.append(_quinte(ligne[-1]))
+    return ligne
+
+
+def lire_armures():
+    """
+    Les règles de lecture des armures, refaites et vérifiées sur les quinze
+    tonalités, avant d'écrire le moindre tableau. Le texte du guide les énonce ;
+    rien ici n'est recopié de lui.
+
+    Renvoie, par armure, un dict : dernière altération, avant-dernière, tonique
+    majeure, relatif mineur, sensible du mineur (altération accidentelle).
+    """
+    ligne = ligne_des_quintes()
+    lignes = {}
+    for armure, maj, min_ in TONALITES:
+        g = gamme(note_de(maj, 4), "majeure")          # g[0] … g[7]
+        alterees = armure_notes(armure)                 # lettres, dans l'ordre de l'armure
+        sens = 1 if armure > 0 else -1
+
+        # L'armure est bien celle de la gamme : les lettres altérées, et elles seules.
+        assert sorted(n.lettre for n in g[:7] if n.alt) == sorted(alterees), maj
+        assert all(n.alt in (0, sens) for n in g[:7]), maj
+
+        # Relatif mineur : le sixième degré, une tierce mineure sous la tonique.
+        rel = g[5]
+        assert _meme_note(rel, note_de(min_)), (maj, min_)
+        assert analyser(g[5], g[7]) == (3, "mineure"), maj
+
+        # Sensible du mineur (formes harmonique et mélodique) : la dominante de la
+        # majeure, haussée d'un demi-ton. Jamais dans l'armure.
+        hm = gamme(Note(rel.lettre, rel.alt, 4), "mineure harmonique")
+        sens_min = hm[6]
+        assert sens_min.lettre == g[4].lettre and sens_min.alt == g[4].alt + 1, maj
+        assert analyser(hm[6], hm[7]) == (2, "mineure"), maj
+
+        d = {"armure": armure, "tonique": g[0], "relatif": rel,
+             "sensible_min": sens_min, "derniere": None, "avant_derniere": None}
+
+        if armure > 0:
+            # Le dernier dièse est la sensible (degré 7) ; la tonique est une
+            # seconde mineure au-dessus, sur la lettre suivante ; le relatif, une
+            # seconde majeure au-dessous, sur la lettre précédente.
+            der = g[6]
+            assert der.lettre == alterees[-1] and der.alt == 1, maj
+            assert analyser(g[6], g[7]) == (2, "mineure"), maj
+            assert analyser(g[5], g[6]) == (2, "majeure"), maj
+            d["derniere"] = der
+        elif armure < 0:
+            # Le dernier bémol est la sous-dominante (degré 4), une quarte juste
+            # au-dessus de la tonique ; l'avant-dernier bémol est la tonique —
+            # sauf à un bémol, où la tonique (fa) n'est pas altérée.
+            der = g[3]
+            assert der.lettre == alterees[-1] and der.alt == -1, maj
+            assert analyser(g[0], g[3]) == (4, "juste"), maj
+            d["derniere"] = der
+            if armure <= -2:
+                assert g[0].lettre == alterees[-2] and g[0].alt == -1, maj
+                d["avant_derniere"] = g[0]
+            else:
+                assert g[0].alt == 0, maj
+
+        # La même chose, lue sur la ligne des quintes : la gamme y occupe sept
+        # cases consécutives, degrés 4 1 5 2 6 3 7, décalées d'une case par
+        # dièse vers la droite, d'une case par bémol vers la gauche.
+        i = next(k for k, n in enumerate(ligne) if _meme_note(n, g[3]))
+        assert i == 7 + armure, maj                     # do majeur commence à fa, case 7
+        fenetre = ligne[i:i + 7]
+        attendu = [g[deg - 1] for deg in DEGRES_EN_QUINTES]
+        assert all(map(_meme_note, fenetre, attendu)), maj
+        # Les altérées sont les |armure| dernières cases (dièses) ou premières (bémols).
+        alt_fen = [k for k, n in enumerate(fenetre) if n.alt]
+        attendu_k = list(range(7 - armure, 7)) if armure > 0 else list(range(-armure))
+        assert alt_fen == attendu_k, maj
+
+        lignes[armure] = d
+    return lignes
+
+
+def _nom_accidentel(note, armure):
+    """Le nom de l'altération à écrire : bécarre quand elle annule un bémol de l'armure."""
+    if note.alt == 0 and armure < 0 and note.lettre in armure_notes(armure):
+        return note.nom_fr() + " bécarre"
+    return note.nom_fr()
+
+
+def _court(n):
+    """Écriture compacte, pour la ligne des quintes : la$\\flat$, fa$\\sharp$."""
+    signe = {-2: r"$\flat\flat$", -1: r"$\flat$", 0: "", 1: r"$\sharp$", 2: r"$\times$"}
+    return NOMS_FR[n.lettre] + signe[n.alt]
+
+
+def _entete(*titres):
+    """Ligne d'en-tête ; les titres de plusieurs mots sur deux lignes, pour tenir
+    six colonnes dans la largeur de la page."""
+    cases = []
+    for t in titres:
+        mots = t.split(" ", 1)
+        txt = t if len(mots) == 1 else r"\shortstack[l]{%s\\%s}" % tuple(mots)
+        cases.append(r"\textbf{%s}" % txt)
+    return " & ".join(cases) + r" \\"
+
+
+def ecrire_tables_armures():
+    """Les deux tableaux de lecture des armures, et la ligne des quintes."""
+    a = lire_armures()
+    entete = ["%% Produit par outils/generer.py — ne pas modifier à la main.", ""]
+    chemins = []
+
+    l = entete + [r"\begin{tabular}{@{}l l l l l@{}}", r"\toprule",
+                  _entete("Armure", "Dernier dièse", "Tonique majeure", "Relatif mineur",
+                          "Sensible du mineur"),
+                  r"\midrule"]
+    for k in range(1, 8):
+        d = a[k]
+        l.append(f"{_armure_txt(k)} & {d['derniere'].nom_fr()} & {d['tonique'].nom_fr()}"
+                 f" & {d['relatif'].nom_fr()} & {_nom_accidentel(d['sensible_min'], k)} \\\\")
+    l += [r"\bottomrule", r"\end{tabular}", ""]
+    chemins.append(("armures-dieses", l))
+
+    l = entete + [r"\begin{tabular}{@{}l l l l l l@{}}", r"\toprule",
+                  _entete("Armure", "Dernier bémol", "Avant-dernier bémol",
+                          "Tonique majeure", "Relatif mineur", "Sensible du mineur"),
+                  r"\midrule"]
+    for k in range(-1, -8, -1):
+        d = a[k]
+        avant = d["avant_derniere"].nom_fr() if d["avant_derniere"] else "---"
+        l.append(f"{_armure_txt(k)} & {d['derniere'].nom_fr()} & {avant}"
+                 f" & {d['tonique'].nom_fr()} & {d['relatif'].nom_fr()}"
+                 f" & {_nom_accidentel(d['sensible_min'], k)} \\\\")
+    l += [r"\bottomrule", r"\end{tabular}", ""]
+    chemins.append(("armures-bemols", l))
+
+    # La ligne des quintes, de la bémol à sol dièse, avec deux fenêtres : la
+    # majeur (3 dièses) et mi bémol majeur (3 bémols). En couleur, les degrés
+    # que désignent les règles : la sensible, la sous-dominante, la tonique.
+    ligne = ligne_des_quintes()[4:17]
+    l = entete + [r"{\small\setlength{\tabcolsep}{4.2pt}%",
+                  r"\begin{tabular}{@{}l*{%d}{c}@{}}" % len(ligne), r"\toprule",
+                  " & " + " & ".join(_court(n) for n in ligne) + r" \\", r"\midrule"]
+    for armure, marques in ((3, {7}), (-3, {4, 1})):
+        d = a[armure]
+        g = gamme(d["tonique"], "majeure")
+        cases = []
+        for n in ligne:
+            deg = next((DEGRES_EN_QUINTES[j] for j, x in
+                        enumerate(g[deg - 1] for deg in DEGRES_EN_QUINTES)
+                        if _meme_note(x, n)), None)
+            if deg is None:
+                cases.append("")
+            elif deg in marques:
+                cases.append(r"\textcolor{accent}{\textbf{%d}}" % deg)
+            elif n.alt:
+                cases.append(r"\textbf{%d}" % deg)
+            else:
+                cases.append(str(deg))
+        l.append(f"{d['tonique'].nom_fr()} majeur ({_armure_txt(armure)}) & "
+                 + " & ".join(cases) + r" \\")
+    l += [r"\bottomrule", r"\end{tabular}}", ""]
+    chemins.append(("armures-quintes", l))
+
+    sorties = []
+    for nom, bloc in chemins:
+        chemin = os.path.join(DIR_LY, nom + ".tex")
+        with open(chemin, "w", encoding="utf-8") as f:
+            f.write("\n".join(bloc) + "\n")
+        sorties.append(chemin)
+    return sorties
+
+
 def ecrire_planches():
     """
     Planches de gammes gravées, deux par ligne.
@@ -620,6 +813,8 @@ if __name__ == "__main__":
     if tout or "--tex" in quoi:
         print("Tableaux :", os.path.relpath(ecrire_tables(), RACINE))
         for c in ecrire_table_tetracordes():
+            print("Tableaux :", os.path.relpath(c, RACINE))
+        for c in ecrire_tables_armures():
             print("Tableaux :", os.path.relpath(c, RACINE))
         for c in ecrire_planches():
             print("Planches :", os.path.relpath(c, RACINE))

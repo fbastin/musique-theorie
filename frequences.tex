@@ -108,8 +108,6 @@
 {\Huge\bfseries\color{navy} Les fréquences\par}
 \vspace{0.6cm}
 {\LARGE\color{navy} De l'octave au comma\par}
-\vspace{1.4cm}
-{\large Ce que mesurent le ton, le demi-ton et le comma\par}
 \vspace{2.5cm}
 \includegraphics[width=0.85\linewidth]{freq-harmoniques.cropped.pdf}
 \vfill
@@ -126,43 +124,19 @@ Expériences à faire au synthétiseur de slashbin.net :\\
 % =====================================================================
 \section{Avant-propos}
 
-Les deux premiers guides,
-\href{https://www.slashbin.net/musique/theorie/intervalles.pdf}{\emph{Les
-intervalles}} et
-\href{https://www.slashbin.net/musique/theorie/gammes.pdf}{\emph{Les gammes}},
-comptent en \emph{demi-tons} : une tierce majeure en vaut quatre, une quinte
-juste sept. Ils ne disent pas ce qu'est un demi-ton. Celui-ci le dit : une
-note est une \textbf{fréquence}, un intervalle un \textbf{rapport} entre deux
-fréquences, et l'octave, le ton, le demi-ton et le comma sont des rapports
-particuliers, avec une histoire.
+Une note est une \textbf{fréquence}, un intervalle un \textbf{rapport} entre
+deux fréquences. Mesurées ainsi, douze quintes ne font pas tout à fait sept
+octaves --- l'écart est le \emph{comma} ---, et le piano doit s'en accommoder.
 
-On y verra pourquoi l'octave porte deux fois le même nom de note, d'où viennent
-le ton et le demi-ton, pourquoi douze quintes ne font pas tout à fait sept
-octaves --- c'est le \emph{comma} ---, et comment le piano s'en accommode en
-faussant légèrement tous ses intervalles sauf l'octave.
-
-Chaque idée se vérifie à l'oreille avec le \synth{} de slashbin.net, qui joue
-une fréquence choisie au hertz près. Les encadrés à filet rouge, comme
-celui-ci, proposent une expérience ; la section~\ref{sec:synth} les reprend
-toutes, dans l'ordre.
-
-\begin{ecoute}
-\textbf{À l'écoute.} Ouvrir \url{\synthurl}, choisir l'onde
-\touche{Sinusoïdale}, et appuyer sur la touche \touche{A4} du clavier : c'est le
-la du diapason, 440~Hz. Le curseur \touche{Fréquence} se règle aussi au
-clavier de l'ordinateur : cliquer dessus, puis les flèches le déplacent d'un
-hertz. Une touche du clavier lance le son d'elle-même ; après un réglage au
-curseur, il faut appuyer sur \touche{Démarrer}.
-\end{ecoute}
+Chaque idée se vérifie à l'oreille au \synth{} de slashbin.net. Les encadrés à
+filet rouge proposent ces expériences ; la plupart sont réunies à la
+section~\ref{sec:synth}, qui présente aussi les commandes du synthétiseur.
 
 \begin{remarque}
-\textbf{Conventions.} Les notes sont nommées en français, et les octaves
-numérotées à la française : le la du diapason est \emph{la3}, le do du
-milieu du piano \emph{do3}. Le synthétiseur, comme la plupart des logiciels,
-suit la notation internationale, décalée d'un cran : son \touche{A4} est
-notre la3, son \touche{C4} notre do3 (section~\ref{sec:octave}). Les nombres
-décimaux s'écrivent avec une virgule ; « Hz » se lit « hertz », vibrations
-par seconde.
+\textbf{Conventions.} Les notes sont nommées en français et les octaves
+numérotées à la française : le la du diapason est \emph{la3}, que le
+synthétiseur, comme la plupart des logiciels, appelle \touche{A4}
+(section~\ref{sec:octave}). Les nombres décimaux s'écrivent avec une virgule.
 \end{remarque}
 
 % =====================================================================
@@ -194,7 +168,9 @@ produisent un son presque pur, sans harmoniques --- celui de l'onde
 % rien n'y dépend du modèle, sauf la durée de la période (\periodeLa).
 % Un flottant plutôt qu'un bloc centré : trop haut pour la fin de la page 2,
 % le bloc passait à la page suivante en laissant un tiers de page vide.
-\begin{figure}[tb]
+% En bas de page seulement : placé en haut, il passait au-dessus de
+% l'avant-propos, avant le texte qu'il illustre.
+\begin{figure}[b]
 \centering
 \begin{tikzpicture}[font=\small]
   % Les branches au repos (plein) et à l'écart maximal (tirets).
@@ -327,7 +303,8 @@ L'oscilloscope du synthétiseur montre les trois formes d'onde.
 (3/2) suivie d'une quarte (4/3) donne $\tfrac32 \times \tfrac43 = 2$ : une
 octave. Une tierce majeure (5/4) suivie d'une tierce mineure (6/5) donne
 $\tfrac54 \times \tfrac65 = \tfrac32$ : une quinte. C'est l'équivalent, pour
-les fréquences, de l'addition des demi-tons des deux premiers guides.
+les fréquences, de l'addition des demi-tons dans les guides des intervalles
+et des gammes.
 
 Multiplier des fractions est peu commode. On convertit donc les rapports en
 une unité qui s'\emph{additionne} : le \textbf{cent}. L'octave vaut
@@ -515,7 +492,9 @@ que ré bémol quand le demi-ton chromatique dépasse le diatonique : en
 pythagoricien seulement.}
 \end{center}
 
-\subsection{Le tempérament égal}
+% =====================================================================
+\section{Le tempérament égal}
+\label{sec:egal}
 
 Le tempérament égal partage l'octave en \textbf{douze demi-tons égaux}. Le
 demi-ton est le nombre qui, multiplié douze fois par lui-même, donne 2 :
@@ -543,9 +522,10 @@ leurs tierces majeures vers le juste.
 \begin{center}
 \input{gravures/freq-ecarts.tex}
 \legende{La gamme de do majeur, écart de chaque degré au tempérament égal (la
-ligne 0). La gamme pythagoricienne, construite par quintes, a des tierces et
-des sensibles hautes ; la gamme juste, des tierces et des sixtes basses. Leur
-écart sur mi et sur la est le comma syntonique.}
+ligne 0). La gamme pythagoricienne, construite par quintes, a la tierce, la
+sixte et la sensible hautes ; la gamme juste, les mêmes degrés bas. Sur ces
+trois notes, mi, la et si, leur écart est le comma syntonique ; sur les quatre
+autres, elles coïncident.}
 \end{center}
 
 % =====================================================================
@@ -562,6 +542,8 @@ fois, entre 50 et 2000~Hz. Ses commandes :
   \item le curseur \touche{Fréquence}, au hertz près --- après un clic, les
     flèches du clavier de l'ordinateur le déplacent d'un hertz ; la ligne
     \emph{Note la plus proche} nomme la touche correspondante ;
+  \item le bouton \touche{Démarrer}, qui lance le son après un réglage au
+    curseur ; une touche du clavier le lance d'elle-même ;
   \item les boutons \touche{$-$} et \touche{$+$} de la fréquence, qui la
     divisent ou la multiplient par \demiTon : ils descendent ou montent d'un
     demi-ton tempéré ;

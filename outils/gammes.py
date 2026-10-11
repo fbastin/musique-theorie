@@ -166,3 +166,16 @@ def octave_depart(tonique, plancher=4):
     gamme ne sorte pas de la portée par le haut.
     """
     return plancher if tonique.idx <= 4 else plancher - 1
+
+
+def octave_depart_fa(tonique):
+    """
+    Octave qui garde la gamme sur une portée en clé de fa, à une ligne
+    supplémentaire près.
+
+    Do et ré partent de l'octave 3 : do3–do4, ré3–ré4 ne dépassent la portée que
+    d'une ligne par le haut. De mi à si, l'octave 2 : mi2 ne la dépasse que d'une
+    ligne par le bas, et sol2–sol3 la remplit exactement. Partir de l'octave 3
+    pour sol aurait fini sur sol4, trois lignes au-dessus.
+    """
+    return 3 if tonique.idx <= 1 else 2

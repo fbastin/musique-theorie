@@ -514,6 +514,10 @@ trancher entre les deux demande de regarder la partition. Aucune de ces règles
 n'est à apprendre telle quelle : toutes découlent de la construction par
 tétracordes.
 
+Elle se lit de la même façon en clé de sol et en clé de fa : dans la seconde,
+dièses et bémols dessinent le même motif, une ligne plus bas. Les gammes de la
+section~\ref{sec:gravees} sont gravées dans les deux clés.
+
 \subsection{Avec des dièses : le dernier dièse est la sensible}
 
 \begin{remarque}
@@ -679,38 +683,68 @@ quintes.
 \input{gravures/tables.tex}
 
 % =====================================================================
-% Chaque famille tient sur une page et une seule : on compare les quinze
-% armures d'un coup d'œil, sans tourner la page au milieu du groupe. D'où un
-% saut avant chaque sous-section — et `samepage`, qui interdit une coupure si
-% la planche venait à déborder après une retouche des gravures.
+% Chaque famille tient sur une page et une seule par clé : on compare les
+% quinze armures d'un coup d'œil, sans tourner la page au milieu du groupe. La
+% page en clé de fa suit celle en clé de sol, dans le même ordre. D'où un saut
+% avant chaque sous-section — et `samepage`, qui interdit une coupure si la
+% planche venait à déborder après une retouche des gravures.
 %
 % Le saut précède le titre de *section* et non la première sous-section :
 % placé après, il laissait « Les gammes gravées » seul en bas de la page
 % précédente, sans rien sous lui.
+%
+% Pas de texte sous le titre : quatre lignes suffisaient à faire déborder la
+% première planche (do dièse passait sur la page suivante). Ce qu'il y aurait à
+% dire est en section « Lire une armure » et dans le colophon.
 \clearpage
 \section{Les gammes gravées}
+\label{sec:gravees}
 
-\subsection{Les quinze gammes majeures}
+\subsection{Les quinze gammes majeures, en clé de sol}
 \begin{samepage}
 \input{gravures/planche-majeures.tex}
 \end{samepage}
 
 \clearpage
-\subsection{Les quinze gammes mineures naturelles}
+\subsection{Les quinze gammes majeures, en clé de fa}
+\begin{samepage}
+\input{gravures/planche-majeures-fa.tex}
+\end{samepage}
+
+\clearpage
+\subsection{Les quinze gammes mineures naturelles, en clé de sol}
 \begin{samepage}
 \input{gravures/planche-min-nat.tex}
 \end{samepage}
 
 \clearpage
-\subsection{Les quinze gammes mineures harmoniques}
+\subsection{Les quinze gammes mineures naturelles, en clé de fa}
+\begin{samepage}
+\input{gravures/planche-min-nat-fa.tex}
+\end{samepage}
+
+\clearpage
+\subsection{Les quinze gammes mineures harmoniques, en clé de sol}
 \begin{samepage}
 \input{gravures/planche-min-harm.tex}
 \end{samepage}
 
 \clearpage
-\subsection{Les quinze gammes mineures mélodiques}
+\subsection{Les quinze gammes mineures harmoniques, en clé de fa}
+\begin{samepage}
+\input{gravures/planche-min-harm-fa.tex}
+\end{samepage}
+
+\clearpage
+\subsection{Les quinze gammes mineures mélodiques, en clé de sol}
 \begin{samepage}
 \input{gravures/planche-min-mel.tex}
+\end{samepage}
+
+\clearpage
+\subsection{Les quinze gammes mineures mélodiques, en clé de fa}
+\begin{samepage}
+\input{gravures/planche-min-mel-fa.tex}
 \end{samepage}
 
 % =====================================================================
@@ -757,6 +791,8 @@ MusicXML sont tous dérivés d'un unique modèle de hauteurs, le module
 \texttt{outils/gammes.py} : une hauteur y est un couple (lettre, altération)
 et non un numéro de demi-ton, ce qui permet d'obtenir si dièse majeur ou ré
 dièse mineur harmonique — avec son double dièse — sans cas particulier.
+En clé de fa, chaque gamme est gravée une ou deux octaves plus bas qu'en clé
+de sol, là où elle tient sur la portée à une ligne supplémentaire près.
 
 Écrire le guide et les fichiers MusicXML séparément aurait garanti qu'ils
 finissent par se contredire. Pour régénérer l'ensemble :

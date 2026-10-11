@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from gammes import (GAMMES, NOMS_FR, ORDRE_BEMOLS, ORDRE_DIESES, TETRACORDES,
                     TONALITES, Note, armure_notes, gamme, intervalles, note_de,
-                    octave_depart, tetracorde)
+                    octave_depart, octave_depart_fa, tetracorde)
 from intervalles import analyser, au_dessus
 import musicxml
 
@@ -172,10 +172,10 @@ def ecrire(nom, contenu, preambule=None):
     return chemin
 
 
-def portee(notes, armure=0, mode="major", ancrages=""):
+def portee(notes, armure=0, mode="major", ancrages="", cle="treble"):
     return (r"""\score {
   \new Staff {
-    \clef treble
+    \clef %s
     \key %s \%s
     \omit Staff.TimeSignature
     \cadenzaOn
@@ -184,7 +184,7 @@ def portee(notes, armure=0, mode="major", ancrages=""):
   }
   \layout { }
 }
-""" % (_lily_tonique(armure, mode), mode, ancrages or ly_notes(notes)))
+""" % (cle, _lily_tonique(armure, mode), mode, ancrages or ly_notes(notes)))
 
 
 def _lily_tonique(armure, mode):
@@ -434,7 +434,9 @@ def ecrire_figures():
 def ecrire_lilypond():
     produits = []
 
-    # --- une gamme par fichier, pour les tableaux de référence -------------
+    # --- une gamme par fichier, pour les planches de la section 9 -----------
+    # Deux gravures par gamme : en clé de sol (maj-c), puis en clé de fa
+    # (maj-c-fa), chacune dans le registre où elle tient sur sa portée.
     for armure, maj, min_ in TONALITES:
         for type_gamme, col, prefixe in (("majeure", 1, "maj"),
                                          ("mineure naturelle", 2, "min-nat"),
@@ -442,13 +444,14 @@ def ecrire_lilypond():
                                          ("mineure mélodique", 2, "min-mel")):
             txt = maj if col == 1 else min_
             t = note_de(txt, 4)
-            t = Note(t.lettre, t.alt, octave_depart(t))
-            notes = gamme(t, type_gamme)
             mode = "major" if col == 1 else "minor"
             slug = txt.replace("#", "d").replace("b", "b").lower()
-            produits.append(ecrire(f"{prefixe}-{slug}",
-                                   portee(notes, armure, mode),
-                                   preambule=PREAMBULE_REF))
+            for cle, suffixe, octave in (("treble", "", octave_depart(t)),
+                                         ("bass", "-fa", octave_depart_fa(t))):
+                notes = gamme(Note(t.lettre, t.alt, octave), type_gamme)
+                produits.append(ecrire(f"{prefixe}-{slug}{suffixe}",
+                                       portee(notes, armure, mode, cle=cle),
+                                       preambule=PREAMBULE_REF))
 
     return produits
 
@@ -775,10 +778,11 @@ def ecrire_tables_armures():
 
 def ecrire_planches():
     """
-    Planches de gammes gravées, deux par ligne.
+    Planches de gammes gravées, deux par ligne : une planche par famille et
+    par clé (planche-majeures en clé de sol, planche-majeures-fa en clé de fa).
 
-    Engendrées plutôt qu'écrites à la main : soixante appels à
-    \\gammeref saisis manuellement seraient soixante occasions de se tromper
+    Engendrées plutôt qu'écrites à la main : cent vingt appels à
+    \\gammeref saisis manuellement seraient autant d'occasions de se tromper
     de fichier ou de libellé.
     """
     familles = [("planche-majeures", "maj", 1, "majeure"),
@@ -787,18 +791,19 @@ def ecrire_planches():
                 ("planche-min-mel", "min-mel", 2, "mineure mélodique")]
     chemins = []
     for nom, prefixe, col, libelle in familles:
-        l = ["%% Produit par outils/generer.py — ne pas modifier à la main.", ""]
-        for i, (armure, maj, min_) in enumerate(TONALITES):
-            txt = maj if col == 1 else min_
-            slug = txt.replace("#", "d").lower()
-            t = note_de(txt, 4)
-            l.append("\\gammeref{%s-%s}{%s}%%" % (prefixe, slug, t.nom_fr()))
-            if i % 2 == 1:
-                l.append("")
-        chemin = os.path.join(DIR_LY, nom + ".tex")
-        with open(chemin, "w", encoding="utf-8") as f:
-            f.write("\n".join(l) + "\n")
-        chemins.append(chemin)
+        for suffixe in ("", "-fa"):
+            l = ["%% Produit par outils/generer.py — ne pas modifier à la main.", ""]
+            for i, (armure, maj, min_) in enumerate(TONALITES):
+                txt = maj if col == 1 else min_
+                slug = txt.replace("#", "d").lower()
+                t = note_de(txt, 4)
+                l.append("\\gammeref{%s-%s%s}{%s}%%" % (prefixe, slug, suffixe, t.nom_fr()))
+                if i % 2 == 1:
+                    l.append("")
+            chemin = os.path.join(DIR_LY, nom + suffixe + ".tex")
+            with open(chemin, "w", encoding="utf-8") as f:
+                f.write("\n".join(l) + "\n")
+            chemins.append(chemin)
     return chemins
 
 

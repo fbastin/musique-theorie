@@ -7,15 +7,17 @@ Les diagrammes d'accords de guitare vivent dans un dépôt séparé,
 
 ## Documents
 
-Trois guides. Les deux premiers se lisent dans cet ordre : le second emploie
-les intervalles que le premier définit. Le troisième dit ce que mesurent ces
-intervalles — des rapports de fréquences — et se lit après le premier.
+Les guides se lisent dans l'ordre du tableau. *Lire les notes* ouvre la série ;
+*Les intervalles* supposent les notes connues ; *Les gammes* emploient les
+intervalles sans les redéfinir ; *Les fréquences* disent ce que mesurent ces
+intervalles — des rapports de fréquences — et se lisent après *Les intervalles*.
 
 | Fichier | Contenu |
 | --- | --- |
-| `intervalles.tex` / `.pdf` | **1. Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
-| `gammes.tex` / `.pdf` | **2. Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, les trois formes de la gamme mineure, et la lecture d'une armure (le dernier dièse est la sensible, l'avant-dernier bémol la tonique, le relatif un ton sous le dernier dièse), démontrée. Les quinze tonalités sont tabulées, et gravées en annexe en clé de sol et en clé de fa. |
-| `frequences.tex` / `.pdf` | **3. Les fréquences — de l'octave au comma.** Une note comme fréquence, un intervalle comme rapport : l'octave 2/1, la série des harmoniques, les cents, le ton et ses deux demi-tons, les commas pythagoricien et syntonique, les tempéraments jusqu'au tempérament égal. Chaque idée se vérifie à l'oreille avec le [synthétiseur](https://www.slashbin.net/musique/synth.php) de slashbin.net. |
+| `lecture.tex` / `.pdf` | **Lire les notes — la portée, les clés, le do central.** La portée, ses lignes et interlignes comptés de bas en haut, les lignes supplémentaires, les sept noms de notes et l'octave, les clés de sol, de fa et d'ut, le do central et la grande portée vue comme une portée de onze lignes, des repères pour lire sans compter, et des exercices corrigés. |
+| `intervalles.tex` / `.pdf` | **Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
+| `gammes.tex` / `.pdf` | **Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, les trois formes de la gamme mineure, et la lecture d'une armure (le dernier dièse est la sensible, l'avant-dernier bémol la tonique, le relatif un ton sous le dernier dièse), démontrée. Les quinze tonalités sont tabulées, et gravées en annexe en clé de sol et en clé de fa. |
+| `frequences.tex` / `.pdf` | **Les fréquences — de l'octave au comma.** Une note comme fréquence, un intervalle comme rapport : l'octave 2/1, la série des harmoniques, les cents, le ton et ses deux demi-tons, les commas pythagoricien et syntonique, les tempéraments jusqu'au tempérament égal. Chaque idée se vérifie à l'oreille avec le [synthétiseur](https://www.slashbin.net/musique/synth.php) de slashbin.net. |
 
 ## Partitions (MusicXML)
 
@@ -42,7 +44,8 @@ note, puis les deux notes ensemble.
 Les PDF rognés des gravures étant suivis, les guides se recompilent avec LaTeX seul :
 
 ```bash
-pdflatex gammes.tex          # deux fois, pour la table des matières
+pdflatex lecture.tex         # deux fois, pour la table des matières
+pdflatex gammes.tex          # deux fois aussi
 pdflatex intervalles.tex
 pdflatex frequences.tex      # deux fois aussi
 ```
@@ -51,16 +54,18 @@ Pour tout régénérer depuis le modèle de hauteurs — après avoir modifié u
 gamme, ajouté une tonalité ou retouché une figure :
 
 ```bash
+python3 outils/generer_lecture.py              # lecture : figures .ly, tableaux, réponses des exercices
 python3 outils/generer.py                      # gammes : MusicXML, figures .ly, tableaux LaTeX
 python3 outils/generer_intervalles.py          # intervalles : idem
 python3 outils/generer_frequences.py           # fréquences : tableaux, figure, valeurs du texte
 lilypond -dcrop --formats=pdf gravures/*.ly    # gravures
+pdflatex lecture.tex                           # deux fois
 pdflatex gammes.tex                            # deux fois
 pdflatex intervalles.tex                       # deux fois
 pdflatex frequences.tex                        # deux fois
 ```
 
-### Pourquoi un générateur
+### Un modèle, des générateurs
 
 `outils/gammes.py` contient un modèle de hauteurs unique, dont dérivent à la
 fois les gravures et les fichiers MusicXML. Une hauteur y est un couple
@@ -75,7 +80,14 @@ intervalle redonne le même nom, et chaque renversement complète l'octave — l
 générateur le vérifie sur toutes les toniques des gammes avant d'écrire quoi
 que ce soit (`python3 outils/intervalles.py` lance ces contrôles seuls).
 
-`outils/frequences.py` fait de même pour le troisième guide, qui cite des
+`outils/generer_lecture.py` repose sur le même modèle et sur une seule donnée
+par clé : la ligne qu'elle désigne et la note qu'elle y place. La note de chaque
+position, les noms sous les gravures, le tableau des repères et les réponses des
+exercices en découlent ; le générateur vérifie d'abord ce que le guide affirme
+(le do central sur la première ligne supplémentaire dans les deux clés, la
+grande portée de onze lignes, l'écart de deux noms entre clé de sol et clé de fa).
+
+`outils/frequences.py` fait de même pour le guide des fréquences, qui cite des
 dizaines de nombres : commas, tailles de demi-tons, écarts en cents, fréquences
 en hertz. Il les calcule en fractions exactes quand le rapport est rationnel et
 vérifie chaque identité que le texte affirme (le ton majeur dépasse le mineur
@@ -94,8 +106,9 @@ ailleurs.
 ### Dépendances
 
 - LaTeX : `geometry`, `xcolor`, `titlesec`, `fancyhdr`, `booktabs`, `longtable`,
-  `mdframed`, `adjustbox`, `babel` (français), `hyperref`, et pour le guide des
-  fréquences `amsmath` et `tikz`
+  `mdframed`, `adjustbox`, `babel` (français), `hyperref`, `amsmath` pour le
+  guide des fréquences, et `tikz` pour ceux des fréquences et de la lecture des
+  notes
 - LilyPond 2.24 ou plus récent (seulement pour régénérer les gravures)
 - Python 3 (bibliothèque standard uniquement)
 

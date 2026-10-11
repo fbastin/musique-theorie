@@ -34,7 +34,8 @@ partitions :
 - `intervalles-gamme-majeure.musicxml` — de la tonique de do majeur à chacun de ses degrés
 - `intervalles-renversements.musicxml` — cinq intervalles, chacun suivi de son renversement
 
-Chaque gamme y figure montante puis descendante, avec son armure et son nom.
+Chaque gamme y figure en clé de sol, montante puis descendante, avec son
+armure et son nom.
 Les mineures mélodiques descendent sous leur forme naturelle : c'est la seule
 façon de rendre leur asymétrie visible. Chaque intervalle est joué note après
 note, puis les deux notes ensemble.
@@ -46,7 +47,7 @@ Les PDF rognés des gravures étant suivis, les guides se recompilent avec LaTeX
 ```bash
 pdflatex lecture.tex         # deux fois, pour la table des matières
 pdflatex gammes.tex          # deux fois aussi
-pdflatex intervalles.tex
+pdflatex intervalles.tex     # deux fois aussi
 pdflatex frequences.tex      # deux fois aussi
 ```
 

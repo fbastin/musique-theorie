@@ -480,7 +480,7 @@ def ecrire_tables():
     l = ["%% Produit par outils/generer.py — ne pas modifier à la main.", ""]
 
     # --- les quinze tonalités majeures -----------------------------------
-    l += [r"\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{9.4cm}@{}}",
+    l += [r"\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{12.6cm}@{}}",
           r"\toprule",
           r"\textbf{Tonique} & \textbf{Armure} & \textbf{Degrés} \\",
           r"\midrule", r"\endhead"]
@@ -495,7 +495,7 @@ def ecrire_tables():
                              ("mineure harmonique", "harmoniques"),
                              ("mineure mélodique", "mélodiques (forme ascendante)")):
         l.append(r"\subsection{Gammes mineures %s}" % titre)
-        l += [r"\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{9.4cm}@{}}",
+        l += [r"\begin{longtable}{@{}l l >{\raggedright\arraybackslash}p{12.6cm}@{}}",
               r"\toprule",
               r"\textbf{Tonique} & \textbf{Armure} & \textbf{Degrés} \\",
               r"\midrule", r"\endhead"]

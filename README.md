@@ -55,15 +55,15 @@ Pour tout régénérer depuis le modèle de hauteurs — après avoir modifié u
 gamme, ajouté une tonalité ou retouché une figure :
 
 ```bash
-python3 outils/generer_lecture.py              # lecture : figures .ly, tableaux, réponses des exercices
-python3 outils/generer.py                      # gammes : MusicXML, figures .ly, tableaux LaTeX
-python3 outils/generer_intervalles.py          # intervalles : idem
-python3 outils/generer_frequences.py           # fréquences : tableaux, figure, valeurs du texte
-lilypond -dcrop --formats=pdf gravures/*.ly    # gravures
-pdflatex lecture.tex                           # deux fois
-pdflatex gammes.tex                            # deux fois
-pdflatex intervalles.tex                       # deux fois
-pdflatex frequences.tex                        # deux fois
+python3 outils/generer_lecture.py                    # lecture : figures .ly, tableaux, réponses des exercices
+python3 outils/generer.py                            # gammes : MusicXML, figures .ly, tableaux LaTeX
+python3 outils/generer_intervalles.py                # intervalles : idem
+python3 outils/generer_frequences.py                 # fréquences : tableaux, figure, valeurs du texte
+(cd gravures && lilypond -dcrop --formats=pdf *.ly)  # gravures
+pdflatex lecture.tex                                 # deux fois
+pdflatex gammes.tex                                  # deux fois
+pdflatex intervalles.tex                             # deux fois
+pdflatex frequences.tex                              # deux fois
 ```
 
 ### Un modèle, des générateurs
@@ -107,9 +107,9 @@ ailleurs.
 ### Dépendances
 
 - LaTeX : `geometry`, `xcolor`, `titlesec`, `fancyhdr`, `booktabs`, `longtable`,
-  `mdframed`, `adjustbox`, `babel` (français), `hyperref`, `amsmath` pour le
-  guide des fréquences, et `tikz` pour ceux des fréquences et de la lecture des
-  notes
+  `mdframed`, `enumitem`, `adjustbox`, `babel` (français), `lmodern`, `hyperref`,
+  `amsmath` pour le guide des fréquences, et `tikz` pour ceux des fréquences et
+  de la lecture des notes
 - LilyPond 2.24 ou plus récent (seulement pour régénérer les gravures)
 - Python 3 (bibliothèque standard uniquement)
 

@@ -17,6 +17,8 @@ gravures/*.png
 gravures/*.ps
 gravures/*.midi
 gravures/*.mid
+gravures/*.pdf
+!gravures/*.cropped.pdf
 # Les PDF rognés, eux, sont suivis : ils permettent de compiler gammes.tex
 # sans avoir LilyPond installé.
 

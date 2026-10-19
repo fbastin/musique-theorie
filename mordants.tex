@@ -1,0 +1,335 @@
+%% =============================================================
+%%  Les mordants — du signe aux notes jouées
+%%  Guide de référence, composé en LaTeX, gravures LilyPond
+%% =============================================================
+%%
+%%  Les figures (gravures/m-*.cropped.pdf), les réponses de l'exercice
+%%  (gravures/mordants-reponses.tex) et le fichier mordants.musicxml
+%%  sont produits par outils/generer_mordants.py, à partir du modèle
+%%  de hauteurs des autres guides (outils/gammes.py). Voir le colophon
+%%  en dernière page.
+%%
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[top=2.2cm,bottom=2.4cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\graphicspath{{gravures/}}
+
+% ---- Couleurs, reprises du document des accords de guitare ---------
+\definecolor{navy}{RGB}{18,50,105}
+\definecolor{lightnavy}{RGB}{235,241,255}
+\definecolor{mygray}{RGB}{110,110,110}
+
+\hypersetup{colorlinks=true, linkcolor=navy, urlcolor=navy,
+  pdftitle={Les mordants — du signe aux notes jouées},
+  pdfauthor={Fabian Bastin}}
+
+% ---- En-tête et pied -----------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyhead[L]{\small\bfseries\textcolor{navy}{Les mordants}}
+\fancyhead[R]{\small\textcolor{mygray}{\thepage}}
+\fancyfoot[C]{\small\textcolor{mygray}{Du signe aux notes jouées}}
+
+% ---- Titres de section ---------------------------------------------
+\newcommand{\navysect}[1]{%
+  \colorbox{navy}{%
+    \parbox[c][17pt]{\dimexpr\linewidth-2\fboxsep\relax}{%
+      \color{white}\hspace{6pt}\bfseries\normalsize #1}}%
+}
+\titleformat{\section}[block]{\normalfont}{}{0pt}{\navysect}
+\titlespacing*{\section}{0pt}{16pt}{10pt}
+
+% ---- Encadré de remarque -------------------------------------------
+\newmdenv[linecolor=navy, linewidth=0.5pt, backgroundcolor=lightnavy,
+  innertopmargin=6pt, innerbottommargin=6pt,
+  innerleftmargin=8pt, innerrightmargin=8pt,
+  skipabove=8pt, skipbelow=8pt]{remarque}
+
+% ---- Figure gravée ---------------------------------------------------
+% Figure gravée, à la largeur donnée (part de la ligne), avec sa légende.
+% Le tout tient dans une minipage : figure et légende ne sont jamais
+% séparées par un saut de page.
+\newcommand{\gravure}[3]{%
+  \par\medskip\noindent
+  \begin{minipage}{\linewidth}
+    \centering
+    \includegraphics[width=#2\linewidth]{#1.cropped.pdf}\\[4pt]
+    {\small\itshape\color{mygray} #3}
+  \end{minipage}\par\medskip
+}
+
+\setlist{itemsep=2pt, topsep=4pt, parsep=0pt}
+
+\begin{document}
+
+% =====================================================================
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\Huge\bfseries\color{navy} Les mordants\par}
+\vspace{0.6cm}
+{\LARGE\color{navy} Du signe aux notes jouées\par}
+\vspace{1.4cm}
+{\large Une note, sa voisine, la note\par}
+\vspace{2.5cm}
+\includegraphics[width=0.8\linewidth]{m-inferieur.cropped.pdf}
+\vfill
+{\small\color{mygray}
+Gravures LilyPond, composition \LaTeX.\\
+Fichier MusicXML joint.\par}
+\vspace{1cm}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Avant-propos}
+
+Un \textbf{mordant} est un ornement : la note écrite, sa voisine, puis de
+nouveau la note, les deux premières très vite, la dernière tenue. Le nom vient
+de l'italien \emph{mordente}, du latin \emph{mordere}, mordre : l'ornement mord
+la note et la lâche aussitôt.
+
+À lire après
+\href{https://www.slashbin.net/musique/theorie/lecture.pdf}{\emph{Lire les
+notes}} et
+\href{https://www.slashbin.net/musique/theorie/intervalles.pdf}{\emph{Les
+intervalles}} : les exemples sont en clé de sol, et l'écart entre une note et
+sa voisine s'y mesure en tons et en demi-tons. Cette voisine se prend dans la
+gamme que désigne l'armure, dont traitent
+\href{https://www.slashbin.net/musique/theorie/gammes.pdf}{\emph{Les
+gammes}}.
+
+\begin{remarque}
+\textbf{Conventions.} Les notes sont nommées en français. La \emph{note
+principale} est la note écrite ; sa \emph{voisine}, ou note auxiliaire, la note
+immédiatement au-dessus ou au-dessous dans la gamme. Les exemples sont en clé de
+sol et, sauf mention contraire, en do majeur. Les notes jouées y sont écrites
+en triples croches, l'allure d'un mordant à la noire 80 : un peu moins d'un
+dixième de seconde par note.
+\end{remarque}
+
+Le fichier MusicXML joint fait entendre chaque exemple ; la
+section~\ref{sec:musicxml} le présente.
+
+% =====================================================================
+\section{Le signe et ses trois notes}
+\label{sec:signe}
+
+\textbf{Le signe.} Le mordant s'écrit par un court zigzag barré d'un trait
+vertical, au-dessus de la note.
+
+\textbf{Les trois notes.} La note écrite, sa voisine du dessous, la note
+écrite : les deux premières vite, la troisième tenue jusqu'au bout de la
+valeur. L'ornement ne quitte la note que d'un degré, une seule fois, et y
+revient : on entend la note elle-même, à peine troublée à son début.
+
+\textbf{La voisine se prend dans la gamme.} Elle porte le nom qui précède celui
+de la note : si sous do, do sous ré. Selon la place de la note dans la gamme,
+elle est à un ton ou à un demi-ton --- en do majeur, si est à un demi-ton sous
+do, do à un ton sous ré. Dans les deux cas, la note et sa voisine forment une
+seconde, mineure ou majeure.
+
+\gravure{m-inferieur}{0.85}{Le mordant sur do, ré, mi et fa, en do majeur :
+écrit en haut, joué en bas. La voisine est à un demi-ton sous do et fa, à un
+ton sous ré et mi.}
+
+% =====================================================================
+\section{Le temps du mordant}
+\label{sec:temps}
+
+\textbf{Sur le temps.} Le mordant commence sur la note écrite, au moment où
+elle tombe : il prend son temps sur elle, non sur la note qui précède. Dans les
+gravures, chaque groupe joué commence exactement sous la note écrite.
+
+\textbf{Vite, quelle que soit la valeur.} Sur une blanche comme sur une
+croche, la note et sa voisine passent aussi vite ; c'est la note tenue qui
+s'allonge ou se raccourcit. Joué lentement, le mordant ne mordrait plus : ce
+serait un motif de trois notes.
+
+\gravure{m-valeurs}{0.76}{Le même mordant sur une blanche, une noire et une
+croche : deux triples croches chaque fois, la note principale garde le reste.}
+
+\textbf{L'allure suit le tempo.} Les triples croches des exemples sont une
+commodité d'écriture. Dans un mouvement lent, le mordant reste vif et la note
+tenue s'allonge ; dans un mouvement rapide, il se resserre jusqu'à n'être plus
+qu'un frémissement au début de la note.
+
+\textbf{Où on le trouve.} C.~P.~E. Bach, dans son \emph{Essai sur la vraie
+manière de jouer des instruments à clavier} (1753), le place de préférence sur
+une note qui monte, par degré ou par saut, et jamais sur une seconde
+descendante. Il s'en sert pour remplir une note longue --- liée, pointée,
+syncopée --- et pour faire briller des notes détachées ou prises par saut. Dans la
+basse, ajoute-t-il, c'est l'ornement le plus fréquent, même là où rien ne
+l'indique.
+
+% =====================================================================
+\section{La voisine et les altérations}
+\label{sec:alterations}
+
+\textbf{L'armure d'abord.} Sans autre indication, la voisine prend
+l'altération que lui donne l'armure. Sous sol, c'est fa en do majeur, à un
+ton ; fa dièse en sol majeur, à un demi-ton.
+
+\textbf{Une altération près du signe.} Pour changer la voisine, on écrit une
+petite altération près du signe : au-dessous pour le mordant, dont la voisine
+est en dessous ; au-dessus pour le mordant supérieur
+(section~\ref{sec:superieur}). Elle ne touche que la voisine de cet
+ornement : la note écrite garde son altération.
+
+\gravure{m-alterations}{0.85}{Sol orné d'un mordant : en do majeur, avec un
+dièse sous le signe, puis en sol majeur. Le dièse écrit et l'armure donnent la
+même voisine, fa dièse.}
+
+\textbf{Le demi-ton baroque.} Dans la musique baroque, la voisine inférieure
+se prend volontiers à un demi-ton, qui mord davantage : C.~P.~E. Bach note
+qu'elle reçoit souvent une altération qui la hausse. Quand le signe n'en porte
+pas, l'interprète en juge selon l'harmonie.
+
+% =====================================================================
+\section{Le mordant supérieur}
+\label{sec:superieur}
+
+\textbf{Sans le trait.} Le même zigzag, sans trait vertical, désigne
+aujourd'hui le \emph{mordant supérieur} : la note, sa voisine du dessus, la
+note. Tout ce qui précède s'y applique en miroir : la voisine se prend dans la
+gamme, et l'ornement commence sur le temps et passe aussi vite.
+
+\gravure{m-superieur}{0.85}{Le mordant supérieur sur do, ré, mi et fa : la
+voisine est à un ton au-dessus de do, ré et fa, à un demi-ton au-dessus de mi.}
+
+\textbf{Ses noms.} L'allemand l'appelle \emph{Pralltriller}, le trille qui
+rebondit. L'anglais l'appelle aujourd'hui \emph{upper} ou \emph{inverted
+mordent}, mais au XIX\textsuperscript{e} siècle, \emph{mordent} y désignait
+souvent le mordant supérieur, et \emph{inverted mordent} l'inférieur.
+
+\begin{remarque}
+\textbf{Le trait ne trompe pas.} Les noms changent d'une langue et d'une époque
+à l'autre ; barré, le signe désigne toujours la voisine du dessous. C'est le
+zigzag sans trait dont le sens a changé (section~\ref{sec:epoques}).
+\end{remarque}
+
+% =====================================================================
+\section{Le mordant long}
+\label{sec:long}
+
+Un zigzag plus long, toujours barré, double l'alternance : la note, sa
+voisine, la note, sa voisine, la note. Les clavecinistes français appelaient le
+mordant \emph{pincé}, et Couperin distingue un pincé simple et un pincé double,
+plus long. C.~P.~E. Bach distingue de même un mordant court et un mordant
+long ; le signe du long ne s'allonge jamais davantage, mais son exécution peut
+compter plus d'alternances, pour remplir une note longue.
+
+\gravure{m-long}{0.6}{Le mordant, puis le mordant long, chacun sur une noire :
+trois notes, puis cinq.}
+
+% =====================================================================
+\section{Un signe, deux lectures}
+\label{sec:epoques}
+
+\textbf{Chez Bach.} En 1720, Jean-Sébastien Bach écrit pour son fils
+Wilhelm Friedemann une table des ornements. Le zigzag barré y porte le nom de
+\emph{Mordant} et se joue comme aujourd'hui : la note, sa voisine du dessous,
+la note. Le zigzag sans trait, lui, y est un \emph{trille} (\emph{Trillo}) : il
+commence sur la voisine du dessus et alterne avec la note. Sur une note brève,
+on le réduit à quatre notes, la dernière tenue.
+
+\textbf{Chez son fils.} Une génération plus tard, C.~P.~E. Bach décrit deux
+figures aux mêmes notes. Le \emph{Pralltriller}, un demi-trille très bref, ne se
+place que sur une seconde descendante, pour lier une note à la suivante. Le
+\emph{Schneller}, qu'il est le premier à nommer, vient sur des notes brèves et
+détachées : la note, sa voisine du dessus, la note --- le mordant supérieur
+d'aujourd'hui.
+
+\textbf{Plus tard.} À partir du XIX\textsuperscript{e} siècle, le zigzag sans
+trait se lit le plus souvent comme un mordant supérieur, commencé sur la
+note. Devant ce signe, il faut donc savoir d'où vient la musique : dans la
+musique baroque, un trille commencé sur la voisine ; dans la musique
+romantique, un mordant supérieur. Entre les deux, l'usage varie d'un
+compositeur et d'une édition à l'autre.
+
+\gravure{m-epoques}{0.57}{Le zigzag sans trait sur do : chez Bach, un trille
+court commencé sur la voisine, ré do ré do ; plus tard, un mordant supérieur,
+do ré do.}
+
+% =====================================================================
+\section{Mordant, trille, gruppetto}
+\label{sec:voisins}
+
+Trois ornements tournent autour d'une note.
+
+\begin{itemize}
+  \item Le \textbf{mordant} la quitte une fois, d'un côté, et y revient ; elle
+    est ensuite tenue.
+  \item Le \textbf{trille}, noté \emph{tr}, alterne avec la voisine du dessus
+    jusqu'au bout de la valeur.
+  \item Le \textbf{gruppetto} en fait le tour : la voisine du dessus, la note,
+    la voisine du dessous, la note.
+\end{itemize}
+
+\gravure{m-voisins}{0.88}{Le mordant, le trille et le gruppetto sur une même
+note. Le trille commence ici sur la voisine, comme chez Bach ; à partir du
+XIX\textsuperscript{e} siècle, il commence souvent sur la note.}
+
+Le mordant est le plus bref des trois : il orne le début de la note sans en
+changer le caractère, là où le trille la fait vibrer d'un bout à l'autre.
+
+% =====================================================================
+\section{S'exercer}
+\label{sec:exercices}
+
+Pour chaque ornement numéroté, nommer les notes jouées. Les zigzags sans trait
+s'y lisent comme des mordants supérieurs. Les réponses suivent.
+
+\gravure{m-exercice}{1}{En sol majeur.}
+
+\begin{remarque}
+\textbf{Réponses.}
+\input{gravures/mordants-reponses.tex}
+\end{remarque}
+
+% =====================================================================
+\section{Le fichier MusicXML}
+\label{sec:musicxml}
+
+Le fichier joint, \texttt{mordants.musicxml}, reprend chaque gravure, puis la
+mélodie de l'exercice, écrites en toutes notes telles qu'elles se jouent, à la
+noire 80. Les signes n'y figurent pas : tout logiciel fait ainsi entendre la
+même chose. Il se lit avec MuseScore, Finale, Sibelius, Dorico ou tout éditeur
+de partitions ; sur slashbin.net, il s'écoute aussi dans Sodor Piano.
+
+% =====================================================================
+\section*{Colophon}
+\addcontentsline{toc}{section}{Colophon}
+
+Les gravures musicales sont produites par \textbf{LilyPond}, la composition
+par \textbf{\LaTeX}. Les portées jouées, les réponses de l'exercice et le
+fichier MusicXML dérivent du modèle de hauteurs des autres guides, le module
+\texttt{gammes.py} du dossier \texttt{outils}, et d'une règle par ornement :
+un motif joué vite, puis la note principale tenue. Avant d'écrire quoi que ce
+soit, le générateur vérifie ce que le texte affirme : la voisine à un ton ou à
+un demi-ton selon la gamme, l'ornement de même durée sur toute valeur, la
+valeur écrite respectée. Pour régénérer l'ensemble :
+
+\begin{center}
+\texttt{python3 outils/generer\_mordants.py}\\
+\texttt{lilypond -dcrop --formats=pdf gravures/m-*.ly}\\
+\texttt{pdflatex mordants.tex}
+\end{center}
+
+\end{document}

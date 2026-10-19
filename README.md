@@ -7,36 +7,53 @@ Les diagrammes d'accords de guitare vivent dans un dépôt séparé,
 
 ## Documents
 
-Les guides se lisent dans l'ordre du tableau. *Lire les notes* ouvre la série ;
-*Les intervalles* supposent les notes connues ; *Les gammes* emploient les
-intervalles sans les redéfinir ; *Les fréquences* disent ce que mesurent ces
+Les guides s'inspirent du programme de matières théoriques de l'École de
+musique Vincent-d'Indy, du niveau 1 au niveau 6 : la colonne *Niveaux* dit à
+quels niveaux ce programme place les notions de chaque guide. Ils se lisent dans
+l'ordre du tableau, chacun après ceux dont il a besoin. *Lire les notes* ouvre
+la série ; *Les valeurs* puis *La mesure* traitent de la durée ; *Les
+intervalles* supposent les notes connues ; *Les gammes* emploient les
+intervalles sans les redéfinir. *Les ornements* et *Les mordants* prennent la
+voisine d'une note dans la gamme que désigne l'armure ; *L'interprétation*
+suppose les valeurs et la mesure ; *Les tonalités* et *Les accords* partent des
+gammes. *Les fréquences*, hors programme, disent ce que mesurent les
 intervalles — des rapports de fréquences — et se lisent après *Les intervalles*.
-*Les mordants* supposent les notes, le ton et le demi-ton connus, et prennent la
-voisine d'une note dans la gamme que désigne l'armure.
 
-| Fichier | Contenu |
-| --- | --- |
-| `lecture.tex` / `.pdf` | **Lire les notes — la portée, les clés, le do central.** La portée, ses lignes et interlignes comptés de bas en haut, les lignes supplémentaires, les sept noms de notes et l'octave, les clés de sol, de fa et d'ut, le do central et la grande portée vue comme une portée de onze lignes, des repères pour lire sans compter, et des exercices corrigés. |
-| `intervalles.tex` / `.pdf` | **Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs, l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés. |
-| `gammes.tex` / `.pdf` | **Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, les trois formes de la gamme mineure, et la lecture d'une armure (le dernier dièse est la sensible, l'avant-dernier bémol la tonique, le relatif un ton sous le dernier dièse), démontrée. Les quinze tonalités sont tabulées, et gravées en annexe en clé de sol et en clé de fa. |
-| `frequences.tex` / `.pdf` | **Les fréquences — de l'octave au comma.** Une note comme fréquence, un intervalle comme rapport : l'octave 2/1, la série des harmoniques, les cents, le ton et ses deux demi-tons, les commas pythagoricien et syntonique, les tempéraments jusqu'au tempérament égal. Chaque idée se vérifie à l'oreille avec le [synthétiseur](https://www.slashbin.net/musique/synth.php) de slashbin.net. |
-| `mordants.tex` / `.pdf` | **Les mordants — du signe aux notes jouées.** Le signe barré et ses trois notes, la voisine prise dans la gamme à un ton ou à un demi-ton, l'ornement sur le temps et aussi vif sur toute valeur, les altérations, le mordant supérieur et le mordant long, le zigzag sans trait lu comme un trille chez Bach et comme un mordant supérieur plus tard, la comparaison avec le trille et le gruppetto, et un exercice corrigé. |
+| Fichier | Niveaux | Contenu |
+| --- | --- | --- |
+| `lecture.tex` / `.pdf` | 1, 2, 3, 6 | **Lire les notes — la portée, les clés, le do central.** La portée, ses lignes et interlignes comptés de bas en haut, les lignes supplémentaires et le signe d'octave, les sept noms de notes, l'octave et le diapason, les sept clés (sol 2e ligne, ut 1re à 4e lignes, fa 3e et 4e lignes) et la clé de sol octaviée, le do central et la grande portée vue comme une portée de onze lignes, des repères pour lire sans compter, et des exercices corrigés en clé de sol, de fa et d'ut 1re ligne. |
+| `valeurs.tex` / `.pdf` | 1 à 4 | **Les valeurs — de la ronde aux groupes irréguliers.** Les sept figures de notes et leurs silences, la tête, la hampe, le crochet et la ligature, l'arbre des valeurs, le point d'augmentation et le double point, la liaison de prolongation distinguée de la liaison d'expression, le point d'orgue, le triolet et le sextolet, puis le duolet, le quartolet et les autres groupes irréguliers, avec des exercices corrigés. |
+| `mesure.tex` / `.pdf` | 1 à 6 | **La mesure — du temps aux mesures composées.** La pulsation et le temps, les barres de mesure, la lecture des chiffres indicateurs, le C et le C barré, les mesures simples avec leur unité de temps et leur unité de mesure, les temps forts, mi-forts et faibles, les parties du temps, la battue et l'anacrouse, les mesures composées et leur temps ternaire, les mesures correspondantes avec le triolet et le duolet, la syncope et le contretemps, les mesures irrégulières, et trois exercices corrigés. |
+| `intervalles.tex` / `.pdf` | 2 à 6 | **Les intervalles — du demi-ton à l'octave.** Un intervalle nommé en deux parties — un numéro compté en lettres, une qualité comptée en demi-tons —, les intervalles justes et majeurs ou mineurs et leurs abréviations (3ce m, 5te J), l'enharmonie, le renversement, les intervalles de la gamme majeure, la consonance et les intervalles composés, ou redoublés. |
+| `gammes.tex` / `.pdf` | 1, 3, 5, 6 | **Les gammes — construction par tétracordes.** La gamme majeure vue comme deux tétracordes majeurs séparés par un ton, le cycle des quintes qui en découle, les trois formes de la gamme mineure et ses parentés, relative et directe, avec la majeure, et la lecture d'une armure (le dernier dièse est la sensible, l'avant-dernier bémol la tonique, le relatif un ton sous le dernier dièse), démontrée. Les quinze tonalités sont tabulées, et gravées en annexe en clé de sol et en clé de fa. |
+| `ornements.tex` / `.pdf` | 3, 5 | **Les ornements — de l'appogiature à la fioriture.** Les petites notes et les signes, l'appogiature (la moitié de la note, les deux tiers d'une note pointée, toute la note devant un silence), l'appogiature brève ou acciaccatura, le mordant en bref, le trille (sa note de départ selon l'époque, sa terminaison), le gruppetto (sur la note, après la note, renversé, avec ses altérations), la fioriture, un tableau récapitulatif et un exercice corrigé. |
+| `mordants.tex` / `.pdf` | 3, 5 | **Les mordants — du signe aux notes jouées.** Le signe barré et ses trois notes, la voisine prise dans la gamme à un ton ou à un demi-ton, l'ornement sur le temps et aussi vif sur toute valeur, les altérations, le mordant supérieur et le mordant long, le zigzag sans trait lu comme un trille chez Bach et comme un mordant supérieur plus tard, la comparaison avec le trille et le gruppetto, et un exercice corrigé. |
+| `interpretation.tex` / `.pdf` | 4, 5 | **L'interprétation — mouvements, nuances, articulations, caractère.** Les mouvements du plus lent au plus vif, avec leur sens littéral et des fourchettes métronomiques indicatives, les changements de mouvement, les nuances et leurs changements progressifs ou soudains, les sept articulations usuelles et ce qu'elles laissent de la valeur écrite, les termes de caractère et les mots qui les modifient, les reprises, et des exercices corrigés. |
+| `tonalites.tex` / `.pdf` | 5, 6 | **Les tonalités — des tons voisins aux modes anciens.** La tonalité et son mode, les notes tonales et modales, le relatif et l'homonyme (tonalités directes), les cinq tons voisins sur le cercle des quintes, la modulation et ce qui la signale, la transposition écrite, par changement de clé et pour les instruments transpositeurs, les sept modes anciens, leurs tétracordes, leur note caractéristique et leur échelle sur une même finale, et des exercices corrigés. |
+| `accords.tex` / `.pdf` | 5, 6 | **Les accords — de l'accord parfait à la septième diminuée.** L'accord bâti en tierces superposées, les quatre accords de trois sons, l'accord de chaque degré en majeur et en mineur harmonique, la position fondamentale et les renversements avec leur chiffrage (5, 6, 6/4), la septième de dominante, sa résolution et ses renversements (V7, V6/5, V4/3, V2), la septième diminuée et sa symétrie, une méthode pour reconnaître un accord écrit, et un exercice corrigé. |
+| `frequences.tex` / `.pdf` | hors programme | **Les fréquences — de l'octave au comma.** Une note comme fréquence, un intervalle comme rapport : l'octave 2/1, la série des harmoniques, les cents, le ton et ses deux demi-tons, les commas pythagoricien et syntonique, les tempéraments jusqu'au tempérament égal. Chaque idée se vérifie à l'oreille avec le [synthétiseur](https://www.slashbin.net/musique/synth.php) de slashbin.net. |
 
 ## Partitions (MusicXML)
 
-Les gammes et les intervalles sont aussi fournis en MusicXML 4.0, lisibles par
+Les exemples des guides sont aussi fournis en MusicXML 4.0, lisibles par
 MuseScore, Finale, Sibelius, Dorico, Sodor Piano et la plupart des éditeurs de
 partitions :
 
+- `valeurs.musicxml` — les exemples du guide des valeurs, de la ronde à la quadruple croche jusqu'aux groupes irréguliers, et les groupes de son exercice, à la noire 60
+- `mesure.musicxml` — les exemples du guide de la mesure, anacrouse comprise, puis ses deux exercices gravés, avec leurs chiffres indicateurs
+- `intervalles.musicxml` — les quatorze intervalles simples au-dessus de do
+- `intervalles-gamme-majeure.musicxml` — de la tonique de do majeur à chacun de ses degrés
+- `intervalles-renversements.musicxml` — cinq intervalles, chacun suivi de son renversement
+- `tetracordes.musicxml` — les cinq tétracordes, sur do
 - `gammes-majeures.musicxml` — les 15 tonalités majeures
 - `gammes-mineures-naturelles.musicxml` — les 15 mineures naturelles
 - `gammes-mineures-harmoniques.musicxml` — les 15 mineures harmoniques
 - `gammes-mineures-melodiques.musicxml` — les 15 mineures mélodiques
-- `tetracordes.musicxml` — les cinq tétracordes, sur do
-- `intervalles.musicxml` — les quatorze intervalles simples au-dessus de do
-- `intervalles-gamme-majeure.musicxml` — de la tonique de do majeur à chacun de ses degrés
-- `intervalles-renversements.musicxml` — cinq intervalles, chacun suivi de son renversement
+- `ornements.musicxml` — les exemples du guide des ornements et la mélodie de son exercice, écrits en toutes notes tels qu'ils se jouent ; le trille y figure sous ses deux lectures
 - `mordants.musicxml` — les exemples du guide des mordants et la mélodie de son exercice, écrits en toutes notes tels qu'ils se jouent
+- `interpretation.musicxml` — *Au clair de la lune* sous chaque articulation, nuance et mouvement, un ritardando suivi d'un a tempo, puis les reprises et les exercices du guide d'interprétation
+- `tonalites.musicxml` — do majeur, son relatif et son homonyme, deux modulations, une mélodie transposée, les sept modes sur les touches blanches puis sur ré
+- `accords.musicxml` — les accords des gravures du guide des accords, puis ceux de son exercice, une ronde chacun
 
 Chaque gamme y figure en clé de sol, montante puis descendante, avec son
 armure et son nom.
@@ -49,11 +66,17 @@ note, puis les deux notes ensemble.
 Les PDF rognés des gravures étant suivis, les guides se recompilent avec LaTeX seul :
 
 ```bash
-pdflatex lecture.tex         # deux fois, pour la table des matières
-pdflatex gammes.tex          # deux fois aussi
-pdflatex intervalles.tex     # deux fois aussi
-pdflatex frequences.tex      # deux fois aussi
-pdflatex mordants.tex        # deux fois aussi
+pdflatex lecture.tex          # deux fois, pour la table des matières
+pdflatex valeurs.tex          # deux fois aussi
+pdflatex mesure.tex           # deux fois aussi
+pdflatex intervalles.tex      # deux fois aussi
+pdflatex gammes.tex           # deux fois aussi
+pdflatex ornements.tex        # deux fois aussi
+pdflatex mordants.tex         # deux fois aussi
+pdflatex interpretation.tex   # deux fois aussi
+pdflatex tonalites.tex        # deux fois aussi
+pdflatex accords.tex          # deux fois aussi
+pdflatex frequences.tex       # deux fois aussi
 ```
 
 Pour tout régénérer depuis le modèle de hauteurs — après avoir modifié une
@@ -61,16 +84,18 @@ gamme, ajouté une tonalité ou retouché une figure :
 
 ```bash
 python3 outils/generer_lecture.py                    # lecture : figures .ly, tableaux, réponses des exercices
-python3 outils/generer.py                            # gammes : MusicXML, figures .ly, tableaux LaTeX
-python3 outils/generer_intervalles.py                # intervalles : idem
-python3 outils/generer_frequences.py                 # fréquences : tableaux, figure, valeurs du texte
+python3 outils/generer_valeurs.py                    # valeurs : figures .ly, tableau, exercices, MusicXML
+python3 outils/generer_mesure.py                     # mesure : figures .ly, tableaux, exercices, réponses, MusicXML
+python3 outils/generer_intervalles.py                # intervalles : MusicXML, figures .ly, tableaux LaTeX
+python3 outils/generer.py                            # gammes : idem
+python3 outils/generer_ornements.py                  # ornements : figures .ly, réponses, MusicXML
 python3 outils/generer_mordants.py                   # mordants : figures .ly, réponses, MusicXML
+python3 outils/generer_interpretation.py             # interprétation : tableaux, figures .ly, exercices, MusicXML
+python3 outils/generer_tonalites.py                  # tonalités : figures .ly, cercle, tableau des modes, réponses, MusicXML
+python3 outils/generer_accords.py                    # accords : figures .ly, tableaux, réponses, MusicXML
+python3 outils/generer_frequences.py                 # fréquences : tableaux, figure, valeurs du texte
 (cd gravures && lilypond -dcrop --formats=pdf *.ly)  # gravures
-pdflatex lecture.tex                                 # deux fois
-pdflatex gammes.tex                                  # deux fois
-pdflatex intervalles.tex                             # deux fois
-pdflatex frequences.tex                              # deux fois
-pdflatex mordants.tex                                # deux fois
+pdflatex lecture.tex                                 # puis chaque guide, deux fois
 ```
 
 ### Un modèle, des générateurs
@@ -86,14 +111,17 @@ qu'ils finissent par se contredire.
 intervalle y est un couple *(numéro, qualité)*. Construire puis analyser un
 intervalle redonne le même nom, et chaque renversement complète l'octave — le
 générateur le vérifie sur toutes les toniques des gammes avant d'écrire quoi
-que ce soit (`python3 outils/intervalles.py` lance ces contrôles seuls).
+que ce soit (`python3 outils/intervalles.py` lance ces contrôles seuls). Il
+vérifie aussi qu'un intervalle redoublé gagne sept lettres et douze demi-tons.
 
 `outils/generer_lecture.py` repose sur le même modèle et sur une seule donnée
 par clé : la ligne qu'elle désigne et la note qu'elle y place. La note de chaque
-position, les noms sous les gravures, le tableau des repères et les réponses des
-exercices en découlent ; le générateur vérifie d'abord ce que le guide affirme
-(le do central sur la première ligne supplémentaire dans les deux clés, la
-grande portée de onze lignes, l'écart de deux noms entre clé de sol et clé de fa).
+position, les noms sous les gravures, le tableau des sept clés, celui des repères
+et les réponses des exercices en découlent ; le générateur vérifie d'abord ce que
+le guide affirme (le do central sur la première ligne supplémentaire en clé de sol
+et en clé de fa, la grande portée de onze lignes, l'écart de deux noms entre clé
+de sol et clé de fa, la tierce qui sépare chaque clé de la suivante et donne à
+chaque position les sept noms).
 
 `outils/frequences.py` fait de même pour le guide des fréquences, qui cite des
 dizaines de nombres : commas, tailles de demi-tons, écarts en cents, fréquences
@@ -117,18 +145,86 @@ et celle du XIXe siècle, gravées l'une sous l'autre. Le fichier MusicXML écri
 les ornements en toutes notes plutôt qu'avec leurs signes, que tous les
 logiciels ne savent pas jouer.
 
+`outils/generer_valeurs.py` traite une valeur comme une fraction de ronde, et un
+rythme comme une suite de notes, de silences, de ligatures et de groupes
+irréguliers dont la durée se calcule. Les gravures, le tableau des figures, les
+deux exercices et leurs réponses, et le fichier MusicXML en dérivent ; le
+générateur vérifie d'abord ce que le texte affirme (chaque figure vaut deux fois
+la suivante, le point ajoute la moitié de la valeur, cinq croches ne s'écrivent
+pas d'une seule figure, un groupe irrégulier dure autant que la division
+régulière qu'il remplace et en garde la figure), et que les deux portées de
+chaque figure comparative durent autant l'une que l'autre.
+
+`outils/generer_mesure.py` ne part que du chiffre indicateur. Il en déduit le
+genre de la mesure (simple, composée, irrégulière), le nombre de temps, l'unité
+de temps et l'unité de mesure, la mesure correspondante, et la force de chaque
+temps et de chaque partie de temps. Les tableaux, les numéros et les forces
+gravés sous les temps, la reconnaissance des syncopes et des contretemps et les
+réponses des exercices en découlent. Le générateur vérifie d'abord ce que le
+texte affirme : les unités de chaque mesure, les correspondances 2/4–6/8 et
+suivantes, chaque mesure complète, le triolet à 2/4 qui attaque comme une
+mesure à 6/8, les syncopes et contretemps des exemples, et un seul chiffre
+possible pour chaque mesure de l'exercice.
+
+`outils/generer_ornements.py` prolonge le générateur des mordants, dont il
+reprend le modèle et la règle du mordant et du gruppetto. L'appogiature y prend
+la moitié d'une valeur simple, les deux tiers d'une valeur pointée et toute la
+note devant un silence ; l'appogiature brève, une triple croche sur toute
+valeur ; le trille alterne jusqu'au bout de la valeur, commencé sur la voisine
+ou sur la note selon l'époque, et s'achève sur la note ; le gruppetto tourne
+autour d'elle, sur la note ou après elle. Le générateur vérifie d'abord ce que
+le texte affirme, puis écrit les portées « joué », les réponses de l'exercice et
+le fichier MusicXML, où les ornements sont écrits en toutes notes.
+
+`outils/generer_interpretation.py` tient les termes du guide d'interprétation
+dans des listes : les mouvements et leurs fourchettes, les nuances, les
+articulations et la part de la valeur que chacune laisse, les termes de
+caractère. Les tableaux, les énoncés et les réponses des exercices et le fichier
+MusicXML en dérivent. Le générateur vérifie d'abord ce que le texte affirme :
+les fourchettes ordonnées, les nuances graduées, le staccatissimo plus bref que
+le staccato, chaque mot à traduire présent dans les tableaux, l'ordre dans
+lequel se jouent des mesures reprises. Le fichier MusicXML porte les indications
+comme une partition ; le ritardando y est en plus inscrit temps par temps.
+
+`outils/generer_tonalites.py` traite une tonalité comme un couple *(tonique,
+mode)* ; son armure, son relatif, son homonyme et ses tons voisins s'en
+déduisent sur le modèle de hauteurs commun. Une transposition y déplace chaque
+note d'un même intervalle, et un mode ancien fait tourner la gamme majeure.
+Avant d'écrire quoi que ce soit, le générateur vérifie ce que le texte affirme :
+les cinq tons voisins sur trois armures consécutives et sur les degrés de la
+gamme, les notes modales seules à changer d'un mode à l'autre, la transposition
+qui conserve chaque intervalle et l'effet de chaque altération accidentelle, les
+tétracordes de chaque mode, et l'échelle des modes sur ré, qui perd une
+altération à chaque marche.
+
+`outils/generer_accords.py` bâtit un accord comme une pile de tierces prise dans
+une gamme, majeure ou mineure harmonique : la fondamentale, puis une lettre sur
+deux. Chaque accord construit est ensuite analysé à partir de ses seules notes,
+comme le ferait un lecteur : rangées en tierces, elles désignent la
+fondamentale ; les intervalles qu'elle forme donnent la nature, la basse la
+position et le chiffrage. L'analyse doit retrouver la construction. Le
+générateur vérifie d'abord, sur les quinze tonalités majeures et mineures, ce
+que le texte affirme : la nature de l'accord de chaque degré, la septième de
+dominante seule sur V et identique en majeur et en mineur, les trois tierces
+mineures de la septième diminuée et ses trois seules sonorités, le chiffrage
+complet et abrégé de chaque renversement.
+
 `outils/musicxml.py` traite une subtilité qui mérite d'être nommée : `<alter>`
 porte le *son*, `<accidental>` porte ce qui est *imprimé*. Une altération ne
 s'écrit que si elle contredit l'armure en vigueur, laquelle repart à chaque
 barre de mesure — un bécarre apparaît donc là où elle s'annule, et nulle part
 ailleurs.
+Le même module écrit des notes de toute durée — points, liaisons, silences,
+accords, groupes irréguliers, points d'orgue et articulations — pour les guides
+qui ont besoin de rythme.
 
 ### Dépendances
 
 - LaTeX : `geometry`, `xcolor`, `titlesec`, `fancyhdr`, `booktabs`, `longtable`,
-  `mdframed`, `enumitem`, `adjustbox`, `babel` (français), `lmodern`, `hyperref`,
-  `amsmath` pour le guide des fréquences, et `tikz` pour ceux des fréquences et
-  de la lecture des notes
+  `array`, `mdframed`, `enumitem`, `adjustbox`, `multicol`, `needspace`, `babel`
+  (français), `lmodern`, `hyperref`, `amsmath` pour les guides des fréquences et
+  des accords, et `tikz` pour ceux des fréquences, de la lecture des notes et des
+  tonalités
 - LilyPond 2.24 ou plus récent (seulement pour régénérer les gravures)
 - Python 3 (bibliothèque standard uniquement)
 

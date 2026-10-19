@@ -50,6 +50,33 @@ def renversements():
     return paires
 
 
+def verifier_redoublement():
+    """
+    Redoubler un intervalle, c'est l'élargir d'une octave : la note aiguë monte
+    d'une octave. Le numéro gagne sept (la seconde devient neuvième, la tierce
+    dixième), la taille douze demi-tons, et la qualité ne change pas.
+    """
+    from gammes import TONALITES
+    toniques = {t for _, maj, mi in TONALITES for t in (maj, mi)}
+    for txt in toniques:
+        base = note_de(txt, 4)
+        for n, q in SIMPLES:
+            if n == 1:
+                continue        # l'unisson redoublé est l'octave
+            haut = au_dessus(base, n, q)
+            redouble = Note(haut.lettre, haut.alt, haut.octave + 1)
+            lettres = 7 * (redouble.octave - base.octave) + redouble.idx - base.idx + 1
+            assert lettres == n + 7
+            # Sept lettres et douze demi-tons de plus : l'écart à la référence,
+            # donc la qualité, est celui de l'intervalle simple.
+            assert redouble.hauteur - base.hauteur == demi_tons(n, q) + 12
+    # Les exemples du texte : la 9e est une 2de redoublée, la 10e une 3ce ;
+    # do–ré de l'octave suivante, une neuvième majeure.
+    assert 2 + 7 == 9 and 3 + 7 == 10 and 8 + 2 - 1 == 9
+    re_suivant = Note("D", 0, DO.octave + 1)
+    assert re_suivant.hauteur - DO.hauteur == demi_tons(2, "majeure") + 12
+
+
 # ---------------------------------------------------------------------------
 # MusicXML
 # ---------------------------------------------------------------------------
@@ -191,6 +218,7 @@ def ecrire_table():
 
 if __name__ == "__main__":
     verifier()
+    verifier_redoublement()
     for c in ecrire_musicxml():
         print("MusicXML :", os.path.relpath(c, RACINE))
     print("Tableau :", os.path.relpath(ecrire_table(), RACINE))

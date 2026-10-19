@@ -113,7 +113,9 @@ Fichiers MusicXML joints.\par}
 \section{Avant-propos}
 
 Un \textbf{intervalle} est la distance entre deux notes. Son nom en dit plus
-que le simple nombre de demi-tons qui les sépare.
+que le simple nombre de demi-tons qui les sépare. Au programme de matières
+théoriques de l'École de musique Vincent-d'Indy, ces notions relèvent des
+niveaux 2 à 6.
 
 Les exemples sont tous écrits en clé de sol. La lecture des notes, sur la
 portée et dans les clés, fait l'objet de
@@ -140,8 +142,7 @@ ensemble ; il porte le même nom dans les deux cas. Sauf mention contraire,
 on le mesure de la note grave à la note aiguë.
 \end{remarque}
 
-Les fichiers MusicXML qui accompagnent ce document font entendre chaque
-intervalle, joué note après note puis les deux notes ensemble ; la
+Les fichiers MusicXML joints font entendre chaque intervalle ; la
 section~\ref{sec:musicxml} les présente.
 
 % =====================================================================
@@ -221,6 +222,14 @@ Une quarte ne peut pas être majeure, une tierce ne peut pas être juste.
 \gravure{i-sur-do}{0.9}{Les quatorze intervalles simples au-dessus de do, de
 l'unisson à l'octave. La quarte augmentée et la quinte diminuée ont la même
 taille, six demi-tons.}
+
+\begin{remarque}
+\textbf{Abréviations.} Dans le tableau et sous les figures, le numéro s'abrège
+en 2de, 3ce, 4te, 5te, 6te, 7e et 8ve, et la qualité en M (majeure), m
+(mineure), J (juste), aug. (augmentée) et dim. (diminuée) : 3ce m se lit tierce
+mineure, 4te aug. quarte augmentée. On rencontre aussi des formes plus brèves,
+comme 3 m.
+\end{remarque}
 
 D'autres formes existent : do dièse--mi bémol est une tierce diminuée (deux
 demi-tons), do--ré dièse une seconde augmentée (trois), do--do dièse un
@@ -358,12 +367,16 @@ comma, et comment le tempérament égal s'en accommode.
 Un intervalle plus grand qu'une octave est dit \textbf{composé}. Il réunit une
 octave et un intervalle simple, dont il tire son nom : la neuvième
 est une octave plus une seconde, la dixième une octave plus une tierce, et
-ainsi de suite. Il garde la qualité de l'intervalle simple : do--ré de
-l'octave suivante est une neuvième majeure, comme do--ré est une seconde
-majeure.
+ainsi de suite. On dit aussi que la neuvième est une seconde
+\textbf{redoublée}, la dixième une tierce redoublée : \emph{redoubler} un
+intervalle, c'est l'élargir d'une octave, en montant sa note aiguë ou en
+descendant sa note grave. L'intervalle redoublé garde la qualité de
+l'intervalle simple : do--ré de l'octave suivante est une neuvième majeure,
+comme do--ré est une seconde majeure.
 
 La règle des numéros est celle du renversement : la note commune compte deux
-fois, et l'on retire un. Une octave plus une seconde fait 8~+~2~--~1~=~9.
+fois, et l'on retire un. Une octave plus une seconde fait 8~+~2~--~1~=~9 :
+redoubler ajoute sept au numéro, et douze demi-tons à la taille.
 Les intervalles composés sont courants dans l'écriture des accords, où l'on
 parle de neuvième, de onzième ou de treizième.
 
@@ -395,12 +408,13 @@ dérivés d'un unique modèle, le module \texttt{intervalles.py} du dossier \tex
 sur le modèle de hauteurs du guide des gammes : un intervalle y est un couple
 (numéro, qualité), comme une hauteur y est un couple (lettre, altération). Le
 générateur vérifie que construire un intervalle puis le mesurer redonne le
-même nom, et que chaque renversement complète bien l'octave, sur toutes les
+même nom, que chaque renversement complète bien l'octave et que chaque
+intervalle redoublé gagne sept lettres et douze demi-tons, sur toutes les
 toniques des gammes. Pour régénérer l'ensemble :
 
 \begin{center}
 \texttt{python3 outils/generer\_intervalles.py}\\
-\texttt{lilypond -dcrop --formats=pdf gravures/i-*.ly}\\
+\texttt{(cd gravures \&\& lilypond -dcrop --formats=pdf i-*.ly)}\\
 \texttt{pdflatex intervalles.tex}
 \end{center}
 

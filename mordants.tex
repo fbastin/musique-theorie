@@ -103,7 +103,10 @@ Fichier MusicXML joint.\par}
 Un \textbf{mordant} est un ornement : la note écrite, sa voisine, puis de
 nouveau la note, les deux premières très vite, la dernière tenue. Le nom vient
 de l'italien \emph{mordente}, du latin \emph{mordere}, mordre : l'ornement mord
-la note et la lâche aussitôt.
+la note et la lâche aussitôt. Au programme de matières théoriques de l'École de
+musique Vincent-d'Indy, ces notions relèvent des niveaux 3 et 5 ;
+\href{https://www.slashbin.net/musique/theorie/ornements.pdf}{\emph{Les
+ornements}} présentent les autres, de l'appogiature au gruppetto.
 
 À lire après
 \href{https://www.slashbin.net/musique/theorie/lecture.pdf}{\emph{Lire les
@@ -328,7 +331,7 @@ valeur écrite respectée. Pour régénérer l'ensemble :
 
 \begin{center}
 \texttt{python3 outils/generer\_mordants.py}\\
-\texttt{lilypond -dcrop --formats=pdf gravures/m-*.ly}\\
+\texttt{(cd gravures \&\& lilypond -dcrop --formats=pdf m-*.ly)}\\
 \texttt{pdflatex mordants.tex}
 \end{center}
 

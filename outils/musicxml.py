@@ -12,8 +12,10 @@ un dièse à chaque note dièsée, ce qu'aucun éditeur n'imprimerait, et il man
 les bécarres d'annulation à la descente.
 """
 
+from collections import namedtuple
 from datetime import date
 from fractions import Fraction
+from math import lcm
 from xml.sax.saxutils import escape
 
 from gammes import LETTRES, DEMI_TONS, armure_notes
@@ -47,36 +49,53 @@ class Mesure:
 
 
 def _note_xml(note, mesure, duree=1, type_="quarter", accord=False,
-              points=0, liaisons=(), poutres=()):
+              points=0, liaisons=(), poutres=(), nolet=None, marques=()):
     """
-    Une note ; `accord` la joint à la précédente (note simultanée).
+    Une note, ou un silence si `note` est None ; `accord` la joint à la
+    précédente (note simultanée).
 
     `liaisons` : « start » et/ou « stop », pour une note liée à la suivante ou
     à la précédente. `poutres` : couples (niveau, valeur MusicXML), du niveau 1
-    (les croches) au niveau 3 (les triples croches).
+    (les croches) au niveau 4 (les quadruples croches). `nolet` : (réelles,
+    normales, crochet), le crochet valant « start », « stop » ou None, pour une
+    note d'un triolet ou d'un autre groupe irrégulier. `marques` : « fermata »
+    pour un point d'orgue, ou une articulation MusicXML (« staccato »,
+    « accent », « tenuto »…).
     """
-    acc = mesure.accidental(note)
+    acc = mesure.accidental(note) if note is not None else None
     l = [" " * 6 + "<note>"]
     if accord:
         l.append(" " * 8 + "<chord/>")
-    l += [" " * 8 + "<pitch>",
-         " " * 10 + f"<step>{note.lettre}</step>"]
-    if note.alt:
-        l.append(" " * 10 + f"<alter>{note.alt}</alter>")
-    l += [" " * 10 + f"<octave>{note.octave}</octave>",
-          " " * 8 + "</pitch>",
-          " " * 8 + f"<duration>{duree}</duration>"]
+    if note is None:
+        l.append(" " * 8 + "<rest/>")
+    else:
+        l += [" " * 8 + "<pitch>",
+             " " * 10 + f"<step>{note.lettre}</step>"]
+        if note.alt:
+            l.append(" " * 10 + f"<alter>{note.alt}</alter>")
+        l += [" " * 10 + f"<octave>{note.octave}</octave>",
+              " " * 8 + "</pitch>"]
+    l.append(" " * 8 + f"<duration>{duree}</duration>")
     l += [" " * 8 + f"<tie type=\"{t}\"/>" for t in liaisons]
     l += [" " * 8 + "<voice>1</voice>",
           " " * 8 + f"<type>{type_}</type>"]
     l += [" " * 8 + "<dot/>"] * points
     if acc:
         l.append(" " * 8 + f"<accidental>{acc}</accidental>")
+    if nolet:
+        l.append(" " * 8 + f"<time-modification><actual-notes>{nolet[0]}</actual-notes>"
+                 f"<normal-notes>{nolet[1]}</normal-notes></time-modification>")
     l += [" " * 8 + f"<beam number=\"{n}\">{v}</beam>" for n, v in poutres]
-    if liaisons:
-        l.append(" " * 8 + "<notations>"
-                 + "".join(f"<tied type=\"{t}\"/>" for t in liaisons)
-                 + "</notations>")
+    notations = [f"<tied type=\"{t}\"/>" for t in liaisons]
+    if nolet and nolet[2]:
+        notations.append(f"<tuplet type=\"{nolet[2]}\"/>")
+    if "fermata" in marques:
+        notations.append("<fermata type=\"upright\"/>")
+    articulations = [f"<{a}/>" for a in marques if a != "fermata"]
+    if articulations:
+        notations.append("<articulations>" + "".join(articulations) + "</articulations>")
+    if notations:
+        l.append(" " * 8 + "<notations>" + "".join(notations) + "</notations>")
     l.append(" " * 6 + "</note>")
     return l
 
@@ -176,12 +195,14 @@ def partition(titre, sous_titre, entrees, partie="Gammes"):
 # ---------------------------------------------------------------------------
 # Notes de durées quelconques
 # ---------------------------------------------------------------------------
-# Valeurs en fraction de ronde. Huit divisions par noire : la triple croche,
-# la plus brève des notes écrites, en vaut une.
-DIVISIONS = 8
+# Valeurs en fraction de ronde. Le nombre de divisions par noire se calcule
+# pour chaque document : le plus petit qui donne à chaque note une durée
+# entière (huit quand la triple croche est la plus brève, un multiple de trois
+# dès qu'il y a un triolet).
 TYPES = {Fraction(1): "whole", Fraction(1, 2): "half", Fraction(1, 4): "quarter",
-         Fraction(1, 8): "eighth", Fraction(1, 16): "16th", Fraction(1, 32): "32nd"}
-POUTRES = {"eighth": 1, "16th": 2, "32nd": 3}
+         Fraction(1, 8): "eighth", Fraction(1, 16): "16th", Fraction(1, 32): "32nd",
+         Fraction(1, 64): "64th"}
+POUTRES = {"eighth": 1, "16th": 2, "32nd": 3, "64th": 4}
 
 
 def type_et_points(valeur):
@@ -214,29 +235,64 @@ def _poutres(types):
     return res
 
 
-def partition_rythmee(titre, sous_titre, entrees, partie, tempo):
+Nolet = namedtuple("Nolet", "reelles normales notes")
+Nolet.__doc__ = """
+Groupe irrégulier : `reelles` notes écrites dans le temps de `normales`
+(3 pour 2 dans un triolet). Les valeurs de `notes` sont les valeurs écrites.
+"""
+
+CLES = {"G": 2, "F": 4}
+
+
+def _elements(element):
+    """Une entrée de groupe : (note, valeur, liée), avec ou sans ses marques."""
+    note, valeur, liee, *reste = element
+    return note, valeur, liee, (reste[0] if reste else ())
+
+
+def _durees(entrees):
+    """Durées réelles de toutes les notes, en fraction de ronde."""
+    for _, _, _, _, mesures in entrees:
+        for mesure in mesures:
+            for groupe in mesure:
+                rapport = (Fraction(groupe.normales, groupe.reelles)
+                           if isinstance(groupe, Nolet) else 1)
+                notes = groupe.notes if isinstance(groupe, Nolet) else groupe
+                for element in notes:
+                    yield _elements(element)[1] * rapport
+
+
+def partition_rythmee(titre, sous_titre, entrees, partie, tempo, cle="G"):
     """
     Document MusicXML dont chaque note a sa durée.
 
     `entrees` : liste de (libellé, armure, mode, (temps, unité), mesures). Une
     mesure est une liste de groupes, un groupe une liste de (note, valeur,
-    liée) : la valeur en fraction de ronde, `liée` vraie si la note se prolonge
-    dans la suivante. Les notes d'un groupe de plus d'une note sont réunies par
-    des poutres. Chaque entrée s'achève sur une double barre ; un libellé vide
-    prolonge l'entrée précédente, sous une autre armure.
+    liée) ou de (note, valeur, liée, marques) : la valeur en fraction de ronde,
+    `liée` vraie si la note se prolonge dans la suivante, `marques` comme pour
+    `_note_xml`. Une note peut être None (un silence) ou une liste de notes
+    jouées ensemble (un accord). Un groupe peut aussi être un `Nolet`. Les notes
+    d'un groupe de plus d'une note sont réunies par des poutres. Chaque entrée
+    s'achève sur une double barre ; un libellé vide prolonge l'entrée
+    précédente, sous une autre armure. `cle` : « G » (clé de sol) ou « F »
+    (clé de fa).
     """
+    divisions = lcm(*((d * 4).denominator for d in _durees(entrees)))
     out = _debut(titre, sous_titre, partie)
     num = 0
     chiffrage = None
     for libelle, armure, mode, temps, mesures in entrees:
         m = Mesure(armure)
+        # Une liaison peut franchir la barre : la note qui la reçoit, au début
+        # de la mesure suivante, en porte la fin.
+        lie = False
         for j, mesure in enumerate(mesures):
             num += 1
             out.append(f"    <measure number=\"{num}\">\n")
             if j == 0:
                 out.append("      <attributes>\n")
                 if num == 1:
-                    out.append(f"        <divisions>{DIVISIONS}</divisions>\n")
+                    out.append(f"        <divisions>{divisions}</divisions>\n")
                 out.append(f"        <key><fifths>{armure}</fifths>"
                            f"<mode>{mode}</mode></key>\n")
                 if temps != chiffrage:
@@ -244,7 +300,7 @@ def partition_rythmee(titre, sous_titre, entrees, partie, tempo):
                                f"<beat-type>{temps[1]}</beat-type></time>\n")
                     chiffrage = temps
                 if num == 1:
-                    out.append("        <clef><sign>G</sign><line>2</line></clef>\n")
+                    out.append(f"        <clef><sign>{cle}</sign><line>{CLES[cle]}</line></clef>\n")
                 out.append("      </attributes>\n")
                 if num == 1:
                     out.append("      <direction placement=\"above\">\n"
@@ -262,15 +318,26 @@ def partition_rythmee(titre, sous_titre, entrees, partie, tempo):
                                "      </direction>\n")
             else:
                 m.reset()
-            lie = False
             for groupe in mesure:
-                types = [type_et_points(v) for _, v, _ in groupe]
-                poutres = _poutres([t for t, _ in types]) if len(groupe) > 1 else [()] * len(groupe)
-                for (note, valeur, liee), (type_, points), p in zip(groupe, types, poutres):
+                nolet = isinstance(groupe, Nolet)
+                notes = [_elements(e) for e in (groupe.notes if nolet else groupe)]
+                rapport = Fraction(groupe.normales, groupe.reelles) if nolet else 1
+                types = [type_et_points(v) for _, v, _, _ in notes]
+                poutres = (_poutres([t for t, _ in types])
+                           if len(notes) > 1 and all(t in POUTRES for t, _ in types)
+                           else [()] * len(notes))
+                for i, ((note, valeur, liee, marques), (type_, points), p) in enumerate(
+                        zip(notes, types, poutres)):
                     liaisons = (["stop"] if lie else []) + (["start"] if liee else [])
-                    out += [x + "\n" for x in _note_xml(
-                        note, m, duree=int(valeur * 4 * DIVISIONS), type_=type_,
-                        points=points, liaisons=liaisons, poutres=p)]
+                    crochet = "start" if i == 0 else "stop" if i == len(notes) - 1 else None
+                    duree = valeur * rapport * 4 * divisions
+                    accord = note if isinstance(note, (list, tuple)) else [note]
+                    for k, n in enumerate(accord):
+                        out += [x + "\n" for x in _note_xml(
+                            n, m, duree=int(duree), type_=type_, accord=k > 0,
+                            points=points, liaisons=liaisons, poutres=p,
+                            nolet=(groupe.reelles, groupe.normales, crochet) if nolet else None,
+                            marques=marques)]
                     lie = liee
             if j == len(mesures) - 1:
                 out.append("      <barline location=\"right\">\n"

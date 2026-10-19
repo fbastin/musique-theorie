@@ -7,8 +7,8 @@ Produit les gravures et les tableaux du guide « Lire les notes ».
 
 Tout dérive du modèle de hauteurs des autres guides (`gammes.py`) et d'une seule
 donnée par clé : la ligne qu'elle désigne et la note qu'elle y place. La note
-de chaque position, les noms sous les gravures, le tableau des repères et les
-réponses des exercices en découlent. Les affirmations chiffrées du texte sont
+de chaque position, les noms sous les gravures, le tableau des sept clés, celui
+des repères et les réponses des exercices en découlent. Les affirmations chiffrées du texte sont
 vérifiées avant toute écriture.
 """
 
@@ -28,13 +28,29 @@ PREAMBULE_LECTURE = PREAMBULE.replace("outils/generer.py", "outils/generer_lectu
 # 10 la première au-dessus.
 #
 # Une clé : son nom LilyPond, la position qu'elle désigne et la note qu'elle y
-# place (octaves du modèle : 4 est l'octave du do central).
+# place (octaves du modèle : 4 est l'octave du do central). Les sept clés du
+# solfège, rangées de la plus aiguë à la plus grave : d'une clé à la suivante,
+# la même position descend d'une tierce.
 CLES = {
     "sol": ("treble", 2, Note("G", 0, 4)),
-    "fa": ("bass", 6, Note("F", 0, 3)),
+    "ut1": ("soprano", 0, Note("C", 0, 4)),
+    "ut2": ("mezzosoprano", 2, Note("C", 0, 4)),
     "ut3": ("alto", 4, Note("C", 0, 4)),
     "ut4": ("tenor", 6, Note("C", 0, 4)),
+    "fa3": ("varbaritone", 4, Note("F", 0, 3)),
+    "fa": ("bass", 6, Note("F", 0, 3)),
 }
+
+# Nom de chaque clé, dans le texte et les tableaux.
+NOMS_CLES = {"sol": "clé de sol", "ut1": "clé d'ut", "ut2": "clé d'ut",
+             "ut3": "clé d'ut", "ut4": "clé d'ut", "fa3": "clé de fa", "fa": "clé de fa"}
+
+# La clé de sol octaviée : la clé de sol, un 8 dessous ; tout sonne une octave
+# plus bas qu'écrit.
+SOL_OCTAVIEE = "treble_8"
+
+# Le signe d'octave : do5 à fa5, joués sous le signe, écrits do4 à fa4.
+OTTAVA = [Note(L, 0, 6) for L in "CDEF"]
 
 DO_CENTRAL = Note("C", 0, 4)
 
@@ -59,6 +75,16 @@ def position_de(cle, n):
 def nom(n, octave=True):
     """Nom français ; numéro d'octave à la française (do central = do3)."""
     return n.nom_fr() + (str(n.octave - 1) if octave else "")
+
+
+def ligne_de(cle):
+    """« 2e ligne » : la ligne que désigne la clé."""
+    return lieu(CLES[cle][1])
+
+
+def nom_complet(cle):
+    """« clé d'ut 1re ligne »."""
+    return f"{NOMS_CLES[cle]} {ligne_de(cle)}"
 
 
 def lieu(position):
@@ -89,6 +115,39 @@ def verifier():
     assert lieu(-2) == "1re ligne supplémentaire au-dessous"
     assert lieu(10) == "1re ligne supplémentaire au-dessus"
     assert position_de("ut3", DO_CENTRAL) == 4 and position_de("ut4", DO_CENTRAL) == 6
+
+    # Les quatre clés d'ut désignent toutes le do central, sur les lignes 1 à
+    # 4 ; les deux clés de fa, le fa2, sur la 3e et la 4e ligne.
+    for k, cle in enumerate(("ut1", "ut2", "ut3", "ut4")):
+        assert nom(CLES[cle][2]) == nom(DO_CENTRAL) and ligne_de(cle) == lieu(2 * k)
+    assert nom(CLES["fa3"][2]) == nom(CLES["fa"][2]) == "fa2"
+    assert (ligne_de("fa3"), ligne_de("fa")) == ("3e ligne", "4e ligne")
+
+    # Sept clés, sept noms : de la clé de sol à la clé de fa 4e ligne, la
+    # première ligne descend d'une tierce à chaque clé, et porte chaque nom une
+    # fois. Il en va de même à toute position.
+    premieres = [note_a(cle, 0) for cle in CLES]
+    assert [nom(n) for n in premieres] == ["mi3", "do3", "la2", "fa2", "ré2", "si1", "sol1"]
+    assert all(rang(a) - rang(b) == 2 for a, b in zip(premieres, premieres[1:]))
+    for p in range(-6, 15):
+        assert len({note_a(cle, p).lettre for cle in CLES}) == 7
+
+    # En clé d'ut 1re ligne, la note se lit deux noms avant la clé de sol, une
+    # tierce plus bas : la première ligne porte do3 et non mi3.
+    for p in range(-6, 15):
+        assert rang(note_a("sol", p)) - rang(note_a("ut1", p)) == 2
+
+    # Le diapason : le la3 au 2e interligne de la clé de sol.
+    assert nom(note_a("sol", 3)) == "la3" and lieu(3) == "2e interligne"
+
+    # La clé de sol octaviée : à position égale, une octave sous la clé de sol.
+    assert SOL_OCTAVIEE == CLES["sol"][0] + "_8"
+
+    # Le signe d'octave : do5 à fa5 joués, écrits do4 à fa4, dans la portée.
+    assert [nom(n) for n in OTTAVA] == ["do5", "ré5", "mi5", "fa5"]
+    ecrites = [Note(n.lettre, n.alt, n.octave - 1) for n in OTTAVA]
+    assert [nom(n) for n in ecrites] == ["do4", "ré4", "mi4", "fa4"]
+    assert all(0 <= position_de("sol", n) <= 8 for n in ecrites)
 
     # Les clés : sol3 sur la 2e ligne, fa2 sur la 4e.
     assert nom(note_a("sol", 2)) == "sol3" and lieu(2) == "2e ligne"
@@ -169,6 +228,37 @@ def figure_cle(cle):
 """ % (lily, n.lily())
 
 
+def figure_sol_octaviee():
+    """La clé de sol octaviée et la note de sa deuxième ligne, sol3 écrit."""
+    _, p, n = CLES["sol"]
+    return r"""\score {
+  \new Staff {
+    \clef "%s"
+    \omit Staff.TimeSignature
+    \cadenzaOn
+    %s1
+    \bar "|."
+  }
+  \layout { }
+}
+""" % (SOL_OCTAVIEE, n.lily())
+
+
+def figure_ottava():
+    """Quatre notes sous le signe 8va : écrites une octave plus bas qu'elles ne sonnent."""
+    return r"""\score {
+  \new Staff {
+    \clef treble
+    \omit Staff.TimeSignature
+    \cadenzaOn
+    \ottava #1 %s \ottava #0
+    \bar "|."
+  }
+  \layout { }
+}
+""" % " ".join(n.lily() + "1" for n in OTTAVA)
+
+
 def figure_grande_portee():
     """Le do central dans les deux portées, puis une gamme qui passe de l'une à l'autre."""
     montee = gamme_diatonique(note_a("fa", 6), 9)           # de fa2 à sol3
@@ -198,6 +288,7 @@ def figure_grande_portee():
 EXERCICES = {
     "sol": [2, 5, -2, 8, 0, 6, 3, 10, -1, 7, 4, 12],
     "fa": [6, 3, 10, 0, 8, -2, 5, 1, 12, 4, 7, -1],
+    "ut1": [0, 4, 7, -2, 2, 9, 5, 1, 10, 6, -1, 3],
 }
 
 
@@ -229,6 +320,8 @@ def ecrire_gravures():
                            preambule=PREAMBULE_LECTURE))
     for cle in CLES:
         produits.append(ecrire(f"l-cle-{cle}", figure_cle(cle), preambule=PREAMBULE_LECTURE))
+    produits.append(ecrire("l-cle-sol8", figure_sol_octaviee(), preambule=PREAMBULE_LECTURE))
+    produits.append(ecrire("l-ottava", figure_ottava(), preambule=PREAMBULE_LECTURE))
     contenu, _ = figure_grande_portee()
     produits.append(ecrire("l-grande-portee", contenu, preambule=PREAMBULE_LECTURE))
     for cle in EXERCICES:
@@ -251,18 +344,46 @@ def ecrire_tex(nom_fichier, contenu):
 
 
 def tableau_reperes():
+    """Les notes des lignes et des interlignes, dans les sept clés."""
     l = [r"\begin{tabular}{@{}l *{5}{c} @{\hspace{14pt}} *{4}{c}@{}}",
          r"\toprule",
          r" & \multicolumn{5}{c}{\textbf{Lignes}} & \multicolumn{4}{c}{\textbf{Interlignes}} \\",
          r"\cmidrule(lr){2-6}\cmidrule(l){7-10}",
          r" & 1 & 2 & 3 & 4 & 5 & 1 & 2 & 3 & 4 \\",
          r"\midrule"]
-    for cle, libelle in (("sol", "Clé de sol"), ("fa", "Clé de fa")):
+    for cle in CLES:
         lignes = [nom(note_a(cle, p)) for p in range(0, 9, 2)]
         inter = [nom(note_a(cle, p)) for p in range(1, 8, 2)]
+        libelle = "C" + NOMS_CLES[cle][1:] + " " + exposant(CLES[cle][1]).replace(" ", "~")
         l.append(libelle + " & " + " & ".join(lignes + inter) + r" \\")
+        if cle in ("sol", "ut4"):
+            l.append(r"\addlinespace[3pt]")
     l += [r"\bottomrule", r"\end{tabular}"]
     return "\n".join(l) + "\n"
+
+
+def exposant(position):
+    """« 2\textsuperscript{e} ligne » pour LaTeX."""
+    k = position // 2 + 1
+    return r"%d\textsuperscript{%s} ligne" % (k, "re" if k == 1 else "e")
+
+
+def tableau_cles():
+    """
+    Les sept clés, chacune avec la note qu'elle désigne et sa ligne : la clé de
+    sol et les deux clés de fa, puis les quatre clés d'ut.
+    """
+    def bloc(cles, largeur):
+        cols = "c" * len(cles)
+        images = " &\n".join(r"\includegraphics{l-cle-%s.cropped.pdf}" % c for c in cles)
+        noms = " & ".join(r"\small %s" % NOMS_CLES[c] for c in cles)
+        notes = " &\n".join(r"\small\color{mygray} %s, %s" % (nom(CLES[c][2]), exposant(CLES[c][1]))
+                            for c in cles)
+        return (r"\begin{tabular*}{%s\linewidth}{@{\extracolsep{\fill}}%s@{}}" % (largeur, cols) + "\n"
+                + images + r" \\[2pt]" + "\n" + noms + r" \\" + "\n" + notes + r" \\" + "\n"
+                + r"\end{tabular*}" + "\n")
+    return (bloc(["sol", "fa", "fa3"], "0.68") + r"\\[10pt]" + "\n"
+            + bloc(["ut1", "ut2", "ut3", "ut4"], "0.9"))
 
 
 def tikz_onze_lignes():
@@ -290,7 +411,8 @@ def tikz_onze_lignes():
 
 def reponses():
     blocs = []
-    for cle, libelle in (("sol", "En clé de sol"), ("fa", "En clé de fa")):
+    for cle, libelle in (("sol", "En clé de sol"), ("fa", "En clé de fa"),
+                         ("ut1", "En clé d'ut 1\\textsuperscript{re} ligne")):
         _, notes = figure_exercice(cle)
         items = ", ".join(f"{i}~:~{nom(n)}" for i, n in enumerate(notes, 1))
         blocs.append(r"\textbf{%s.} %s." % (libelle, items))
@@ -303,7 +425,8 @@ def legende_grande_portee():
 
 
 def ecrire_tableaux():
-    return [ecrire_tex("lecture-reperes.tex", tableau_reperes()),
+    return [ecrire_tex("lecture-cles.tex", tableau_cles()),
+            ecrire_tex("lecture-reperes.tex", tableau_reperes()),
             ecrire_tex("lecture-onze-lignes.tex", tikz_onze_lignes()),
             ecrire_tex("lecture-reponses.tex", reponses())]
 

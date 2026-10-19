@@ -123,7 +123,9 @@ Fichiers MusicXML joints.\par}
 Les gammes majeures et mineures se construisent toutes à partir du
 \emph{tétracorde} : un groupe de quatre notes qui, répété et transposé,
 engendre la gamme majeure, explique le cycle des quintes et rend les trois
-gammes mineures comparables entre elles.
+gammes mineures comparables entre elles. Au programme de matières théoriques
+de l'École de musique Vincent-d'Indy, ces notions relèvent des niveaux 1, 3, 5
+et 6.
 
 Les intervalles — seconde, tierce, quarte juste, triton, seconde augmentée —
 sont employés ici sans être redéfinis : leur construction, un numéro compté en
@@ -425,11 +427,16 @@ tonalité voisine impose l'autre.
 \section{Les gammes mineures}
 \label{sec:mineures}
 
-\subsection{La mineure naturelle, ou relative}
+\subsection{La mineure naturelle}
 
 À toute gamme majeure correspond une gamme mineure qui emploie exactement les
 mêmes notes, mais prend pour tonique son \emph{sixième degré}. À do majeur
-répond la mineur ; l'armure est la même, le centre de gravité a changé.
+répond la mineur, son \emph{relatif} : même armure, autre centre de
+gravité. Les trois formes de la mineure de la sont des mineures
+\textbf{relatives} ; la \textbf{directe}, ou homonyme, garde la
+tonique : do mineur, trois bémols
+(\href{https://www.slashbin.net/musique/theorie/tonalites.pdf}{\emph{Les
+tonalités}}).
 
 En tétracordes, la mineure naturelle se lit : tétracorde \emph{mineur}, ton
 disjonctif, tétracorde \emph{phrygien}.
@@ -447,7 +454,7 @@ L'attraction vers la tonique disparaît, et l'accord bâti sur la dominante
 devient mineur — en la mineur, mi--sol--si au lieu de mi--sol dièse--si. La
 cadence parfaite, qui fait reposer une phrase, perd sa force.
 
-La solution est directe : on hausse le septième degré d'un demi-ton. La
+La solution est simple : on hausse le septième degré d'un demi-ton. La
 sensible réapparaît, l'accord de dominante redevient majeur, la cadence
 retrouve son effet. C'est de cet usage harmonique que la gamme tire son nom.
 
@@ -806,7 +813,7 @@ finissent par se contredire. Pour régénérer l'ensemble :
 
 \begin{center}
 \texttt{python3 outils/generer.py}\\
-\texttt{lilypond -dcrop --formats=pdf gravures/*.ly}\\
+\texttt{(cd gravures \&\& lilypond -dcrop --formats=pdf *.ly)}\\
 \texttt{pdflatex gammes.tex}
 \end{center}
 

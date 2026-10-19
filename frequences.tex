@@ -127,6 +127,8 @@ Expériences à faire au synthétiseur de slashbin.net :\\
 Une note est une \textbf{fréquence}, un intervalle un \textbf{rapport} entre
 deux fréquences. Mesurées ainsi, douze quintes ne font pas tout à fait sept
 octaves --- l'écart est le \emph{comma} ---, et le piano doit s'en accommoder.
+Ces notions débordent le programme de matières théoriques de l'École de musique
+Vincent-d'Indy, qui n'en retient que le diapason, au niveau 3.
 
 Chaque idée se vérifie à l'oreille au \synth{} de slashbin.net. Les encadrés à
 filet rouge proposent ces expériences ; la plupart sont réunies à la
@@ -665,7 +667,7 @@ l'ensemble :
 \medskip\noindent\begin{minipage}{\linewidth}
 \centering
 \texttt{python3 outils/generer\_frequences.py}\\
-\texttt{lilypond -dcrop --formats=pdf gravures/freq-harmoniques.ly}\\
+\texttt{(cd gravures \&\& lilypond -dcrop --formats=pdf freq-harmoniques.ly)}\\
 \texttt{pdflatex frequences.tex}
 \end{minipage}
 

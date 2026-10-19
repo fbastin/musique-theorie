@@ -685,6 +685,22 @@ def lire_armures():
     return lignes
 
 
+def verifier_parentes():
+    """
+    Mineures relatives et directes, telles que le guide les définit : la
+    relative garde l'armure de la majeure et prend pour tonique son sixième
+    degré ; la directe garde sa tonique, et compte trois bémols de plus (ou
+    trois dièses de moins) — do mineur, trois bémols.
+    """
+    par_tonique_mineure = {min_: armure for armure, _, min_ in TONALITES}
+    for armure, maj, min_ in TONALITES:
+        g = gamme(note_de(maj, 4), "majeure")
+        assert _meme_note(g[5], note_de(min_)), (maj, min_)
+        if maj in par_tonique_mineure:
+            assert par_tonique_mineure[maj] == armure - 3, maj
+    assert par_tonique_mineure["C"] == -3
+
+
 def _nom_accidentel(note, armure):
     """Le nom de l'altération à écrire : bécarre quand elle annule un bémol de l'armure."""
     if note.alt == 0 and armure < 0 and note.lettre in armure_notes(armure):
@@ -808,6 +824,7 @@ def ecrire_planches():
 
 
 if __name__ == "__main__":
+    verifier_parentes()
     quoi = set(a for a in sys.argv[1:])
     tout = not quoi
     if tout or "--musicxml" in quoi:

@@ -6,8 +6,8 @@ ornements joués.
 
 Un point mérite l'attention : `<alter>` porte le *son*, `<accidental>` porte ce
 qui est *imprimé*. Les deux se déduisent différemment. Une altération ne
-s'imprime que si elle contredit l'état courant de la mesure — lequel repart de
-l'armure à chaque barre. Sans cette règle, une gamme mineure mélodique afficherait
+s'imprime que si elle contredit l'état courant de la mesure à cette position
+(même lettre, même octave) — lequel repart de l'armure à chaque barre. Sans cette règle, une gamme mineure mélodique afficherait
 un dièse à chaque note dièsée, ce qu'aucun éditeur n'imprimerait, et il manquerait
 les bécarres d'annulation à la descente.
 """
@@ -38,13 +38,17 @@ class Mesure:
         """Début de mesure : seule l'armure est en vigueur."""
         alteres = armure_notes(self.armure)
         signe = 1 if self.armure > 0 else -1
-        self.etat = {L: (signe if L in alteres else 0) for L in LETTRES}
+        # L'armure vaut pour toutes les octaves ; une altération accidentelle,
+        # pour la seule position où elle est écrite (même lettre, même octave).
+        self.par_armure = {L: (signe if L in alteres else 0) for L in LETTRES}
+        self.etat = {}
 
     def accidental(self, note):
         """Altération à imprimer, ou None."""
-        if note.alt == self.etat[note.lettre]:
+        position = (note.lettre, note.octave)
+        if note.alt == self.etat.get(position, self.par_armure[note.lettre]):
             return None
-        self.etat[note.lettre] = note.alt
+        self.etat[position] = note.alt
         return ACCIDENTAL[note.alt]
 
 
@@ -199,7 +203,7 @@ def partition(titre, sous_titre, entrees, partie="Gammes"):
 # pour chaque document : le plus petit qui donne à chaque note une durée
 # entière (huit quand la triple croche est la plus brève, un multiple de trois
 # dès qu'il y a un triolet).
-TYPES = {Fraction(1): "whole", Fraction(1, 2): "half", Fraction(1, 4): "quarter",
+TYPES = {Fraction(2): "breve", Fraction(1): "whole", Fraction(1, 2): "half", Fraction(1, 4): "quarter",
          Fraction(1, 8): "eighth", Fraction(1, 16): "16th", Fraction(1, 32): "32nd",
          Fraction(1, 64): "64th"}
 POUTRES = {"eighth": 1, "16th": 2, "32nd": 3, "64th": 4}
@@ -339,6 +343,100 @@ def partition_rythmee(titre, sous_titre, entrees, partie, tempo, cle="G"):
                             nolet=(groupe.reelles, groupe.normales, crochet) if nolet else None,
                             marques=marques)]
                     lie = liee
+            if j == len(mesures) - 1:
+                out.append("      <barline location=\"right\">\n"
+                           "        <bar-style>light-light</bar-style>\n"
+                           "      </barline>\n")
+            out.append("    </measure>\n")
+
+    out.append("  </part>\n</score-partwise>\n")
+    return "".join(out)
+
+
+# ---------------------------------------------------------------------------
+# Grande portée de piano
+# ---------------------------------------------------------------------------
+def _sur_portee(lignes, portee):
+    """
+    Une note de `_note_xml` placée sur la portée `portee` (1 en haut, 2 en
+    bas), dans la voix de cette portée. `<staff>` vient après la figure et ses
+    altérations, avant les poutres et les notations.
+    """
+    voix = "1" if portee == 1 else "5"
+    lignes = [x.replace("<voice>1</voice>", f"<voice>{voix}</voice>") for x in lignes]
+    i = next(k for k, x in enumerate(lignes)
+             if x.lstrip().startswith(("<beam", "<notations", "</note>")))
+    return lignes[:i] + [" " * 8 + f"<staff>{portee}</staff>"] + lignes[i:]
+
+
+def partition_piano(titre, sous_titre, entrees, partie, tempo):
+    """
+    Document MusicXML sur une grande portée de piano : clé de sol en haut, clé
+    de fa en bas.
+
+    `entrees` : liste de (libellé, armure, mode, (temps, unité), mesures). Une
+    mesure est un couple (main droite, main gauche), chaque main une liste de
+    (notes, valeur) : `notes` est une note, une liste de notes jouées ensemble
+    ou None (un silence), la valeur en fraction de ronde. Les altérations
+    s'impriment portée par portée, comme dans une partition de piano. Chaque
+    entrée s'achève sur une double barre.
+    """
+    valeurs = [v for _, _, _, _, mesures in entrees for mains in mesures
+               for main in mains for _, v in main]
+    divisions = lcm(*((v * 4).denominator for v in valeurs))
+    out = _debut(titre, sous_titre, partie)
+    num = 0
+    chiffrage = None
+    for libelle, armure, mode, temps, mesures in entrees:
+        etats = (Mesure(armure), Mesure(armure))
+        for j, mains in enumerate(mesures):
+            num += 1
+            out.append(f"    <measure number=\"{num}\">\n")
+            if j == 0:
+                out.append("      <attributes>\n")
+                if num == 1:
+                    out.append(f"        <divisions>{divisions}</divisions>\n")
+                out.append(f"        <key><fifths>{armure}</fifths>"
+                           f"<mode>{mode}</mode></key>\n")
+                if temps != chiffrage:
+                    out.append(f"        <time><beats>{temps[0]}</beats>"
+                               f"<beat-type>{temps[1]}</beat-type></time>\n")
+                    chiffrage = temps
+                if num == 1:
+                    out.append("        <staves>2</staves>\n"
+                               "        <clef number=\"1\"><sign>G</sign><line>2</line></clef>\n"
+                               "        <clef number=\"2\"><sign>F</sign><line>4</line></clef>\n")
+                out.append("      </attributes>\n")
+                if num == 1:
+                    out.append("      <direction placement=\"above\">\n"
+                               "        <direction-type>\n"
+                               "          <metronome><beat-unit>quarter</beat-unit>"
+                               f"<per-minute>{tempo}</per-minute></metronome>\n"
+                               "        </direction-type>\n"
+                               "        <staff>1</staff>\n"
+                               f"        <sound tempo=\"{tempo}\"/>\n"
+                               "      </direction>\n")
+                if libelle:
+                    out.append("      <direction placement=\"above\">\n"
+                               "        <direction-type>\n"
+                               f"          <words font-weight=\"bold\">{escape(libelle)}</words>\n"
+                               "        </direction-type>\n"
+                               "        <staff>1</staff>\n"
+                               "      </direction>\n")
+            else:
+                for e in etats:
+                    e.reset()
+            for portee, (main, etat) in enumerate(zip(mains, etats), start=1):
+                if portee == 2:
+                    total = sum(v for _, v in mains[0]) * 4 * divisions
+                    out.append(f"      <backup><duration>{int(total)}</duration></backup>\n")
+                for notes, valeur in main:
+                    type_, points = type_et_points(valeur)
+                    accord = notes if isinstance(notes, (list, tuple)) else [notes]
+                    for k, x in enumerate(accord):
+                        out += [y + "\n" for y in _sur_portee(_note_xml(
+                            x, etat, duree=int(valeur * 4 * divisions), type_=type_,
+                            accord=k > 0, points=points), portee)]
             if j == len(mesures) - 1:
                 out.append("      <barline location=\"right\">\n"
                            "        <bar-style>light-light</bar-style>\n"

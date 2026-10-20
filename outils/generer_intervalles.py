@@ -77,6 +77,52 @@ def verifier_redoublement():
     assert re_suivant.hauteur - DO.hauteur == demi_tons(2, "majeure") + 12
 
 
+# Qualités au-delà des formes usuelles : un demi-ton de plus que l'augmentée,
+# un de moins que la diminuée.
+ETENDUES_JUSTE = {-2: "sous-diminuée", -1: "diminuée", 0: "juste", 1: "augmentée",
+                  2: "sur-augmentée"}
+ETENDUES_MAJEUR = {-3: "sous-diminuée", -2: "diminuée", -1: "mineure", 0: "majeure",
+                   1: "augmentée", 2: "sur-augmentée"}
+
+
+def qualite_etendue(grave, aigu):
+    """Numéro et qualité d'un intervalle simple, sur-augmenté et sous-diminué compris."""
+    from intervalles import JUSTES, REFERENCE
+    numero = (aigu.idx - grave.idx) % 7 + 1
+    ecart = aigu.hauteur - grave.hauteur - REFERENCE[numero]
+    return numero, (ETENDUES_JUSTE if numero in JUSTES else ETENDUES_MAJEUR)[ecart]
+
+
+DEMI_TONS = [(DO, note_de("C#", 4), "chromatique"), (note_de("C#", 4), note_de("D", 4), "diatonique"),
+             (DO, note_de("Db", 4), "diatonique"), (note_de("Db", 4), note_de("D", 4), "chromatique")]
+
+
+def verifier_complements():
+    """
+    Les deux demi-tons : sur une même lettre, un unisson augmenté, le demi-ton
+    chromatique ; entre deux lettres voisines, une seconde mineure, le demi-ton
+    diatonique. Un ton en réunit un de chaque sorte, dans un ordre ou dans
+    l'autre. Puis les formes sur-augmentée et sous-diminuée du texte.
+    """
+    for grave, aigu, sorte in DEMI_TONS:
+        assert aigu.hauteur - grave.hauteur == 1
+        attendu = (1, "augmentée") if sorte == "chromatique" else (2, "mineure")
+        assert analyser(grave, aigu) == attendu, (grave, aigu)
+        assert (grave.lettre == aigu.lettre) == (sorte == "chromatique")
+    assert analyser(note_de("E", 4), note_de("F", 4)) == (2, "mineure")
+    assert analyser(DO, note_de("D", 4)) == (2, "majeure")
+    # Do bémol–fa dièse, sept demi-tons : une quarte sur-augmentée ; do
+    # dièse–sol bémol, cinq : une quinte sous-diminuée. Les formes usuelles
+    # restent celles du modèle commun.
+    assert qualite_etendue(note_de("Cb", 4), note_de("F#", 4)) == (4, "sur-augmentée")
+    assert note_de("F#", 4).hauteur - note_de("Cb", 4).hauteur == 7
+    assert qualite_etendue(note_de("C#", 4), note_de("Gb", 4)) == (5, "sous-diminuée")
+    assert note_de("Gb", 4).hauteur - note_de("C#", 4).hauteur == 5
+    for n, q in SIMPLES:
+        if n < 8:
+            assert qualite_etendue(DO, au_dessus(DO, n, q)) == (n, q)
+
+
 # ---------------------------------------------------------------------------
 # MusicXML
 # ---------------------------------------------------------------------------
@@ -159,6 +205,16 @@ def figure_compter():
     return ENTETE_PORTEE + corps + PIED_PORTEE
 
 
+def figure_demi_tons():
+    """Un ton, coupé en deux demi-tons de deux sortes, dans un ordre puis dans l'autre."""
+    corps = "    \\key c \\major\n"
+    for grave, aigu, sorte in DEMI_TONS:
+        corps += groupe([grave, aigu], sorte)
+    # Les libellés sont plus larges que les crochets : on écarte les notes.
+    return ENTETE_PORTEE + corps + PIED_PORTEE.replace("spacing-increment = #2.2",
+                                                         "spacing-increment = #5")
+
+
 def figure_sur_do():
     suite = sur_do()
     return portee_avec_libelles([accord(g, a) for _, g, a in suite],
@@ -191,6 +247,7 @@ FIGURES = {
     "i-compter": figure_compter,
     "i-sur-do": figure_sur_do,
     "i-enharmonie": figure_enharmonie,
+    "i-demi-tons": figure_demi_tons,
     "i-renversements": figure_renversements,
     "i-gamme-majeure": figure_gamme_majeure,
 }
@@ -219,6 +276,7 @@ def ecrire_table():
 if __name__ == "__main__":
     verifier()
     verifier_redoublement()
+    verifier_complements()
     for c in ecrire_musicxml():
         print("MusicXML :", os.path.relpath(c, RACINE))
     print("Tableau :", os.path.relpath(ecrire_table(), RACINE))

@@ -110,7 +110,8 @@ Gravures LilyPond, composition \LaTeX.\par}
 Une note s'écrit par sa position sur la portée, et la clé dit quelle note
 occupe chaque position : elle en nomme une, les autres s'en déduisent en
 comptant. Lire, c'est d'abord compter à partir de la clé, puis, à force de
-repères, ne plus compter.
+repères, ne plus compter. Les altérations, enfin, haussent ou baissent une note
+sans changer sa position.
 
 À lire avant
 \href{https://www.slashbin.net/musique/theorie/intervalles.pdf}{\emph{Les
@@ -253,9 +254,7 @@ deuxième, alto sur la troisième, ténor sur la quatrième. Aujourd'hui, l'alto
 lit la clé d'ut 3\textsuperscript{e} ligne, et le violoncelle, le basson et le
 trombone passent à la 4\textsuperscript{e} pour leur aigu : entre les deux
 clés principales, elles épargnent les lignes supplémentaires. La clé d'ut
-1\textsuperscript{re} ligne reste pratiquée en solfège ; à l'École de musique
-Vincent-d'Indy, elle y entre au niveau 7, avant la 3\textsuperscript{e} ligne
-au niveau 8 et la 4\textsuperscript{e} au niveau 9.
+1\textsuperscript{re} ligne reste pratiquée en solfège.
 
 \textbf{Sept clés, sept noms.} Rangées de la plus aiguë à la plus grave ---
 sol 2\textsuperscript{e} ligne ; ut 1\textsuperscript{re},
@@ -354,14 +353,102 @@ et une tierce seulement plus bas : la première ligne, mi3 en clé de sol, y por
 do3.
 
 % =====================================================================
-% Une page à part : sans ce saut, le titre et sa phrase restaient seuls en bas
-% de page, les deux portées d'exercices sur la suivante.
-\clearpage
+\section{Les altérations}
+\label{sec:alterations}
+
+\textbf{Le demi-ton.} Sept noms ne suffisent pas à tous les sons : entre do et
+ré, le clavier du piano place une touche noire. L'écart entre deux touches
+voisines, blanche ou noire, est le \emph{demi-ton} ; deux demi-tons font un
+\emph{ton}. Mi et fa, si et do n'ont pas de touche noire entre eux : ils ne
+sont qu'à un demi-ton l'un de l'autre, les autres notes voisines à un ton.
+\href{https://www.slashbin.net/musique/theorie/intervalles.pdf}{\emph{Les
+intervalles}} mesurent ainsi toute distance entre deux notes.
+
+\textbf{Trois signes.} Une \emph{altération} change la hauteur d'une note sans
+changer sa position sur la portée. Le \emph{dièse} ($\sharp$) la hausse d'un
+demi-ton, le \emph{bémol} ($\flat$) la baisse d'un demi-ton, le \emph{bécarre}
+($\natural$) annule l'un ou l'autre et rend la note \emph{naturelle}. La note
+garde son nom, suivi de celui de l'altération : fa dièse, si bémol.
+
+\textbf{Les doubles altérations.} Le \emph{double dièse}, une petite croix,
+hausse la note d'un ton ; le \emph{double bémol}, deux bémols accolés, la
+baisse d'un ton. On les rencontre sur une note que l'armure altère déjà, ou
+quand une gamme les exige. Pour revenir d'un double dièse à un dièse simple, on
+écrit aujourd'hui un dièse ; l'usage ancien faisait précéder ce dièse d'un
+bécarre.
+
+\gravure{l-alterations}{0.85}{Sol et ses altérations, dans une même mesure :
+chaque signe vaut jusqu'au suivant, et le bécarre final efface le double
+bémol. Le double dièse fait entendre la, le double bémol fa.}
+
+\textbf{Devant la note.} L'altération s'écrit à gauche de la tête de la note,
+sur la même ligne ou dans le même interligne : on la lit avant la note qu'elle
+modifie. On la dit pourtant après : on lit « fa dièse ».
+
+\textbf{L'altération accidentelle.} Écrite en cours de morceau, une altération
+est dite \emph{accidentelle}. Elle vaut pour la note qu'elle précède et pour
+les notes qui occupent la même position dans la suite de la mesure ; la barre
+de mesure l'efface. Elle ne touche que cette position : la même note une octave
+plus haut ou plus bas, sur une autre ligne, n'est pas altérée. Elle ne touche
+aussi que sa portée : au piano, un dièse de la main droite laisse la main gauche
+en l'état. Seule exception à la barre : une note altérée \emph{liée} à la même
+note, par-dessus la barre, la prolonge avec son altération, sans qu'on la
+réécrive. La liaison ne vaut que pour la note liée.
+
+\par\medskip\noindent
+\begin{minipage}{\linewidth}
+\centering
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}cc@{}}
+\includegraphics[width=0.44\linewidth]{l-accidentelle.cropped.pdf} &
+\includegraphics[width=0.46\linewidth]{l-liaison.cropped.pdf} \\
+\end{tabular*}
+\legende{À gauche, le dièse court jusqu'à la barre : le fa du premier
+interligne, sans signe, est encore dièse ; celui de la cinquième ligne ne l'est
+pas ; après la barre, fa redevient naturel. À droite, le fa dièse lié passe la
+barre ; le fa suivant, sans liaison, est naturel.}
+\end{minipage}\par\medskip
+
+\textbf{L'armure.} Les altérations qui reviennent tout au long d'un morceau
+s'écrivent une fois pour toutes après la clé, au début de chaque portée : c'est
+l'\emph{armure}, et ses altérations sont dites \emph{constitutives}, ou à la
+clé. Elles valent à toutes les octaves, pendant tout le morceau ou jusqu'à un
+changement d'armure. Les dièses s'y rangent toujours dans le même ordre --- fa,
+do, sol, ré, la, mi, si ---, les bémols dans l'ordre inverse --- si, mi, la, ré,
+sol, do, fa. \href{https://www.slashbin.net/musique/theorie/gammes.pdf}{\emph{Les
+gammes}} expliquent cet ordre, et comment l'armure désigne la tonalité.
+
+\textbf{Pas de cumul.} Une altération accidentelle ne s'ajoute pas à celle de
+l'armure : elle la remplace, pour sa position et jusqu'à la barre. En sol
+majeur, dont l'armure porte fa dièse, un bécarre rend fa naturel ; un double
+dièse donne fa double dièse, un demi-ton seulement au-dessus du fa dièse de
+l'armure.
+
+\gravure{l-armure}{0.65}{En sol majeur, l'armure hausse tous les fa, à toutes
+les octaves. Le bécarre rend fa naturel jusqu'à la barre ; après elle,
+l'armure reprend ses droits. Le double dièse remplace son dièse sans s'y
+ajouter.}
+
+\textbf{L'altération de précaution.} La règle suffit, mais le lecteur hésite
+parfois : sur la même note à une autre octave, ou après une barre qui a effacé
+un dièse. On y écrit alors une altération que rien n'oblige à écrire,
+l'\emph{altération de précaution}, souvent entre parenthèses. Elle ne change
+rien au son : elle le confirme.
+
+\gravure{l-precaution}{0.30}{Deux bécarres de précaution, le second entre
+parenthèses. Sans eux, ces deux fa seraient déjà naturels.}
+
+\textbf{Même son, autre nom.} Mi dièse sonne comme fa, do double dièse comme
+ré : au piano, ce sont les mêmes touches. Deux noms d'un même son sont dits
+\emph{enharmoniques} ; \emph{Les intervalles} montrent comment l'écriture
+choisit entre eux.
+
+% =====================================================================
 \section{S'exercer}
 \label{sec:exercices}
 
-Les notes ci-dessous sont à nommer, avec leur numéro d'octave. Les réponses
-suivent.
+Les notes des trois premières portées sont à nommer avec leur numéro d'octave ;
+celles de la dernière, avec leur altération, en tenant compte de l'armure et
+des barres de mesure. Les réponses suivent.
 
 \gravure{l-exercice-sol}{1}{En clé de sol.}
 
@@ -369,7 +456,10 @@ suivent.
 
 \gravure{l-exercice-ut1}{1}{En clé d'ut 1\textsuperscript{re} ligne.}
 
-\begin{remarque}
+\gravure{l-exercice-alterations}{0.94}{En fa majeur : l'armure porte si bémol.}
+
+% Les réponses ne se coupent pas : elles passent ensemble sur la page suivante.
+\begin{remarque}[nobreak=true]
 \textbf{Réponses.}
 
 \input{gravures/lecture-reponses.tex}
@@ -384,10 +474,15 @@ par \textbf{\LaTeX}. Les figures, le tableau des clés, celui des repères, la
 portée de onze lignes et les réponses des exercices dérivent du modèle de
 hauteurs des autres guides, le module \texttt{gammes.py} du dossier
 \texttt{outils}, et d'une seule donnée par clé : la ligne qu'elle désigne et la
-note qu'elle y place. Avant d'écrire quoi que ce soit, le générateur vérifie ce
-que le texte affirme : la place du do central dans chaque clé, les onze lignes
-de la grande portée, l'écart de deux noms entre la clé de sol et la clé de fa,
-la tierce qui sépare chaque clé de la suivante. Pour régénérer l'ensemble :
+note qu'elle y place. Les altérations s'y lisent selon une règle, et les noms
+gravés sous les notes sont ceux qu'elle donne. Avant d'écrire quoi que ce soit,
+le générateur vérifie ce que le texte affirme : la place du do central dans
+chaque clé, les onze lignes de la grande portée, l'écart de deux noms entre la
+clé de sol et la clé de fa, la tierce qui sépare chaque clé de la suivante, le
+demi-ton de chaque altération, l'altération accidentelle bornée à sa position
+et à sa mesure, la liaison qui la prolonge, l'armure qu'elle remplace sans s'y
+ajouter, et chaque signe gravé exigé par la règle, sauf ceux de précaution.
+Pour régénérer l'ensemble :
 
 \begin{center}
 \texttt{python3 outils/generer\_lecture.py}\\

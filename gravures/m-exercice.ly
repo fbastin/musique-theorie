@@ -17,7 +17,7 @@
 \score {
   \new Staff  {
       \clef treble \time 4/4 \override TextScript.staff-padding = #4
-      \key g \major g'4\mordent_\markup \small 1 a'8 b'8 c''4 b'4\mordent_\markup \small 2 | a'4 d''4\prall_\markup \small 3 c''4\mordent_\markup \small 4 b'4 | e''4\prall_\markup \small 5 d''8 c''8 a'4-\tweak self-alignment-X #CENTER ^\markup \override #'(baseline-skip . 1.9) \center-column { \musicglyph "scripts.mordent" \teeny \sharp }_\markup \small 6 b'4\prall_\markup \small 7 | fis'4\mordent_\markup \small 8 a'4 g'2\prallmordent_\markup \small 9
+      \key g \major g'4\mordent_\markup \small 1 a'8 b'8 c''4 b'4\mordent_\markup \small 2 | a'4 d''4\prall_\markup \small 3 c''4\mordent_\markup \small 4 b'4 | e''4\prall_\markup \small 5 d''8 c''8 a'4-\tweak self-alignment-X #CENTER ^\markup \override #'(baseline-skip . 1.9) \center-column { \musicglyph "scripts.mordent" \teeny \sharp }_\markup \small 6 b'4\prall_\markup \small 7 | a'4 fis'4\trill_\markup \small 8 g'2\prallmordent_\markup \small 9
       \bar "|."
     }
   \layout {

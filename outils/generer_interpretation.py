@@ -69,7 +69,11 @@ CHANGEMENTS_MOUVEMENT = [
     Changement("meno mosso", "", "moins animé", -1, False),
     Changement("a tempo", "", "au mouvement : celui d'avant le changement", 0, False),
     Changement("tempo primo", "Tempo I", "le premier mouvement", 0, False),
+    Changement("l'istesso tempo", "", "le même mouvement : la pulsation ne change pas avec la mesure",
+               0, False),
     Changement("tempo rubato", "rubato", "temps dérobé : pressé ici, rendu là", 0, False),
+    Changement("ad libitum", "ad lib.", "à volonté : le mouvement laissé à l'interprète", 0, False),
+    Changement("a piacere", "", "à plaisir : librement", 0, False),
 ]
 
 # Les nuances, du plus doux au plus fort : signe, terme, sens, et vélocité MIDI
@@ -91,8 +95,11 @@ CHANGEMENTS_NUANCE = [
     ("decrescendo", r"\emph{decresc.}, $>$", "en décroissant"),
     ("diminuendo", r"\emph{dim.}, $>$", "en diminuant"),
     ("morendo", "", "en mourant : en s'éteignant"),
+    ("smorzando", r"\emph{smorz.}", "en étouffant : en s'éteignant"),
+    ("perdendosi", r"\emph{perd.}", "en se perdant : en s'éteignant peu à peu"),
     ("subito", r"\emph{sub.}", "soudain : \\emph{p subito}, aussitôt doux"),
     ("sforzando", r"\textbf{\emph{sf}}, \textbf{\emph{sfz}}", "en forçant : une note soudain appuyée"),
+    ("rinforzando", r"\textbf{\emph{rf}}, \textbf{\emph{rfz}}", "en renforçant : quelques notes soudain appuyées"),
     ("forte-piano", r"\textbf{\emph{fp}}", "fort, puis aussitôt doux"),
 ]
 
@@ -119,6 +126,23 @@ ARTICULATIONS = [
                  "marqué : attaque plus forte encore"),
 ]
 ARTICULATION = {a.nom: a for a in ARTICULATIONS}
+
+# Les signes qui se cumulent sur une note : l'un dit l'attaque, l'autre la
+# durée. Le trait et le point réunis font le louré, ou portato.
+Combinaison = namedtuple("Combinaison", "signes lily effet")
+COMBINAISONS = [
+    Combinaison(("accent", "staccato"), "->-.", "appuyée et brève"),
+    Combinaison(("accent", "tenuto"), "->--", "appuyée et tenue"),
+    Combinaison(("tenuto", "staccato"), "-_", "le louré : à peine détachée"),
+    Combinaison(("marcato", "staccato"), "-^-.", "marquée et brève"),
+]
+
+
+def part_combinee(signes):
+    """La part de la valeur que laissent des signes cumulés."""
+    if set(signes) == {"tenuto", "staccato"}:
+        return ARTICULATION["portato"].part
+    return min(ARTICULATION[x].part for x in signes)
 
 # Le caractère, et les mots qui modifient les autres.
 CARACTERE = [
@@ -216,6 +240,7 @@ VARIANTES = [
     Variante("portato", None, TEMPO, portato),
     Variante("accent sur chaque premier temps", None, TEMPO,
              lambda m, i, d: ("accent",) if i == 0 else ()),
+    Variante("accent et staccato", None, TEMPO, partout("accent", "staccato")),
     Variante("piano, crescendo, forte, decrescendo", None, TEMPO,
              lambda m, i, d: {(0, 0): ("p", "<"), (2, 0): ("f", ">"), (3, 0): ("p",)}.get((m, i), ())),
     Variante("forte, puis piano subito", None, TEMPO,
@@ -250,6 +275,21 @@ REPRISES = [M([j("E5", N(1, 4)), j("D5", N(1, 4)), j("C5", N(1, 4)), j("D5", N(1
             M([j("E5", N(1, 4)), j("E5", N(1, 4)), j("E5", N(1, 2))]),
             M([j("D5", N(1, 4)), j("D5", N(1, 4)), j("D5", N(1, 2))], fin_reprise=True, volta=1),
             M([j("C5", N(1))], volta=2)]
+
+# Les signes de répétition : un motif d'une ou deux mesures, puis le signe
+# qui le répète, autant de fois qu'indiqué.
+Repetition = namedtuple("Repetition", "motif fois")
+REPETITIONS = [
+    Repetition([[j("C5", N(1, 4)), j("E5", N(1, 4)), j("G5", N(1, 4)), j("E5", N(1, 4))]], 2),
+    Repetition([[j("D5", N(1, 4)), j("F5", N(1, 4)), j("A5", N(1, 4)), j("F5", N(1, 4))],
+                [j("G5", N(1, 2)), j("G4", N(1, 2))]], 2),
+]
+
+
+def deplier(repetitions):
+    """Les mesures telles qu'elles se jouent : chaque motif autant de fois qu'indiqué."""
+    return [mes for r in repetitions for _ in range(r.fois) for mes in r.motif]
+
 
 # L'exercice des reprises : une reprise, un segno, Fine, et D.S. al Fine.
 EXERCICE_REPRISES = [
@@ -380,7 +420,7 @@ def verifier():
 
     # Chaque mesure est complète, à 4/4 ; chaque texte au-dessus de la portée
     # est un terme ou une abréviation des tableaux.
-    phrases = [AU_CLAIR, PHRASE, FRERE_JACQUES, RITARDANDO]
+    phrases = [AU_CLAIR, PHRASE, FRERE_JACQUES, RITARDANDO, deplier(REPETITIONS)]
     phrases += [[m.notes for m in r] for r in (REPRISES, EXERCICE_REPRISES)]
     abreges = {a.strip() for c in CHANGEMENTS_MOUVEMENT for a in c.abrege.split(",")}
     for mesures in phrases:
@@ -390,6 +430,21 @@ def verifier():
                 for mq in x.marques:
                     if mq.startswith("t:"):
                         assert mq[2:] in abreges or set(mq[2:].split()) <= mots, mq
+
+    # Les signes cumulés : l'accent garde la durée de l'autre signe, le
+    # trait et le point réunis valent le portato, entre staccato et tenuto.
+    for c in COMBINAISONS:
+        assert all(x in ARTICULATION for x in c.signes)
+    assert part_combinee(("accent", "staccato")) == part["staccato"]
+    assert part_combinee(("accent", "tenuto")) == 1
+    assert part["staccato"] < part_combinee(("tenuto", "staccato")) < part["tenuto"]
+
+    # Les signes de répétition : chaque signe redonne exactement son motif, une
+    # ou deux mesures.
+    jouees = deplier(REPETITIONS)
+    assert len(jouees) == sum(len(r.motif) * r.fois for r in REPETITIONS) == 6
+    assert jouees[0] == jouees[1] and jouees[2:4] == jouees[4:6]
+    assert {len(r.motif) for r in REPETITIONS} == {1, 2}
 
     # Les reprises : 1 2 3, puis 1 2 4 ; l'exercice : la reprise, puis le
     # retour au segno jusqu'à Fine.
@@ -638,6 +693,25 @@ def figure_articulations():
     return score(portee(corps, avant=r"\override TextScript.staff-padding = #3"))
 
 
+def figure_combinaisons():
+    blocs = []
+    for c in COMBINAISONS:
+        blocs.append(r"c''4%s_\markup \small \italic \center-column { %s }" % (
+            c.lily, " ".join(f'"{x}"' for x in (c.signes[0], "et " + c.signes[1]))))
+    corps = r' \bar "|" '.join(blocs)
+    return score(portee(corps, avant=r"\omit Staff.TimeSignature \cadenzaOn "
+                        r"\override TextScript.staff-padding = #3 \textLengthOn"))
+
+
+def figure_repetitions():
+    """Chaque motif, puis le signe qui le répète."""
+    corps = []
+    for r in REPETITIONS:
+        motif = " | ".join(" ".join(lily_note(x) for x in mes) for mes in r.motif)
+        corps.append(r"\repeat percent %d { %s }" % (r.fois, motif))
+    return score(portee(" | ".join(corps)))
+
+
 def joue(hauteur, valeur, part):
     """Une note écrite, telle qu'elle se joue à peu près : la note, puis des silences."""
     son = valeur * part
@@ -743,7 +817,9 @@ def ecrire_gravures():
         "ip-changements": figure_changements(),
         "ip-articulations": figure_articulations(),
         "ip-durees": figure_durees(),
+        "ip-combinaisons": figure_combinaisons(),
         "ip-reprises": figure_reprises(REPRISES),
+        "ip-repetitions": figure_repetitions(),
         "ip-exercice": figure_exercice(),
         "ip-exercice-reprises": figure_reprises(EXERCICE_REPRISES, coupure=3),
         "ip-segno": figure_glyphe("segno"),
@@ -886,6 +962,8 @@ def entrees():
                       TEMPOS_RITARDANDO))
     res.append(Entree("les quatre familles", *MOUVEMENT_PHRASE, [M(mes) for mes in PHRASE]))
     res.append(Entree("reprises, première et seconde fois", None, TEMPO, REPRISES))
+    res.append(Entree("signes de répétition, joués en toutes notes", None, TEMPO,
+                      [M(mes) for mes in deplier(REPETITIONS)]))
     res.append(Entree("exercice : les signes", *MOUVEMENT_EXERCICE, [M(mes) for mes in FRERE_JACQUES]))
     # Le D.S. al Fine vient en dernier : à Fine, la lecture s'arrête.
     res.append(Entree("exercice : les reprises", None, TEMPO, EXERCICE_REPRISES))

@@ -823,12 +823,169 @@ def ecrire_planches():
     return chemins
 
 
+# ---------------------------------------------------------------------------
+# D'autres gammes : chromatique, pentatonique, par tons
+# ---------------------------------------------------------------------------
+LETTRES_GAMME = "CDEFGAB"
+
+
+def chromatique(depart, sens=1):
+    """
+    Les douze demi-tons de l'octave, écrits selon l'usage : une note naturelle
+    quand il y en a une, sinon la lettre d'en dessous haussée d'un dièse en
+    montant, la lettre d'au-dessus abaissée d'un bémol en descendant.
+    """
+    notes = [depart]
+    for _ in range(12):
+        prec = notes[-1]
+        cible = prec.hauteur + sens
+        rang = prec.idx + prec.octave * 7
+        for pas in (0, sens):
+            r = rang + pas
+            lettre, octave = LETTRES_GAMME[r % 7], r // 7
+            naturelle = Note(lettre, 0, octave)
+            if naturelle.hauteur == cible:
+                notes.append(naturelle)
+                break
+        else:
+            r = rang
+            lettre, octave = LETTRES_GAMME[r % 7], r // 7
+            notes.append(Note(lettre, sens, octave))
+    return notes
+
+
+
+def pentatonique(tonique):
+    """La gamme majeure sans ses degrés 4 et 7, puis l'octave."""
+    g = gamme(tonique, "majeure")
+    return [g[i] for i in (0, 1, 2, 4, 5, 7)]
+
+
+def par_tons(tonique):
+    """Six tons égaux : cinq secondes majeures, puis la tierce diminuée qui ramène à l'octave."""
+    notes = [tonique]
+    for _ in range(5):
+        notes.append(au_dessus(notes[-1], 2, "majeure"))
+    notes.append(Note(tonique.lettre, tonique.alt, tonique.octave + 1))
+    return notes
+
+
+def _classes(notes):
+    return {n.hauteur % 12 for n in notes}
+
+
+def verifier_autres_gammes():
+    """Ce que la section « D'autres gammes » affirme."""
+    do = note_de("C", 4)
+    montee, descente = chromatique(do, 1), chromatique(Note("C", 0, 5), -1)
+    for suite, sens in ((montee, 1), (descente, -1)):
+        assert len(suite) == 13
+        assert all(b.hauteur - a.hauteur == sens for a, b in zip(suite, suite[1:]))
+        # Dièses en montant, bémols en descendant, et rien d'autre.
+        assert {n.alt for n in suite} == {0, sens}
+        # Chaque note altérée va vers la lettre suivante, dans le sens de la
+        # marche : do dièse vers ré, ré bémol vers do.
+        for a, b in zip(suite, suite[1:]):
+            if a.alt:
+                assert b.alt == 0 and b.lettre != a.lettre
+        # Cinq demi-tons chromatiques (même lettre), sept diatoniques
+        # (lettres voisines) : il faut passer par les sept lettres.
+        nature = [analyser(*sorted((a, b), key=lambda x: x.hauteur)) for a, b in zip(suite, suite[1:])]
+        assert nature.count((1, "augmentée")) == 5
+        assert nature.count((2, "mineure")) == 7
+    assert [n.nom_fr() for n in montee[:3]] == ["do", "do dièse", "ré"]
+    assert [n.nom_fr() for n in descente[:3]] == ["do", "si", "si bémol"]
+
+    # La pentatonique : do majeur sans fa ni si, pas un demi-ton, et fa–si,
+    # les deux notes retirées, forment le triton de la gamme.
+    p = pentatonique(do)
+    assert [n.nom_fr() for n in p] == ["do", "ré", "mi", "sol", "la", "do"]
+    assert all(b.hauteur - a.hauteur >= 2 for a, b in zip(p, p[1:]))
+    assert analyser(note_de("F", 4), note_de("B", 4)) == (4, "augmentée")
+    g = gamme(do, "majeure")
+    demi_tons_majeure = {i for i in range(7) if g[i + 1].hauteur - g[i].hauteur == 1}
+    assert demi_tons_majeure == {2, 6}           # mi–fa et si–do
+    # Sur fa dièse, les cinq touches noires du piano.
+    noires = pentatonique(note_de("F#", 4))
+    assert all(n.alt == 1 for n in noires)
+    assert _classes(noires) == {1, 3, 6, 8, 10}
+
+    # La gamme par tons : six tons égaux, aucune quinte juste ni demi-ton
+    # entre deux de ses notes ; commencée sur ré, les mêmes notes ; il n'en
+    # existe que deux, sur do et sur do dièse.
+    t = par_tons(do)
+    assert [n.nom_fr() for n in t] == ["do", "ré", "mi", "fa dièse", "sol dièse",
+                                       "la dièse", "do"]
+    assert all(b.hauteur - a.hauteur == 2 for a, b in zip(t, t[1:]))
+    assert all((b - a) % 2 == 0 for a in _classes(t) for b in _classes(t))
+    assert _classes(par_tons(note_de("D", 4))) == _classes(t)
+    autre = _classes(par_tons(note_de("C#", 4)))
+    assert not (autre & _classes(t)) and len(autre | _classes(t)) == 12
+
+
+def _au_dessus_de(note, texte):
+    return note.lily() + r'^\markup \small \bold "%s"' % texte
+
+
+def figure_chromatique():
+    """La gamme chromatique de do, montante avec des dièses, descendante avec des bémols."""
+    montee = chromatique(note_de("C", 4), 1)
+    descente = chromatique(Note("C", 0, 5), -1)
+    corps = "    \\key c \\major\n"
+    corps += "    " + _au_dessus_de(montee[0], "en montant, des dièses") + " " \
+        + " ".join(n.lily() for n in montee[1:]) + "\n"
+    corps += "    \\bar \"||\" \\break\n"
+    corps += "    " + _au_dessus_de(descente[0], "en descendant, des bémols") + " " \
+        + " ".join(n.lily() for n in descente[1:]) + "\n"
+    return ENTETE_PORTEE + corps + PIED_PORTEE
+
+
+def figure_autres_gammes():
+    """La pentatonique et la gamme par tons, sur do."""
+    do = note_de("C", 4)
+    p, t = pentatonique(do), par_tons(do)
+    corps = "    \\key c \\major\n"
+    corps += "    " + _au_dessus_de(p[0], "pentatonique") + " " \
+        + " ".join(n.lily() for n in p[1:]) + "\n"
+    corps += "    \\bar \"||\"\n"
+    corps += "    " + _au_dessus_de(t[0], "par tons") + " " \
+        + " ".join(n.lily() for n in t[1:]) + "\n"
+    return ENTETE_PORTEE + corps + PIED_PORTEE
+
+
+FIGURES.update({
+    "f-chromatique": figure_chromatique,
+    "f-autres-gammes": figure_autres_gammes,
+})
+
+
+def ecrire_musicxml_autres():
+    """La gamme chromatique, la pentatonique et la gamme par tons, sur do."""
+    do = note_de("C", 4)
+    montee, descente = chromatique(do, 1), chromatique(Note("C", 0, 5), -1)
+    p, t = pentatonique(do), par_tons(do)
+    entrees = [
+        ("gamme chromatique, montante puis descendante", 0, "none", montee + descente[1:]),
+        ("gamme pentatonique sur do", 0, "none", p + list(reversed(p))[1:]),
+        ("gamme par tons sur do", 0, "none", t + list(reversed(t))[1:]),
+    ]
+    chemin = os.path.join(RACINE, "gammes-autres.musicxml")
+    with open(chemin, "w", encoding="utf-8") as f:
+        f.write(musicxml.partition(
+            "D'autres gammes",
+            "La gamme chromatique, écrite avec des dièses en montant et des bémols "
+            "en descendant, puis la gamme pentatonique et la gamme par tons, sur do.",
+            entrees))
+    return chemin
+
+
 if __name__ == "__main__":
     verifier_parentes()
+    verifier_autres_gammes()
     quoi = set(a for a in sys.argv[1:])
     tout = not quoi
     if tout or "--musicxml" in quoi:
-        f = ecrire_musicxml()
+        f = ecrire_musicxml() + [ecrire_musicxml_autres()]
         print(f"MusicXML : {len(f)} fichiers")
         for x in f:
             print("  ", os.path.relpath(x, RACINE))

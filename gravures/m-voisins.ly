@@ -18,12 +18,12 @@
   \new StaffGroup <<
     \new Staff \with { instrumentName = \markup \small \italic "écrit" } {
       \clef treble \time 3/4
-      \key c \major c''4\mordent_\markup \small \italic "mordant" c''4\trill_\markup \small \italic "trille" c''4\turn_\markup \small \italic "gruppetto"
+      \key c \major c''4\mordent_\markup \small \italic "mordant inf." c''4\trill_\markup \small \italic "trille" c''4\turn_\markup \small \italic "gruppetto"
       \bar "|."
     }
     \new Staff \with { instrumentName = \markup \small \italic "joué" } {
       \clef treble \time 3/4 \autoBeamOff
-      \key c \major c''32[ b'32 c''8.] d''32[ c''32 d''32 c''32 d''32 c''32 d''32 c''32] d''16[ c''16 b'16 c''16]
+      \key c \major c''32[ b'32 c''8.] c''32[ d''32 c''32 d''32 c''32 d''32 c''16] d''16[ c''16 b'16 c''16]
       \bar "|."
     }
   >>

@@ -777,6 +777,103 @@
     <measure number="20">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
+        <time><beats>6</beats><beat-type>8</beat-type></time>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">la sicilienne</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>9</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <dot/>
+        <beam number="1">begin</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">continue</beam>
+        <beam number="2">backward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>6</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <beam number="1">end</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>9</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <dot/>
+        <beam number="1">begin</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">continue</beam>
+        <beam number="2">backward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>6</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <beam number="1">end</beam>
+      </note>
+    </measure>
+    <measure number="21">
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>18</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <dot/>
+      </note>
+      <note>
+        <rest/>
+        <duration>18</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <dot/>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="22">
+      <attributes>
+        <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>2</beats><beat-type>4</beat-type></time>
       </attributes>
       <direction placement="above">
@@ -828,7 +925,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="21">
+    <measure number="23">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>6</beats><beat-type>8</beat-type></time>
@@ -897,7 +994,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="22">
+    <measure number="24">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>2</beats><beat-type>4</beat-type></time>
@@ -976,7 +1073,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="23">
+    <measure number="25">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>6</beats><beat-type>8</beat-type></time>
@@ -1033,7 +1130,106 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="24">
+    <measure number="26">
+      <attributes>
+        <key><fifths>0</fifths><mode>major</mode></key>
+        <time><beats>3</beats><beat-type>4</beat-type></time>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">une hémiole</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="27">
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>24</duration>
+        <voice>1</voice>
+        <type>half</type>
+        <notations><articulations><accent/></articulations></notations>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <tie type="start"/>
+        <voice>1</voice>
+        <type>quarter</type>
+        <notations><tied type="start"/><articulations><accent/></articulations></notations>
+      </note>
+    </measure>
+    <measure number="28">
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <tie type="stop"/>
+        <voice>1</voice>
+        <type>quarter</type>
+        <notations><tied type="stop"/></notations>
+      </note>
+      <note>
+        <pitch>
+          <step>B</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>24</duration>
+        <voice>1</voice>
+        <type>half</type>
+        <notations><articulations><accent/></articulations></notations>
+      </note>
+    </measure>
+    <measure number="29">
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>36</duration>
+        <voice>1</voice>
+        <type>half</type>
+        <dot/>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="30">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>4</beats><beat-type>4</beat-type></time>
@@ -1091,7 +1287,7 @@
         <notations><tied type="start"/></notations>
       </note>
     </measure>
-    <measure number="25">
+    <measure number="31">
       <note>
         <pitch>
           <step>G</step>
@@ -1125,10 +1321,98 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="26">
+    <measure number="32">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>2</beats><beat-type>4</beat-type></time>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">syncopettes</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">begin</beam>
+        <beam number="2">forward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>6</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <beam number="1">continue</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">end</beam>
+        <beam number="2">backward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">begin</beam>
+        <beam number="2">forward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>6</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <beam number="1">continue</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">end</beam>
+        <beam number="2">backward hook</beam>
+      </note>
+    </measure>
+    <measure number="33">
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>24</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="34">
+      <attributes>
+        <key><fifths>0</fifths><mode>major</mode></key>
       </attributes>
       <direction placement="above">
         <direction-type>
@@ -1166,7 +1450,7 @@
         <type>eighth</type>
       </note>
     </measure>
-    <measure number="27">
+    <measure number="35">
       <note>
         <rest/>
         <duration>12</duration>
@@ -1183,7 +1467,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="28">
+    <measure number="36">
       <note>
         <rest/>
         <duration>6</duration>
@@ -1209,7 +1493,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="29">
+    <measure number="37">
       <note>
         <pitch>
           <step>C</step>
@@ -1223,7 +1507,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="30">
+    <measure number="38">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>5</beats><beat-type>4</beat-type></time>
@@ -1284,7 +1568,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="31">
+    <measure number="39">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>7</beats><beat-type>8</beat-type></time>
@@ -1363,7 +1647,7 @@
         <beam number="1">end</beam>
       </note>
     </measure>
-    <measure number="32">
+    <measure number="40">
       <note>
         <pitch>
           <step>C</step>
@@ -1441,7 +1725,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="33">
+    <measure number="41">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>6</beats><beat-type>8</beat-type></time>
@@ -1495,7 +1779,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="34">
+    <measure number="42">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>3</beats><beat-type>4</beat-type></time>
@@ -1553,7 +1837,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="35">
+    <measure number="43">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>2</beats><beat-type>4</beat-type></time>
@@ -1591,7 +1875,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="36">
+    <measure number="44">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>9</beats><beat-type>8</beat-type></time>
@@ -1638,7 +1922,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="37">
+    <measure number="45">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>4</beats><beat-type>4</beat-type></time>
@@ -1694,7 +1978,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="38">
+    <measure number="46">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>12</beats><beat-type>8</beat-type></time>
@@ -1783,7 +2067,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="39">
+    <measure number="47">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>3</beats><beat-type>4</beat-type></time>
@@ -1816,7 +2100,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="40">
+    <measure number="48">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>6</beats><beat-type>8</beat-type></time>
@@ -1870,7 +2154,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="41">
+    <measure number="49">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>3</beats><beat-type>8</beat-type></time>
@@ -1909,7 +2193,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="42">
+    <measure number="50">
       <attributes>
         <key><fifths>0</fifths><mode>major</mode></key>
         <time><beats>4</beats><beat-type>4</beat-type></time>
@@ -1982,7 +2266,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="43">
+    <measure number="51">
       <note>
         <rest/>
         <duration>6</duration>
@@ -2028,7 +2312,7 @@
         <type>half</type>
       </note>
     </measure>
-    <measure number="44">
+    <measure number="52">
       <note>
         <pitch>
           <step>E</step>
@@ -2057,7 +2341,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="45">
+    <measure number="53">
       <note>
         <rest/>
         <duration>12</duration>
@@ -2100,7 +2384,7 @@
         <notations><tied type="start"/></notations>
       </note>
     </measure>
-    <measure number="46">
+    <measure number="54">
       <note>
         <pitch>
           <step>C</step>
@@ -2129,6 +2413,58 @@
         <duration>12</duration>
         <voice>1</voice>
         <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="55">
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">begin</beam>
+        <beam number="2">forward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>6</duration>
+        <voice>1</voice>
+        <type>eighth</type>
+        <beam number="1">continue</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>3</duration>
+        <voice>1</voice>
+        <type>16th</type>
+        <beam number="1">end</beam>
+        <beam number="2">backward hook</beam>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>12</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>24</duration>
+        <voice>1</voice>
+        <type>half</type>
       </note>
       <barline location="right">
         <bar-style>light-light</bar-style>

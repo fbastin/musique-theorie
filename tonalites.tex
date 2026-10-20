@@ -275,13 +275,14 @@ un ton voisin, dont l'armure ne diffère que d'une altération.
 \textbf{Ce qui la signale.}
 \begin{itemize}
   \item \textbf{Une altération accidentelle qui revient.} Elle introduit une
-    note étrangère à la tonalité de départ. Isolée, une note altérée peut n'être
+    note étrangère à la tonalité de départ, mais propre à celle d'arrivée : la
+    \emph{note modulante}. Isolée, une note altérée peut n'être
     qu'un ornement ; répétée, elle annonce une autre gamme.
   \item \textbf{Une nouvelle sensible.} La note altérée est souvent la sensible
     de la tonalité d'arrivée, un demi-ton sous sa tonique : fa dièse mène à
     sol, sol dièse à la.
   \item \textbf{Une cadence.} La phrase conclut sur la nouvelle tonique,
-    souvent après sa sensible ou sa dominante.
+    souvent après sa sensible ou sa dominante (\href{https://www.slashbin.net/musique/theorie/cadences.pdf}{\emph{Les cadences}}).
 \end{itemize}
 
 \gravure{t-modulation-dominante}{0.75}{De do majeur à sol majeur, sa
@@ -297,13 +298,36 @@ tonalité dont la gamme les contient ; la note de conclusion tranche entre une
 majeure et son relatif. Un fa dièse en do majeur désigne sol majeur ou mi
 mineur ; une fin sur sol décide pour sol majeur.
 
+\textbf{L'accord pivot.} Une modulation passe volontiers par un accord commun
+aux deux tonalités : entendu dans la première, il se comprend aussitôt dans la
+seconde. La--do--mi est le VI de do majeur et le II de sol majeur ; l'accord
+suivant, ré--fa dièse--la, n'appartient plus qu'à sol
+(\href{https://www.slashbin.net/musique/theorie/accords.pdf}{\emph{Les
+accords}} nomment ces degrés).
+
+\gravure{t-pivot}{0.55}{De do majeur à sol majeur : l'accord pivot, la--do--mi,
+se lit dans les deux tonalités.}
+
+\textbf{Vers l'homonyme.} Passer de do majeur à do mineur garde la tonique et
+la dominante : l'accord sol--si--ré, avec la sensible de la mineure
+harmonique, sert aux deux. Ce sont les notes modales qui changent, mi et la
+devenant mi bémol et la bémol.
+
+\textbf{Vers les tons éloignés.} L'enharmonie ouvre des chemins plus longs.
+La septième diminuée de la mineur, sol dièse--si--ré--fa, sonne au piano comme
+celles de do, de mi bémol et de fa dièse mineur : réécrite, elle mène à l'une
+de ces tonalités, dont aucune n'est un ton voisin de la mineur.
+
 \textbf{Passagère ou durable.} Une modulation brève, qui revient vite au ton
 de départ, est dite \emph{passagère} : les altérations accidentelles suffisent
 à l'écrire. Une modulation durable s'installe, parfois pour toute une section ;
 l'armure change alors elle-même, le plus souvent après une double barre. Quand
 le détour ne dure qu'une note ou un accord, sans cadence, on parle plutôt
 d'\emph{emprunt} ; la frontière entre emprunt et modulation passagère varie
-d'un manuel à l'autre.
+d'un manuel à l'autre. Le plus connu est la \emph{tierce picarde} : un morceau
+mineur qui s'achève sur l'accord parfait majeur de sa tonique, emprunté à
+l'homonyme --- la--do dièse--mi au lieu de la--do--mi ---, comme souvent dans
+les chorals de Bach.
 
 % =====================================================================
 \section{La transposition}
@@ -455,7 +479,8 @@ la gamme majeure dont elle emprunte les notes.
 \label{sec:musicxml}
 
 Le fichier joint, \texttt{tonalites.musicxml}, fait entendre do majeur, son
-relatif et son homonyme ; les deux modulations ; la mélodie transposée, avant
+relatif et son homonyme ; les deux modulations, puis l'accord pivot ; la
+mélodie transposée, avant
 et après ; les sept modes sur les touches blanches, puis sur ré, du plus clair
 au plus sombre ; enfin la mélodie de l'exercice de transposition. Le tout est
 à la noire 80. Il se lit avec MuseScore, Finale, Sibelius, Dorico ou tout
@@ -474,7 +499,9 @@ soit, le générateur vérifie ce que le texte affirme : les trente tonalités e
 leurs vingt-quatre sons, les notes modales seules à changer d'un mode à
 l'autre, l'homonyme à trois altérations, les cinq tons voisins sur trois
 armures et sur les degrés de la gamme, la sensible du ton d'arrivée dans
-chaque modulation, la transposition qui conserve chaque intervalle et l'effet
+chaque modulation, l'accord pivot commun aux deux tonalités, la même
+dominante pour l'homonyme, la septième diminuée commune à quatre tonalités
+mineures, la transposition qui conserve chaque intervalle et l'effet
 de chaque altération, les tétracordes des modes et leur échelle sur ré. Pour
 régénérer l'ensemble :
 

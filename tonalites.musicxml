@@ -12,7 +12,7 @@
       <encoding-date>2026-10-19</encoding-date>
     </encoding>
     <miscellaneous>
-      <miscellaneous-field name="description">Relatif et homonyme, deux modulations, une transposition, les modes anciens sur les touches blanches puis sur ré, à la noire 80.</miscellaneous-field>
+      <miscellaneous-field name="description">Relatif et homonyme, deux modulations et un accord pivot, une transposition, les modes anciens sur les touches blanches puis sur ré, à la noire 80.</miscellaneous-field>
     </miscellaneous>
   </identification>
   <part-list>
@@ -575,6 +575,143 @@
     </measure>
     <measure number="15">
       <attributes>
+        <key><fifths>0</fifths><mode>major</mode></key>
+      </attributes>
+      <direction placement="above">
+        <direction-type>
+          <words font-weight="bold">de do majeur à sol majeur, par un accord pivot</words>
+        </direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>E</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+    </measure>
+    <measure number="16">
+      <note>
+        <pitch>
+          <step>A</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+    </measure>
+    <measure number="17">
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>F</step>
+          <alter>1</alter>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <accidental>sharp</accidental>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>A</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+    </measure>
+    <measure number="18">
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>B</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <note>
+        <chord/>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+      <barline location="right">
+        <bar-style>light-light</bar-style>
+      </barline>
+    </measure>
+    <measure number="19">
+      <attributes>
         <key><fifths>1</fifths><mode>major</mode></key>
       </attributes>
       <direction placement="above">
@@ -619,7 +756,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="16">
+    <measure number="20">
       <note>
         <pitch>
           <step>E</step>
@@ -650,7 +787,7 @@
         <type>half</type>
       </note>
     </measure>
-    <measure number="17">
+    <measure number="21">
       <note>
         <pitch>
           <step>C</step>
@@ -689,7 +826,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="18">
+    <measure number="22">
       <note>
         <pitch>
           <step>G</step>
@@ -703,7 +840,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="19">
+    <measure number="23">
       <attributes>
         <key><fifths>-1</fifths><mode>major</mode></key>
       </attributes>
@@ -749,7 +886,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="20">
+    <measure number="24">
       <note>
         <pitch>
           <step>D</step>
@@ -779,7 +916,7 @@
         <type>half</type>
       </note>
     </measure>
-    <measure number="21">
+    <measure number="25">
       <note>
         <pitch>
           <step>B</step>
@@ -818,7 +955,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="22">
+    <measure number="26">
       <note>
         <pitch>
           <step>F</step>
@@ -832,7 +969,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="23">
+    <measure number="27">
       <attributes>
         <key><fifths>0</fifths><mode>ionian</mode></key>
       </attributes>
@@ -878,7 +1015,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="24">
+    <measure number="28">
       <note>
         <pitch>
           <step>G</step>
@@ -919,7 +1056,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="25">
+    <measure number="29">
       <attributes>
         <key><fifths>0</fifths><mode>dorian</mode></key>
       </attributes>
@@ -965,7 +1102,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="26">
+    <measure number="30">
       <note>
         <pitch>
           <step>A</step>
@@ -1006,7 +1143,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="27">
+    <measure number="31">
       <attributes>
         <key><fifths>0</fifths><mode>phrygian</mode></key>
       </attributes>
@@ -1052,7 +1189,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="28">
+    <measure number="32">
       <note>
         <pitch>
           <step>B</step>
@@ -1093,7 +1230,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="29">
+    <measure number="33">
       <attributes>
         <key><fifths>0</fifths><mode>lydian</mode></key>
       </attributes>
@@ -1139,7 +1276,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="30">
+    <measure number="34">
       <note>
         <pitch>
           <step>C</step>
@@ -1180,7 +1317,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="31">
+    <measure number="35">
       <attributes>
         <key><fifths>0</fifths><mode>mixolydian</mode></key>
       </attributes>
@@ -1226,7 +1363,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="32">
+    <measure number="36">
       <note>
         <pitch>
           <step>D</step>
@@ -1267,7 +1404,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="33">
+    <measure number="37">
       <attributes>
         <key><fifths>0</fifths><mode>aeolian</mode></key>
       </attributes>
@@ -1313,7 +1450,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="34">
+    <measure number="38">
       <note>
         <pitch>
           <step>E</step>
@@ -1354,7 +1491,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="35">
+    <measure number="39">
       <attributes>
         <key><fifths>0</fifths><mode>locrian</mode></key>
       </attributes>
@@ -1400,7 +1537,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="36">
+    <measure number="40">
       <note>
         <pitch>
           <step>F</step>
@@ -1441,7 +1578,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="37">
+    <measure number="41">
       <attributes>
         <key><fifths>3</fifths><mode>lydian</mode></key>
       </attributes>
@@ -1489,7 +1626,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="38">
+    <measure number="42">
       <note>
         <pitch>
           <step>A</step>
@@ -1531,7 +1668,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="39">
+    <measure number="43">
       <attributes>
         <key><fifths>2</fifths><mode>ionian</mode></key>
       </attributes>
@@ -1578,7 +1715,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="40">
+    <measure number="44">
       <note>
         <pitch>
           <step>A</step>
@@ -1620,7 +1757,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="41">
+    <measure number="45">
       <attributes>
         <key><fifths>1</fifths><mode>mixolydian</mode></key>
       </attributes>
@@ -1667,7 +1804,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="42">
+    <measure number="46">
       <note>
         <pitch>
           <step>A</step>
@@ -1708,7 +1845,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="43">
+    <measure number="47">
       <attributes>
         <key><fifths>0</fifths><mode>dorian</mode></key>
       </attributes>
@@ -1754,7 +1891,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="44">
+    <measure number="48">
       <note>
         <pitch>
           <step>A</step>
@@ -1795,7 +1932,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="45">
+    <measure number="49">
       <attributes>
         <key><fifths>-1</fifths><mode>aeolian</mode></key>
       </attributes>
@@ -1841,7 +1978,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="46">
+    <measure number="50">
       <note>
         <pitch>
           <step>A</step>
@@ -1883,7 +2020,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="47">
+    <measure number="51">
       <attributes>
         <key><fifths>-2</fifths><mode>phrygian</mode></key>
       </attributes>
@@ -1930,7 +2067,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="48">
+    <measure number="52">
       <note>
         <pitch>
           <step>A</step>
@@ -1972,7 +2109,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="49">
+    <measure number="53">
       <attributes>
         <key><fifths>-3</fifths><mode>locrian</mode></key>
       </attributes>
@@ -2019,7 +2156,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="50">
+    <measure number="54">
       <note>
         <pitch>
           <step>A</step>
@@ -2062,7 +2199,7 @@
         <bar-style>light-light</bar-style>
       </barline>
     </measure>
-    <measure number="51">
+    <measure number="55">
       <attributes>
         <key><fifths>2</fifths><mode>major</mode></key>
       </attributes>
@@ -2109,7 +2246,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="52">
+    <measure number="56">
       <note>
         <pitch>
           <step>C</step>
@@ -2148,7 +2285,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="53">
+    <measure number="57">
       <note>
         <pitch>
           <step>F</step>
@@ -2187,7 +2324,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="54">
+    <measure number="58">
       <note>
         <pitch>
           <step>D</step>

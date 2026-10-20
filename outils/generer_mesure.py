@@ -345,11 +345,18 @@ FIGURES_GUIDE = {
                            " | [C5/8 D5/8 E5/8] [F5/8 G5/8 A5/8] [G5/8 F5/8 E5/8]"
                            " | C5/4. D5/4. E5/4. C5/4.",
                            [C(6, 8), C(9, 8), C(12, 8)], comptes=True),
+    # La sicilienne : croche pointée, double croche, croche, dans chaque temps.
+    "me-sicilienne": Figure("[E5/8. F5/16 E5/8] [D5/8. E5/16 C5/8] | D5/4. r/4.",
+                            C(6, 8), comptes=True),
     "me-correspondances": Figure("[C5/8 D5/8] [E5/8 F5/8] | [C5/8 D5/8 E5/8] [F5/8 E5/8 D5/8]"
                                  " | 3:2[C5/8 D5/8 E5/8] 3:2[F5/8 E5/8 D5/8]"
                                  " | 2:3[C5/8 D5/8] 2:3[E5/8 F5/8]",
                                  [C(2, 4), C(6, 8), C(2, 4), C(6, 8)], comptes=True),
+    # L'hémiole : aux deuxième et troisième mesures, trois blanches accentuées.
+    "me-hemiole": Figure("C5/4 E5/4 D5/4 | C5/2> D5/4~> | D5/4 B4/2> | C5/2.",
+                         C(3, 4), comptes=True),
     "me-syncopes": Figure("C5/8 D5/4 E5/8 F5/4 G5/4~ | G5/4 A5/2 G5/4", C(4, 4), classes=True),
+    "me-syncopettes": Figure("[C5/16 D5/8 C5/16] [E5/16 F5/8 E5/16] | G5/2", C(2, 4), classes=True),
     "me-contretemps": Figure("r/8 C5/8 r/8 D5/8 | r/4 E5/4 | r/8 F5/8 G5/4 | C5/2",
                              C(2, 4), classes=True),
     "me-irregulieres": Figure("C5/4> D5/4 E5/4 F5/4> G5/4"
@@ -362,6 +369,7 @@ FIGURES_GUIDE = {
 # Les syncopes et contretemps qu'affirment les légendes, dans l'ordre des notes.
 CLASSES_ATTENDUES = {
     "me-syncopes": [None, "syncope", None, None, "syncope", "syncope", None],
+    "me-syncopettes": [None, "syncope", None, None, "syncope", None, None],
     "me-contretemps": ["contretemps", "contretemps", "contretemps", "contretemps", None, None],
 }
 
@@ -395,10 +403,11 @@ EXERCICE_SYNCOPES = Figure(
     " | r/8 G4/8* [A4/8 B4/8] C5/2*"
     " | E5/4 D5/2* C5/4"
     " | r/4 B4/4* r/8 D5/8* C5/4*~"
-    " | C5/2 B4/4 C5/4",
+    " | C5/2 B4/4 C5/4"
+    " | [E5/16 F5/8* E5/16] D5/4 C5/2",
     C(4, 4), numeros="notes")
 REPONSES_SYNCOPES = [None, "syncope", "contretemps", None, "syncope", "contretemps",
-                     "contretemps", "syncope"]
+                     "contretemps", "syncope", "syncope"]
 
 
 def chiffres_de(fig, mesures):
@@ -503,6 +512,31 @@ def verifier():
     proportions = lambda m: [t / duree(m) for t, _, _ in evenements([m])]
     assert proportions(corr[2]) == proportions(corr[1])
     assert proportions(corr[3]) == proportions(corr[0])
+
+    # La sicilienne : croche pointée, double croche, croche, qui remplissent
+    # un temps ternaire ; le temps binaire de 2/4 ne l'accueille pas.
+    sic = lire(FIGURES_GUIDE["me-sicilienne"].texte)
+    for g in sic[0].groupes:
+        assert [e.valeur for e in notes_du(g)] == [N(3, 16), N(1, 16), N(1, 8)]
+        assert sum(e.valeur for e in notes_du(g)) == C(6, 8).unite_temps
+        assert sum(e.valeur for e in notes_du(g)) != C(2, 4).unite_temps
+
+    # La syncopette : double croche, croche, double croche, dans un temps
+    # binaire ; la croche est une syncope, prolongée sur le milieu du temps.
+    for g in lire(FIGURES_GUIDE["me-syncopettes"].texte)[0].groupes:
+        assert [e.valeur for e in notes_du(g)] == [N(1, 16), N(1, 8), N(1, 16)]
+        assert sum(e.valeur for e in notes_du(g)) == C(2, 4).unite_temps
+
+    # L'hémiole : aux mesures 2 et 3, trois appuis, une blanche chacun, comme
+    # une seule mesure à 3/2 ; l'appui du milieu tombe sur le troisième temps,
+    # faible, et se prolonge sur le premier de la mesure suivante : une syncope.
+    hem = lire(FIGURES_GUIDE["me-hemiole"].texte)
+    ev = evenements(hem[1:3])
+    assert [t for t, _, e in ev if e.accent] == [0, N(1, 2), N(1)]
+    assert duree(hem[1]) + duree(hem[2]) == C(3, 2).duree == 3 * N(1, 2)
+    milieu = [(e, k) for e, k in classement(C(3, 4), hem[1:3]) if e.accent][1]
+    assert milieu[1] == "syncope"
+    assert C(3, 4).nom_temps(2) == "faible"
 
     # Syncopes et contretemps des exemples.
     for nom_figure, attendu in CLASSES_ATTENDUES.items():
@@ -774,8 +808,11 @@ LIBELLES = {
     "me-forts": "temps forts et temps faibles",
     "me-anacrouse": "une anacrouse",
     "me-composees": "mesures composées : 6/8, 9/8, 12/8",
+    "me-sicilienne": "la sicilienne",
     "me-correspondances": "2/4 et 6/8, triolets et duolets",
+    "me-hemiole": "une hémiole",
     "me-syncopes": "syncopes",
+    "me-syncopettes": "syncopettes",
     "me-contretemps": "contretemps",
     "me-irregulieres": "mesures irrégulières : 5/4, 7/8 de deux façons",
     "me-exercice-mesures": "exercice : les mesures sans chiffre",

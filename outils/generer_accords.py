@@ -297,6 +297,63 @@ EXERCICE = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Les symboles anglo-saxons : la lettre de la fondamentale, puis la nature
+# ---------------------------------------------------------------------------
+SUFFIXES = {"accord parfait majeur": "", "accord parfait mineur": "m",
+            "accord de quinte diminuée": "°", "accord de quinte augmentée": "+",
+            "septième de dominante": "7", "septième diminuée": "°7",
+            "septième de sensible": "m7b5"}
+ALT_SYMBOLE = {-1: "b", 0: "", 1: "#"}
+
+
+def lettre(note):
+    return note.lettre + ALT_SYMBOLE[note.alt]
+
+
+def symbole(notes):
+    """« G7/B » : la fondamentale en lettre, la nature, et la basse si ce n'est pas elle."""
+    a = analyser_accord(notes)
+    basse = min(notes, key=lambda x: x.hauteur)
+    s = lettre(a.fondamentale) + SUFFIXES[a.nature]
+    return s if a.position == 0 else s + "/" + lettre(basse)
+
+
+MATH_SYMBOLE = {"#": r"\sharp", "b": r"\flat", "°": r"^{\circ}"}
+
+
+def tex_symbole(txt):
+    """Le symbole en LaTeX : dièse, bémol et rond en exposant, dans un seul mode mathématique par suite."""
+    res, math = [], []
+    for c in txt + " ":
+        if c in MATH_SYMBOLE:
+            math.append(MATH_SYMBOLE[c])
+            continue
+        if math:
+            res.append("$" + "".join(math) + "$")
+            math = []
+        res.append(c)
+    return "".join(res).rstrip()
+
+
+def verifier_symboles():
+    """Les symboles que cite le texte."""
+    assert [symbole(x) for x in quatre_natures()] == ["C", "Cm", "C°", "C+"]
+    assert symbole(septieme_de_dominante(DO_MAJEUR)) == "G7"
+    assert symbole(septieme_diminuee(LA_MINEUR)) == "G#°7"
+    assert symbole(sur_degre(DO_MAJEUR, 7, 4)) == "Bm7b5"
+    assert symbole(renverser(sur_degre(DO_MAJEUR, 1), 1)) == "C/E"
+    # Les lettres : A pour la, B pour si, C pour do… G pour sol.
+    assert [n(x + "4").nom_fr() for x in "ABCDEFG"] == ["la", "si", "do", "ré", "mi", "fa", "sol"]
+    # Le symbole ne dépend pas de la tonalité : la–do–mi est Am en do majeur
+    # (VI) comme en sol majeur (II).
+    assert symbole(sur_degre(DO_MAJEUR, 6)) == symbole(sur_degre(Ton(n("G4"), "majeur"), 2)) == "Am"
+    # L'accord parfait majeur dans le son : les harmoniques 4, 5 et 6 d'un do
+    # grave tombent, à l'arrondi près, sur do, mi et sol.
+    from math import log2
+    assert [round(12 * log2(k)) % 12 for k in (4, 5, 6)] == [0, 4, 7]
+
+
 def accord_exercice(item):
     notes = renverser(sur_degre(item.ton, item.degre, item.sons), item.position)
     return placer(ecarter(notes) if item.large else notes)
@@ -683,15 +740,16 @@ def ecrire_tex(nom, lignes):
 
 
 def table_natures():
-    l = [r"\begin{tabular}{@{}l l l l l@{}}", r"\toprule",
+    # Six colonnes : on resserre les intervalles entre elles pour tenir dans la ligne.
+    l = [r"\setlength{\tabcolsep}{4pt}%", r"\begin{tabular}{@{}l l l l l l@{}}", r"\toprule",
          r"\textbf{Accord} & \textbf{Tierce} & \textbf{Quinte} & "
-         r"\textbf{Tierces empilées} & \textbf{Sur do} \\", r"\midrule"]
+         r"\textbf{Tierces empilées} & \textbf{Sur do} & \textbf{Symbole} \\", r"\midrule"]
     for notes in quatre_natures():
         a = analyser_accord(notes)
         t, q = (abrege(*au_dessus_de(notes[0], x)) for x in notes[1:])
         empilees = " + ".join(abrege(*analyser(x, y)) for x, y in zip(notes, notes[1:]))
         l.append(f"{COURTES[a.nature]} & {t} & {q} & {empilees} & "
-                 f"{' -- '.join(x.nom_fr() for x in notes)} \\\\")
+                 f"{' -- '.join(x.nom_fr() for x in notes)} & {tex_symbole(symbole(notes))} \\\\")
     l += [r"\bottomrule", r"\end{tabular}"]
     return ecrire_tex("accords-natures.tex", l)
 
@@ -721,9 +779,10 @@ def reponses_exercice():
 
 def ecrire_reponses():
     l = [r"\begin{enumerate}[leftmargin=*, itemsep=1pt]"]
-    for (romain, chiff), fond, nature, position in reponses_exercice():
+    for ((romain, chiff), fond, nature, position), item in zip(reponses_exercice(), EXERCICE):
+        sym = tex_symbole(symbole(accord_exercice(item)))
         l.append(rf"  \item {tex_chiffre(romain, chiff)}~: fondamentale {fond}, "
-                 rf"{nature}, {position}.")
+                 rf"{nature}, {position}~; {sym}.")
     l.append(r"\end{enumerate}")
     return ecrire_tex("accords-reponses.tex", l)
 
@@ -767,6 +826,7 @@ def ecrire_musicxml():
 
 if __name__ == "__main__":
     verifier()
+    verifier_symboles()
     print("Vérifications : toutes passées")
     for c in ecrire_gravures():
         print("LilyPond :", os.path.relpath(c, RACINE))

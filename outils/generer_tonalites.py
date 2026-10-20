@@ -482,6 +482,68 @@ def verifier():
 
 
 # ---------------------------------------------------------------------------
+# La modulation : accord pivot, homonyme, tons éloignés, tierce picarde
+# ---------------------------------------------------------------------------
+def accord_degre(t, degre, sons=3):
+    """L'accord bâti sur un degré, avec les notes de la gamme (harmonique en mineur)."""
+    g = echelle(t)[:7]
+    return [g[(degre - 1 + 2 * i) % 7] for i in range(sons)]
+
+
+def orthographe(notes):
+    return {ecrit(x) for x in notes}
+
+
+# De do majeur à sol majeur par un accord commun : (accord, tonalités et degrés).
+PIVOT = [
+    ([n("C4"), n("E4"), n("G4")], [(ton("C", "majeur"), 1)]),
+    ([n("A4"), n("C5"), n("E5")], [(ton("C", "majeur"), 6), (ton("G", "majeur"), 2)]),
+    ([n("D4"), n("F#4"), n("A4")], [(ton("G", "majeur"), 5)]),
+    ([n("G4"), n("B4"), n("D5")], [(ton("G", "majeur"), 1)]),
+]
+ROMAINS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+TONS_DIMINUEE = [ton(x, "mineur") for x in ("A", "C", "Eb", "F#")]
+
+
+def verifier_modulation():
+    """Ce que la section de la modulation affirme, au-delà des deux exemples."""
+    do, sol = ton("C", "majeur"), ton("G", "majeur")
+    # Chaque accord de l'exemple est bien celui du degré annoncé ; l'accord
+    # pivot appartient aux deux tonalités, le suivant à sol seulement.
+    for notes, lectures in PIVOT:
+        for t, d in lectures:
+            assert orthographe(notes) == orthographe(accord_degre(t, d)), (notes, t, d)
+    assert orthographe(PIVOT[1][0]) <= orthographes(do) and orthographe(PIVOT[1][0]) <= orthographes(sol)
+    assert not orthographe(PIVOT[2][0]) <= orthographes(do)
+    assert [x.nom_fr() for x in PIVOT[1][0]] == ["la", "do", "mi"]
+
+    # Vers l'homonyme : la dominante est la même, la tonique change de tierce.
+    for t in TOUTES:
+        h = homonyme(t)
+        if existe(h):
+            assert orthographe(accord_degre(t, 5)) == orthographe(accord_degre(h, 5)), t
+            i, j = accord_degre(t, 1), accord_degre(h, 1)
+            assert ecrit(i[0]) == ecrit(j[0]) and ecrit(i[2]) == ecrit(j[2]) and ecrit(i[1]) != ecrit(j[1])
+    assert [x.nom_fr() for x in accord_degre(do, 5)] == ["sol", "si", "ré"]
+
+    # La tierce picarde : la mineur s'achève sur la–do dièse–mi, l'accord de
+    # tonique de la majeur, son homonyme.
+    la = ton("A", "mineur")
+    assert [x.nom_fr() for x in accord_degre(homonyme(la), 1)] == ["la", "do dièse", "mi"]
+    assert [x.nom_fr() for x in accord_degre(la, 1)] == ["la", "do", "mi"]
+
+    # Les tons éloignés : la septième diminuée de la mineur sonne comme celles
+    # de do, mi bémol et fa dièse mineur, sous quatre orthographes.
+    septiemes = [accord_degre(t, 7, sons=4) for t in TONS_DIMINUEE]
+    assert len({frozenset(classe(x) for x in a) for a in septiemes}) == 1
+    assert len({frozenset(orthographe(a)) for a in septiemes}) == 4
+    assert [x.nom_fr() for x in septiemes[0]] == ["sol dièse", "si", "ré", "fa"]
+    assert [x.nom_fr() for x in septiemes[1]] == ["si", "ré", "fa", "la bémol"]
+    # Ces quatre tonalités sont loin de la mineur : aucune n'est son voisin.
+    assert not any(cle(t) in {cle(v) for v in voisins(la)} for t in TONS_DIMINUEE[1:])
+
+
+# ---------------------------------------------------------------------------
 # Textes : noms, armures, réponses
 # ---------------------------------------------------------------------------
 SIGNE_TEX = {-2: r"$\flat\flat$", -1: r"$\flat$", 0: "", 1: r"$\sharp$", 2: r"$\times$"}
@@ -707,6 +769,27 @@ def figure_exercice_modes():
     return ENTETE_PORTEE + corps + PIED_PORTEE
 
 
+def figure_pivot():
+    """Quatre accords, chacun lu sous son degré ; l'accord pivot, sous deux."""
+    corps = []
+    for notes, lectures in PIVOT:
+        lignes = " ".join(r'"%s : %s"' % (t.tonique.nom_fr(), ROMAINS[d - 1]) for t, d in lectures)
+        corps.append("<%s>1_\\markup \\small \\center-column { %s }"
+                     % (" ".join(x.lily() for x in notes), lignes))
+    return r"""\score {
+  \new Staff {
+    \clef treble \key c \major \time 4/4
+    \override TextScript.staff-padding = #3.5
+    %s
+    \bar "|."
+  }
+  \layout {
+    \context { \Score \override SpacingSpanner.spacing-increment = #1.6 }
+  }
+}
+""" % " | ".join(corps)
+
+
 def figures():
     res = {
         "t-relatives": figure_relatives(),
@@ -716,6 +799,7 @@ def figures():
         "t-exercice-transposition": figure_transposition(EXERCICE_TRANSPOSITION, avec_reponse=False),
         "t-exercice-reponse": figure_reponse_transposition(EXERCICE_TRANSPOSITION),
         "t-exercice-modes": figure_exercice_modes(),
+        "t-pivot": figure_pivot(),
     }
     res.update({nom_figure: figure_modulation(mod) for nom_figure, mod in MODULATIONS.items()})
     return res
@@ -850,6 +934,8 @@ def ecrire_musicxml():
     for mod in MODULATIONS.values():
         entrees.append((f"de {nom(mod.depart)} à {nom(mod.arrivee)}", armure(mod.depart),
                         MODE_XML[mod.depart.mode], (4, 4), en_groupes(mod.mesures)))
+    entrees.append(("de do majeur à sol majeur, par un accord pivot", 0, "major", (4, 4),
+                    [[[(list(notes), N(1), False)]] for notes, _ in PIVOT]))
     t2, m2 = transposee(TRANSPOSITION)
     entrees.append((f"une mélodie en {nom(TRANSPOSITION.tonalite)}", armure(TRANSPOSITION.tonalite),
                     "major", (4, 4), en_groupes(TRANSPOSITION.mesures)))
@@ -868,7 +954,8 @@ def ecrire_musicxml():
     with open(chemin, "w", encoding="utf-8") as f:
         f.write(musicxml.partition_rythmee(
             "Les tonalités",
-            "Relatif et homonyme, deux modulations, une transposition, les modes anciens "
+            "Relatif et homonyme, deux modulations et un accord pivot, une transposition, "
+            "les modes anciens "
             f"sur les touches blanches puis sur ré, à la noire {TEMPO}.",
             entrees, "Piano", TEMPO))
     return chemin
@@ -876,6 +963,7 @@ def ecrire_musicxml():
 
 if __name__ == "__main__":
     verifier()
+    verifier_modulation()
     print("Vérifications : toutes passées")
     for c in ecrire_gravures():
         print("LilyPond :", os.path.relpath(c, RACINE))

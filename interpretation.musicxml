@@ -746,16 +746,10 @@
     </measure>
     <measure number="25">
       <direction placement="above">
-        <direction-type><words font-weight="bold">piano, crescendo, forte, decrescendo</words></direction-type>
+        <direction-type><words font-weight="bold">accent et staccato</words></direction-type>
       </direction>
       <sound tempo="80"/>
-      <direction placement="below">
-        <direction-type><dynamics><p/></dynamics></direction-type>
-        <sound dynamics="54.44"/>
-      </direction>
-      <direction placement="below">
-        <direction-type><wedge type="crescendo"/></direction-type>
-      </direction>
+      <sound dynamics="88.89"/>
       <note>
         <pitch>
           <step>C</step>
@@ -764,6 +758,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -773,6 +768,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -782,6 +778,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -791,6 +788,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
     </measure>
     <measure number="26">
@@ -802,6 +800,7 @@
         <duration>4</duration>
         <voice>1</voice>
         <type>half</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -811,19 +810,10 @@
         <duration>4</duration>
         <voice>1</voice>
         <type>half</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
     </measure>
     <measure number="27">
-      <direction placement="below">
-        <direction-type><wedge type="stop"/></direction-type>
-      </direction>
-      <direction placement="below">
-        <direction-type><dynamics><f/></dynamics></direction-type>
-        <sound dynamics="106.67"/>
-      </direction>
-      <direction placement="below">
-        <direction-type><wedge type="diminuendo"/></direction-type>
-      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -832,6 +822,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -841,6 +832,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -850,6 +842,7 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
       <note>
         <pitch>
@@ -859,16 +852,10 @@
         <duration>2</duration>
         <voice>1</voice>
         <type>quarter</type>
+        <notations><articulations><accent/><staccato/></articulations></notations>
       </note>
     </measure>
     <measure number="28">
-      <direction placement="below">
-        <direction-type><wedge type="stop"/></direction-type>
-      </direction>
-      <direction placement="below">
-        <direction-type><dynamics><p/></dynamics></direction-type>
-        <sound dynamics="54.44"/>
-      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -882,12 +869,15 @@
     </measure>
     <measure number="29">
       <direction placement="above">
-        <direction-type><words font-weight="bold">forte, puis piano subito</words></direction-type>
+        <direction-type><words font-weight="bold">piano, crescendo, forte, decrescendo</words></direction-type>
       </direction>
       <sound tempo="80"/>
       <direction placement="below">
-        <direction-type><dynamics><f/></dynamics></direction-type>
-        <sound dynamics="106.67"/>
+        <direction-type><dynamics><p/></dynamics></direction-type>
+        <sound dynamics="54.44"/>
+      </direction>
+      <direction placement="below">
+        <direction-type><wedge type="crescendo"/></direction-type>
       </direction>
       <note>
         <pitch>
@@ -948,11 +938,14 @@
     </measure>
     <measure number="31">
       <direction placement="below">
-        <direction-type><dynamics><p/></dynamics></direction-type>
-        <sound dynamics="54.44"/>
+        <direction-type><wedge type="stop"/></direction-type>
       </direction>
-      <direction placement="above">
-        <direction-type><words font-style="italic">subito</words></direction-type>
+      <direction placement="below">
+        <direction-type><dynamics><f/></dynamics></direction-type>
+        <sound dynamics="106.67"/>
+      </direction>
+      <direction placement="below">
+        <direction-type><wedge type="diminuendo"/></direction-type>
       </direction>
       <note>
         <pitch>
@@ -992,6 +985,13 @@
       </note>
     </measure>
     <measure number="32">
+      <direction placement="below">
+        <direction-type><wedge type="stop"/></direction-type>
+      </direction>
+      <direction placement="below">
+        <direction-type><dynamics><p/></dynamics></direction-type>
+        <sound dynamics="54.44"/>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -1005,12 +1005,12 @@
     </measure>
     <measure number="33">
       <direction placement="above">
-        <direction-type><words font-weight="bold">sforzando</words></direction-type>
+        <direction-type><words font-weight="bold">forte, puis piano subito</words></direction-type>
       </direction>
       <sound tempo="80"/>
       <direction placement="below">
-        <direction-type><dynamics><p/></dynamics></direction-type>
-        <sound dynamics="54.44"/>
+        <direction-type><dynamics><f/></dynamics></direction-type>
+        <sound dynamics="106.67"/>
       </direction>
       <note>
         <pitch>
@@ -1050,10 +1050,6 @@
       </note>
     </measure>
     <measure number="34">
-      <direction placement="below">
-        <direction-type><dynamics><sfz/></dynamics></direction-type>
-        <sound dynamics="124.44"/>
-      </direction>
       <note>
         <pitch>
           <step>E</step>
@@ -1074,6 +1070,13 @@
       </note>
     </measure>
     <measure number="35">
+      <direction placement="below">
+        <direction-type><dynamics><p/></dynamics></direction-type>
+        <sound dynamics="54.44"/>
+      </direction>
+      <direction placement="above">
+        <direction-type><words font-style="italic">subito</words></direction-type>
+      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -1125,13 +1128,13 @@
     </measure>
     <measure number="37">
       <direction placement="above">
-        <direction-type><words font-weight="bold">adagio</words></direction-type>
+        <direction-type><words font-weight="bold">sforzando</words></direction-type>
       </direction>
-      <direction placement="above">
-        <direction-type><words font-weight="bold">Adagio</words></direction-type><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>72</per-minute></metronome></direction-type>
-        <sound tempo="72"/>
+      <sound tempo="80"/>
+      <direction placement="below">
+        <direction-type><dynamics><p/></dynamics></direction-type>
+        <sound dynamics="54.44"/>
       </direction>
-      <sound dynamics="88.89"/>
       <note>
         <pitch>
           <step>C</step>
@@ -1170,6 +1173,10 @@
       </note>
     </measure>
     <measure number="38">
+      <direction placement="below">
+        <direction-type><dynamics><sfz/></dynamics></direction-type>
+        <sound dynamics="124.44"/>
+      </direction>
       <note>
         <pitch>
           <step>E</step>
@@ -1241,11 +1248,11 @@
     </measure>
     <measure number="41">
       <direction placement="above">
-        <direction-type><words font-weight="bold">allegro</words></direction-type>
+        <direction-type><words font-weight="bold">adagio</words></direction-type>
       </direction>
       <direction placement="above">
-        <direction-type><words font-weight="bold">Allegro</words></direction-type><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>144</per-minute></metronome></direction-type>
-        <sound tempo="144"/>
+        <direction-type><words font-weight="bold">Adagio</words></direction-type><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>72</per-minute></metronome></direction-type>
+        <sound tempo="72"/>
       </direction>
       <sound dynamics="88.89"/>
       <note>
@@ -1357,9 +1364,12 @@
     </measure>
     <measure number="45">
       <direction placement="above">
-        <direction-type><words font-weight="bold">ritardando, puis a tempo</words></direction-type>
+        <direction-type><words font-weight="bold">allegro</words></direction-type>
       </direction>
-      <sound tempo="80"/>
+      <direction placement="above">
+        <direction-type><words font-weight="bold">Allegro</words></direction-type><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>144</per-minute></metronome></direction-type>
+        <sound tempo="144"/>
+      </direction>
       <sound dynamics="88.89"/>
       <note>
         <pitch>
@@ -1419,10 +1429,6 @@
       </note>
     </measure>
     <measure number="47">
-      <sound tempo="76"/>
-      <direction placement="above">
-        <direction-type><words font-style="italic">rit.</words></direction-type>
-      </direction>
       <note>
         <pitch>
           <step>C</step>
@@ -1432,7 +1438,6 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
-      <sound tempo="70"/>
       <note>
         <pitch>
           <step>E</step>
@@ -1442,7 +1447,6 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
-      <sound tempo="64"/>
       <note>
         <pitch>
           <step>D</step>
@@ -1452,7 +1456,6 @@
         <voice>1</voice>
         <type>quarter</type>
       </note>
-      <sound tempo="58"/>
       <note>
         <pitch>
           <step>D</step>
@@ -1464,7 +1467,6 @@
       </note>
     </measure>
     <measure number="48">
-      <sound tempo="52"/>
       <note>
         <pitch>
           <step>C</step>
@@ -1474,12 +1476,14 @@
         <voice>1</voice>
         <type>whole</type>
       </note>
+      <barline location="right"><bar-style>light-light</bar-style></barline>
     </measure>
     <measure number="49">
-      <sound tempo="80"/>
       <direction placement="above">
-        <direction-type><words font-style="italic">a tempo</words></direction-type>
+        <direction-type><words font-weight="bold">ritardando, puis a tempo</words></direction-type>
       </direction>
+      <sound tempo="80"/>
+      <sound dynamics="88.89"/>
       <note>
         <pitch>
           <step>C</step>
@@ -1538,6 +1542,125 @@
       </note>
     </measure>
     <measure number="51">
+      <sound tempo="76"/>
+      <direction placement="above">
+        <direction-type><words font-style="italic">rit.</words></direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <sound tempo="70"/>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <sound tempo="64"/>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <sound tempo="58"/>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="52">
+      <sound tempo="52"/>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>8</duration>
+        <voice>1</voice>
+        <type>whole</type>
+      </note>
+    </measure>
+    <measure number="53">
+      <sound tempo="80"/>
+      <direction placement="above">
+        <direction-type><words font-style="italic">a tempo</words></direction-type>
+      </direction>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="54">
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+    </measure>
+    <measure number="55">
       <note>
         <pitch>
           <step>C</step>
@@ -1575,7 +1698,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="52">
+    <measure number="56">
       <note>
         <pitch>
           <step>C</step>
@@ -1587,7 +1710,7 @@
       </note>
       <barline location="right"><bar-style>light-light</bar-style></barline>
     </measure>
-    <measure number="53">
+    <measure number="57">
       <direction placement="above">
         <direction-type><words font-weight="bold">les quatre familles</words></direction-type>
       </direction>
@@ -1640,7 +1763,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="54">
+    <measure number="58">
       <direction placement="below">
         <direction-type><wedge type="crescendo"/></direction-type>
       </direction>
@@ -1664,7 +1787,7 @@
         <notations><slur type="stop"/></notations>
       </note>
     </measure>
-    <measure number="55">
+    <measure number="59">
       <direction placement="below">
         <direction-type><wedge type="stop"/></direction-type>
       </direction>
@@ -1716,7 +1839,7 @@
         <notations><articulations><staccato/></articulations></notations>
       </note>
     </measure>
-    <measure number="56">
+    <measure number="60">
       <direction placement="below">
         <direction-type><wedge type="stop"/></direction-type>
       </direction>
@@ -1736,7 +1859,7 @@
       </note>
       <barline location="right"><bar-style>light-light</bar-style></barline>
     </measure>
-    <measure number="57">
+    <measure number="61">
       <barline location="left"><bar-style>heavy-light</bar-style><repeat direction="forward"/></barline>
       <direction placement="above">
         <direction-type><words font-weight="bold">reprises, première et seconde fois</words></direction-type>
@@ -1780,7 +1903,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="58">
+    <measure number="62">
       <note>
         <pitch>
           <step>E</step>
@@ -1809,7 +1932,7 @@
         <type>half</type>
       </note>
     </measure>
-    <measure number="59">
+    <measure number="63">
       <barline location="left"><ending number="1" type="start">1.</ending></barline>
       <note>
         <pitch>
@@ -1840,7 +1963,7 @@
       </note>
       <barline location="right"><bar-style>light-heavy</bar-style><ending number="1" type="stop"/><repeat direction="backward"/></barline>
     </measure>
-    <measure number="60">
+    <measure number="64">
       <barline location="left"><ending number="2" type="start">2.</ending></barline>
       <note>
         <pitch>
@@ -1853,7 +1976,205 @@
       </note>
       <barline location="right"><bar-style>light-light</bar-style><ending number="2" type="discontinue"/></barline>
     </measure>
-    <measure number="61">
+    <measure number="65">
+      <direction placement="above">
+        <direction-type><words font-weight="bold">signes de répétition, joués en toutes notes</words></direction-type>
+      </direction>
+      <sound tempo="80"/>
+      <sound dynamics="88.89"/>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="66">
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>E</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="67">
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>A</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="68">
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+    </measure>
+    <measure number="69">
+      <note>
+        <pitch>
+          <step>D</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>A</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+      <note>
+        <pitch>
+          <step>F</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>2</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+      </note>
+    </measure>
+    <measure number="70">
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>5</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+        </pitch>
+        <duration>4</duration>
+        <voice>1</voice>
+        <type>half</type>
+      </note>
+      <barline location="right"><bar-style>light-light</bar-style></barline>
+    </measure>
+    <measure number="71">
       <direction placement="above">
         <direction-type><words font-weight="bold">exercice : les signes</words></direction-type>
       </direction>
@@ -1902,7 +2223,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="62">
+    <measure number="72">
       <note>
         <pitch>
           <step>C</step>
@@ -1944,7 +2265,7 @@
         <notations><articulations><staccato/></articulations></notations>
       </note>
     </measure>
-    <measure number="63">
+    <measure number="73">
       <direction placement="below">
         <direction-type><wedge type="crescendo"/></direction-type>
       </direction>
@@ -1983,7 +2304,7 @@
         <type>half</type>
       </note>
     </measure>
-    <measure number="64">
+    <measure number="74">
       <note>
         <pitch>
           <step>E</step>
@@ -2015,7 +2336,7 @@
         <notations><articulations><accent/></articulations></notations>
       </note>
     </measure>
-    <measure number="65">
+    <measure number="75">
       <note>
         <pitch>
           <step>G</step>
@@ -2076,7 +2397,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="66">
+    <measure number="76">
       <direction placement="below">
         <direction-type><wedge type="diminuendo"/></direction-type>
       </direction>
@@ -2140,7 +2461,7 @@
         <notations><articulations><tenuto/></articulations></notations>
       </note>
     </measure>
-    <measure number="67">
+    <measure number="77">
       <direction placement="below">
         <direction-type><wedge type="stop"/></direction-type>
       </direction>
@@ -2177,7 +2498,7 @@
       </note>
       <barline location="right"><bar-style>light-light</bar-style></barline>
     </measure>
-    <measure number="68">
+    <measure number="78">
       <barline location="left"><bar-style>heavy-light</bar-style><repeat direction="forward"/></barline>
       <direction placement="above">
         <direction-type><words font-weight="bold">exercice : les reprises</words></direction-type>
@@ -2221,7 +2542,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="69">
+    <measure number="79">
       <note>
         <pitch>
           <step>F</step>
@@ -2251,7 +2572,7 @@
       </note>
       <barline location="right"><bar-style>light-heavy</bar-style><repeat direction="backward"/></barline>
     </measure>
-    <measure number="70">
+    <measure number="80">
       <direction placement="above">
         <direction-type><segno/></direction-type>
         <sound segno="segno"/>
@@ -2293,7 +2614,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="71">
+    <measure number="81">
       <note>
         <pitch>
           <step>C</step>
@@ -2318,7 +2639,7 @@
       </direction>
       <barline location="right"><bar-style>light-light</bar-style></barline>
     </measure>
-    <measure number="72">
+    <measure number="82">
       <note>
         <pitch>
           <step>A</step>
@@ -2356,7 +2677,7 @@
         <type>quarter</type>
       </note>
     </measure>
-    <measure number="73">
+    <measure number="83">
       <note>
         <pitch>
           <step>G</step>

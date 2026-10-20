@@ -138,8 +138,11 @@ synthétiseur.
 sol, la, si). Le \emph{demi-ton} est le plus petit intervalle du système
 tempéré ; le \emph{ton} en vaut deux. Un intervalle est \emph{mélodique}
 quand ses deux notes se suivent, \emph{harmonique} quand elles sonnent
-ensemble ; il porte le même nom dans les deux cas. Sauf mention contraire,
-on le mesure de la note grave à la note aiguë.
+ensemble ; il porte le même nom dans les deux cas. Mélodique, il est
+\emph{ascendant} ou \emph{descendant}, et garde son nom dans les deux sens ;
+il est \emph{conjoint} quand il relie deux notes voisines --- une seconde ---,
+\emph{disjoint} au-delà. Sauf mention contraire, on le mesure de la note
+grave à la note aiguë.
 \end{remarque}
 
 Les fichiers MusicXML joints font entendre chaque intervalle ; la
@@ -233,7 +236,10 @@ comme 3 m.
 
 D'autres formes existent : do dièse--mi bémol est une tierce diminuée (deux
 demi-tons), do--ré dièse une seconde augmentée (trois), do--do dièse un
-unisson augmenté (un).
+unisson augmenté (un). Plus rares, les intervalles \emph{sur-augmentés} et
+\emph{sous-diminués} s'écartent d'un demi-ton de plus : do bémol--fa dièse,
+sept demi-tons, est une quarte sur-augmentée ; do dièse--sol bémol, cinq, une
+quinte sous-diminuée.
 
 % =====================================================================
 \section{Même son, autre nom}
@@ -259,6 +265,18 @@ tons. Écrit do--fa dièse, c'est une quarte augmentée ; écrit do--sol bémol,
 une quinte diminuée. On le rencontre dans le guide des gammes : les quatre
 notes fa--sol--la--si du tétracorde lydien couvrent un triton, fa--si, et non
 une quarte juste.
+
+\textbf{Deux demi-tons.} Le demi-ton lui-même a deux noms. Entre deux lettres
+voisines, mi--fa ou do--ré bémol, c'est une seconde mineure : le \emph{demi-ton
+diatonique}. Sur une même lettre, do--do dièse, c'est un unisson augmenté :
+le \emph{demi-ton chromatique}. Un ton en réunit un de chaque sorte, dans un
+ordre ou dans l'autre : do, do dièse, ré, ou do, ré bémol, ré. Au piano, les
+deux se confondent ; accordés par quintes justes, ils n'ont pas la même
+taille (\href{https://www.slashbin.net/musique/theorie/frequences.pdf}{\emph{Les
+fréquences}}).
+
+\gravure{i-demi-tons}{0.7}{Un ton, coupé en deux demi-tons : chromatique puis
+diatonique, ou diatonique puis chromatique.}
 
 % =====================================================================
 \section{Le renversement}
@@ -410,7 +428,7 @@ sur le modèle de hauteurs du guide des gammes : un intervalle y est un couple
 générateur vérifie que construire un intervalle puis le mesurer redonne le
 même nom, que chaque renversement complète bien l'octave et que chaque
 intervalle redoublé gagne sept lettres et douze demi-tons, sur toutes les
-toniques des gammes. Pour régénérer l'ensemble :
+toniques des gammes, ainsi que les noms des deux demi-tons. Pour régénérer l'ensemble :
 
 \begin{center}
 \texttt{python3 outils/generer\_intervalles.py}\\

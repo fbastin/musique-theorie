@@ -10,14 +10,14 @@ Comme pour les mordants, un ornement y est une règle : d'une note écrite, de
 sa valeur, de ses petites notes et de l'armure, elle tire les notes jouées.
 L'appogiature prend la moitié de la note, les deux tiers d'une note pointée,
 toute la note devant un silence ; l'appogiature brève, une triple croche ; le
-trille alterne jusqu'au bout de la valeur ; le gruppetto tourne autour de la
-note. Les portées « joué » des gravures, les réponses de l'exercice et le
+trille alterne jusqu'au bout de la valeur ; le trémolo répète une note, ou en
+alterne deux, à la valeur que donnent ses barres ; le gruppetto tourne autour
+de la note. Les portées « joué » des gravures, les réponses de l'exercice et le
 fichier MusicXML en dérivent, et les affirmations du texte sont vérifiées avant
 toute écriture.
 """
 
 import os
-import re
 import sys
 from collections import namedtuple
 from fractions import Fraction
@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from generer import DIR_LY, PREAMBULE, RACINE, ecrire
 from generer_mordants import (ALT_MARKUP, TEMPO, TRIPLE_CROCHE, cle_armure,
-                              lily_duree, n, taille, voisine)
+                              lily_duree, n, nom_portee, taille, trille, voisine)
 from generer_mordants import realiser as realiser_mordant
 from intervalles import analyser
 import musicxml
@@ -42,10 +42,11 @@ N = Fraction
 # ---------------------------------------------------------------------------
 # Une note écrite : hauteur (None pour un silence), valeur en fraction de
 # ronde, ornement, petites notes écrites (l'appogiature, la terminaison d'un
-# trille, les notes d'une fioriture), altérations écrites près du signe pour
-# la voisine du dessus et celle du dessous, texte sous la note.
-Ecrite = namedtuple("Ecrite", "note valeur orn petites alt_haut alt_bas sous",
-                    defaults=(None, (), None, None, None))
+# trille, les notes d'une fioriture, la seconde note d'un trémolo), altérations
+# écrites près du signe pour la voisine du dessus et celle du dessous, texte
+# sous la note, nombre de barres d'un trémolo.
+Ecrite = namedtuple("Ecrite", "note valeur orn petites alt_haut alt_bas sous barres",
+                    defaults=(None, (), None, None, None, None))
 # Un exemple : chiffrage, mesures — chacune une armure et des notes écrites —,
 # lectures : (titre de la portée jouée, options). La seule option est la note
 # de départ du trille, « voisine » (XVIIIe siècle) ou « note » (XIXe).
@@ -53,7 +54,8 @@ Exemple = namedtuple("Exemple", "temps mesures lectures",
                      defaults=((("joué", {}),),))
 
 NOMS = {"appogiature": "appogiature", "acciaccatura": "appogiature brève",
-        "mordant": "mordant", "trille": "trille", "gruppetto": "gruppetto",
+        "mordant": "mordant inférieur", "trille": "trille", "gruppetto": "gruppetto",
+        "trémolo": "trémolo", "trémolo à deux notes": "trémolo à deux notes",
         "gruppetto après": "gruppetto après la note",
         "gruppetto renversé": "gruppetto renversé", "fioriture": "fioriture"}
 
@@ -74,25 +76,9 @@ def voisines(e, armure):
             voisine(e.note, -1, armure, e.alt_bas))
 
 
-def trille(note, valeur, haut, bas, depart, terminaison):
-    """
-    L'alternance de la note et de sa voisine du dessus, en triples croches,
-    jusqu'au bout de la valeur ; elle s'achève toujours sur la note.
-
-    Commencé sur la voisine, le trille compte un nombre pair de notes et finit
-    de lui-même sur la note ; la terminaison remplace les deux dernières par la
-    voisine du dessous et la note. Commencé sur la note, il s'arrête sur elle,
-    tenue deux triples croches ; la terminaison s'insère juste avant.
-    """
-    k = int(valeur / TRIPLE_CROCHE)
-    if depart == "voisine":
-        motif = [haut if i % 2 == 0 else note for i in range(k)]
-        if terminaison:
-            motif[-2:] = [bas, note]
-        return [(x, TRIPLE_CROCHE, False) for x in motif]
-    m = k - 3 if terminaison else k - 2
-    motif = [note if i % 2 == 0 else haut for i in range(m)] + ([bas] if terminaison else [])
-    return [(x, TRIPLE_CROCHE, False) for x in motif] + [(note, 2 * TRIPLE_CROCHE, False)]
+def unite_tremolo(barres):
+    """La valeur des notes d'un trémolo : une barre, des croches ; deux, des doubles croches…"""
+    return Fraction(1, 2 ** (barres + 2))
 
 
 def jouer(e, armure, options):
@@ -106,7 +92,13 @@ def jouer(e, armure, options):
     if e.orn == "acciaccatura":
         return [(e.petites[0], TRIPLE_CROCHE, False), (e.note, v - TRIPLE_CROCHE, False)]
     if e.orn == "mordant":
-        return realiser_mordant(e.note, v, "mordant", armure, e.alt_bas)
+        return realiser_mordant(e.note, v, "mordant inférieur", armure, e.alt_bas)
+    if e.orn in ("trémolo", "trémolo à deux notes"):
+        # La note écrite donne la durée de tout le trémolo, les barres la valeur
+        # des notes répétées ; à deux notes, elles alternent.
+        unite = unite_tremolo(e.barres)
+        autre = e.petites[0] if e.petites else e.note
+        return [(e.note if i % 2 == 0 else autre, unite, False) for i in range(int(v / unite))]
     haut, bas = voisines(e, armure)
     if e.orn == "trille":
         return trille(e.note, v, haut, bas, options.get("trille", "voisine"), bool(e.petites))
@@ -146,9 +138,9 @@ def jouer_mesure(notes, armure, options):
 # ---------------------------------------------------------------------------
 # Les exemples
 # ---------------------------------------------------------------------------
-def e(txt, valeur, orn=None, petites=(), alt_haut=None, alt_bas=None, sous=None):
+def e(txt, valeur, orn=None, petites=(), alt_haut=None, alt_bas=None, sous=None, barres=None):
     return Ecrite(n(txt) if txt else None, valeur, orn,
-                  tuple(n(x) for x in petites), alt_haut, alt_bas, sous)
+                  tuple(n(x) for x in petites), alt_haut, alt_bas, sous, barres)
 
 
 EPOQUES = (("XVIIIe s.", {"trille": "voisine"}), ("XIXe s.", {"trille": "note"}))
@@ -181,6 +173,11 @@ EXEMPLES = {
                                  (0, [e("C5", N(1, 2))])]),
     "o-trille-epoques": Exemple((2, 4), [(0, [e("B4", N(1, 4), "trille"), e("C5", N(1, 4))])],
                                 EPOQUES),
+    # Une blanche à une barre, puis à deux ; une blanche partagée entre do et mi.
+    "o-tremolo": Exemple((2, 4), [
+        (0, [e("C5", N(1, 2), "trémolo", barres=1, sous="une barre")]),
+        (0, [e("C5", N(1, 2), "trémolo", barres=2, sous="deux barres")]),
+        (0, [e("C5", N(1, 2), "trémolo à deux notes", ["E5"], barres=2, sous="deux notes")])]),
     "o-gruppetto": Exemple((2, 4), [
         (0, [e("C5", N(1, 4), "gruppetto", sous="sur la note"), e("B4", N(1, 4))]),
         (0, [e("C5", N(1, 4), "gruppetto après", sous="après la note"), e("D5", N(1, 4))]),
@@ -325,6 +322,15 @@ def verifier():
     assert noms(jouer(Ecrite(sol, N(1, 4), "gruppetto", alt_bas=1), 0, {})) == \
         ["la", "sol", "fa dièse", "sol"]
 
+    # Le trémolo : une barre sur une blanche, quatre croches ; deux barres, huit
+    # doubles croches ; à deux notes, une blanche partagée en huit doubles
+    # croches qui alternent do et mi, plus éloignés qu'un ton.
+    t1, t2, t3 = [jouer(notes[0], 0, {}) for _, notes in EXEMPLES["o-tremolo"].mesures]
+    assert [(x.nom_fr(), v) for x, v, _ in t1] == [("do", N(1, 8))] * 4
+    assert [(x.nom_fr(), v) for x, v, _ in t2] == [("do", N(1, 16))] * 8
+    assert noms(t3) == ["do", "mi"] * 4 and all(v == N(1, 16) for _, v, _ in t3)
+    assert analyser(n("C5"), n("E5"))[0] > 2
+
     # La fioriture prend son temps à la fin de la note qui la précède ; la note
     # suivante tombe à sa place.
     _, jouees = mesures_jouees(EXEMPLES["o-fioriture"], {})[0]
@@ -382,6 +388,13 @@ def lily_ecrite(notes, i, etiquette=""):
         return r"\acciaccatura %s8 %s%s" % (x.petites[0].lily(), tete, etiquette)
     if x.orn == "mordant":
         return tete + signe("mordent", alt_bas=x.alt_bas) + etiquette
+    if x.orn == "trémolo":
+        return "%s:%d%s" % (tete, unite_tremolo(x.barres).denominator, etiquette)
+    if x.orn == "trémolo à deux notes":
+        unite = unite_tremolo(x.barres)
+        return r"\repeat tremolo %d { %s%d%s %s%d }" % (
+            x.valeur / (2 * unite), x.note.lily(), unite.denominator, etiquette,
+            x.petites[0].lily(), unite.denominator)
     if x.orn == "trille" and x.petites:
         bas, fin = x.petites
         return r"\afterGrace %s\startTrillSpan%s { %s16[ %s16\stopTrillSpan] }" % (
@@ -461,20 +474,6 @@ def portee_jouee(exemple, options):
                 corps.append(txt)
         corps.append("|")
     return corps
-
-
-def nom_portee(titre):
-    """« XVIIIe s. » s'écrit avec un e en exposant."""
-    morceaux = re.split(r"([XVI]+)e", titre)
-    if len(morceaux) == 1:
-        return r'\markup \small \italic "%s"' % titre
-    elements = []
-    for i, m in enumerate(morceaux):
-        if i % 2:
-            elements.append(r'"%s" \super "e"' % m)
-        elif m:
-            elements.append('"%s"' % m)
-    return r"\markup \small \italic \concat { %s }" % " ".join(elements)
 
 
 def figure(exemple, numeros=False):
@@ -583,6 +582,7 @@ LIBELLES = {
     "o-acciaccatura": "appogiature longue, puis brève",
     "o-trille": "le trille avec terminaison",
     "o-trille-epoques": "le trille sur si",
+    "o-tremolo": "trémolo à une barre, à deux barres, puis à deux notes",
     "o-gruppetto": "gruppetto sur la note, après la note, renversé",
     "o-gruppetto-alt": "gruppetto sur sol, puis avec un dièse sous le signe",
     "o-fioriture": "une fioriture",

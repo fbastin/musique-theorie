@@ -51,6 +51,10 @@ FIGURES = [
 ]
 VALEUR = {nom: v for nom, v, _ in FIGURES}
 VALEUR.update({silence: v for _, v, silence in FIGURES})
+# Plus longue que la ronde, rare aujourd'hui : la carrée, ou brève, et son
+# silence, le bâton de pause.
+CARREE = N(2)
+VALEUR.update({"carrée": CARREE, "bâton de pause": CARREE})
 
 
 def crochets(valeur):
@@ -273,6 +277,7 @@ QUESTIONS = [
     ("croches de triolet", "croche de triolet", "une blanche", N(1, 2)),
     ("doubles croches de sextolet", "double croche de sextolet", "une blanche", N(1, 2)),
     ("soupirs", "soupir", "une pause", N(1)),
+    ("noires", "noire", "une carrée", CARREE),
 ]
 
 
@@ -304,6 +309,14 @@ def verifier():
     for _, v, _ in FIGURES:
         assert pointee(v) == v + v / 2
         assert pointee(v, 2) == v + v / 2 + v / 4
+        assert pointee(v, 3) == v + v / 2 + v / 4 + v / 8
+    # Le triple point : une blanche triplement pointée vaut quinze doubles croches.
+    assert pointee(N(1, 2), 3) == 15 * N(1, 16)
+
+    # La carrée vaut deux rondes, le bâton de pause deux pauses ; une mesure à
+    # 4/2 en contient une.
+    assert CARREE == 2 * VALEUR["ronde"] and VALEUR["bâton de pause"] == 2 * VALEUR["pause"]
+    assert CARREE == 4 * N(1, 2)
 
     # Cinq croches ne s'écrivent pas d'une seule figure : il faut une liaison.
     assert not simple(5 * N(1, 8)) and simple(6 * N(1, 8)) and simple(7 * N(1, 8))
@@ -345,7 +358,7 @@ def verifier():
 
     # L'exercice : les réponses attendues.
     assert [duree(g) / N(1, 4) for g in EXERCICE] == [4, 3, 2, N(5, 2), N(7, 2), 3, N(7, 2), 2, 4, 3]
-    assert [combien(u, t) for _, u, _, t in QUESTIONS] == [12, 7, 12, 3, 8, 6, 12, 4]
+    assert [combien(u, t) for _, u, _, t in QUESTIONS] == [12, 7, 12, 3, 8, 6, 12, 4, 8]
 
 
 def secondes(valeur):
@@ -356,7 +369,7 @@ def secondes(valeur):
 # ---------------------------------------------------------------------------
 # Gravures
 # ---------------------------------------------------------------------------
-DUREES_LILY = {N(1): "1", N(1, 2): "2", N(1, 4): "4", N(1, 8): "8",
+DUREES_LILY = {CARREE: r"\breve", N(1): "1", N(1, 2): "2", N(1, 4): "4", N(1, 8): "8",
                N(1, 16): "16", N(1, 32): "32", N(1, 64): "64"}
 MARQUES_LILY = {"fermata": r"\fermata", "(": "(", ")": ")"}
 
@@ -467,9 +480,37 @@ def figure(fig):
 """ % (musique, retrait, " ".join(reglages_score))
 
 
+# Les valeurs les plus longues : la carrée et le bâton de pause, chacun dans
+# une mesure à 4/2, puis huit mesures de silence à 4/4, réunies en mesures à
+# compter, avant que la musique reprenne.
+MESURES_A_COMPTER = 8
+
+
+def figure_longues():
+    def nom(texte):
+        mots = texte.rsplit(" ", 1) if " " in texte else [texte]
+        return r"\markup \small \italic \override #'(baseline-skip . 2.4) \center-column { %s }" % (
+            " ".join(f'"{m}"' for m in mots))
+    return r"""\score {
+  \new Staff {
+    \clef treble \numericTimeSignature \autoBeamOff \textLengthOn
+    \override TextScript.staff-padding = #2.5
+    \override MultiMeasureRestText.staff-padding = #2.5
+    \time 4/2
+    %s_%s | r%s_%s \bar "||"
+    \time 4/4
+    \compressMMRests { R1*%d_%s } | c''4 d'' e'' f'' \bar "|."
+  }
+  \layout { \context { \Score \override SpacingSpanner.spacing-increment = #1.6 } }
+}
+""" % (LA.lily() + lily_duree(CARREE), nom("carrée"), lily_duree(CARREE), nom("bâton de pause"),
+       MESURES_A_COMPTER, nom("mesures à compter"))
+
+
 def ecrire_gravures():
-    return [ecrire(nom, figure(fig), preambule=PREAMBULE_VALEURS)
-            for nom, fig in FIGURES_GUIDE.items()]
+    return ([ecrire(nom, figure(fig), preambule=PREAMBULE_VALEURS)
+             for nom, fig in FIGURES_GUIDE.items()]
+            + [ecrire("v-longues", figure_longues(), preambule=PREAMBULE_VALEURS)])
 
 
 # ---------------------------------------------------------------------------

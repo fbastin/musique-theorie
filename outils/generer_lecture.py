@@ -8,17 +8,21 @@ Produit les gravures et les tableaux du guide « Lire les notes ».
 Tout dérive du modèle de hauteurs des autres guides (`gammes.py`) et d'une seule
 donnée par clé : la ligne qu'elle désigne et la note qu'elle y place. La note
 de chaque position, les noms sous les gravures, le tableau des sept clés, celui
-des repères et les réponses des exercices en découlent. Les affirmations chiffrées du texte sont
+des repères et les réponses des exercices en découlent. Les altérations se
+lisent selon une règle (`lire`) : les gravures en montrent l'écriture, les noms
+gravés dessous ce qu'en tire la règle. Les affirmations chiffrées du texte sont
 vérifiées avant toute écriture.
 """
 
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from gammes import LETTRES, Note
-from generer import DIR_LY, PREAMBULE, ecrire
+from gammes import LETTRES, ORDRE_BEMOLS, ORDRE_DIESES, Note
+from generer import DIR_LY, PREAMBULE, _lily_tonique, ecrire
+from musicxml import Mesure
 
 PREAMBULE_LECTURE = PREAMBULE.replace("outils/generer.py", "outils/generer_lecture.py")
 
@@ -105,6 +109,121 @@ def lieu(position):
 
 
 # ---------------------------------------------------------------------------
+# Les altérations
+# ---------------------------------------------------------------------------
+# Une note écrite : sa lettre et son octave (sa position sur la portée), le
+# signe écrit devant elle (None, ou l'altération qu'il donne : 0 pour le
+# bécarre), une marque de précaution (None, « ! », « ? » pour un signe entre
+# parenthèses) et une liaison vers la note suivante. BARRE sépare les mesures.
+#
+# Dans les données, une note s'écrit « F#4~ » : lettre, signe (# b x bb n),
+# octave du modèle (4 est celle du do central), puis ! ou ? pour une
+# précaution, ~ pour une liaison.
+BARRE = "|"
+SIGNES = {"#": 1, "b": -1, "x": 2, "bb": -2, "n": 0}
+JETON = re.compile(r"^([A-G])(bb|b|#|x|n)?(\d)([!?])?(~)?$")
+
+
+def ecrit(texte):
+    res = []
+    for jeton in texte.split():
+        if jeton == BARRE:
+            res.append(BARRE)
+            continue
+        m = JETON.match(jeton)
+        assert m, jeton
+        lettre, signe, octave, precaution, liee = m.groups()
+        res.append((lettre, int(octave), SIGNES[signe] if signe else None, precaution, bool(liee)))
+    return res
+
+
+def lire(armure, notes):
+    """
+    Ce que fait entendre une suite de notes écrites. Une altération écrite vaut
+    pour sa position (lettre et octave) jusqu'à la barre ; sans elle, la
+    position suit l'armure, prise à la classe `Mesure` du module MusicXML. Une
+    note liée à la précédente, de même position, en garde l'altération, et
+    elle seule.
+    """
+    armure_ = Mesure(armure).par_armure
+    courantes = {}
+    sons, liee_a = [], None
+    for n in notes:
+        if n == BARRE:
+            courantes = {}
+            continue
+        lettre, octave, signe, _, liee = n
+        if signe is not None:
+            alt = courantes[(lettre, octave)] = signe
+        elif liee_a is not None and (liee_a.lettre, liee_a.octave) == (lettre, octave):
+            alt = liee_a.alt
+        else:
+            alt = courantes.get((lettre, octave), armure_[lettre])
+        son = Note(lettre, alt, octave)
+        sons.append(son)
+        liee_a = son if liee else None
+    return sons
+
+
+def signes_utiles(armure, notes):
+    """
+    Pour chaque note, vrai si la règle de `lire` exige un signe devant elle :
+    ce qu'elle fait entendre diffère de ce que la règle donnerait sans signe.
+    """
+    res = []
+    for i, n in enumerate(notes):
+        if n == BARRE:
+            continue
+        sans = list(notes[:i]) + [n[:2] + (None,) + n[3:]] + list(notes[i + 1:])
+        res.append(lire(armure, sans)[len(res)].alt != lire(armure, notes)[len(res)].alt)
+    return res
+
+
+def mesures_d_une_octave(notes):
+    """
+    Indices des notes dont la mesure n'emploie chaque lettre qu'à une octave,
+    et ne reçoit ni n'envoie de liaison.
+    """
+    res, k = [], 0
+    mesures, courante = [], []
+    for n in notes:
+        if n == BARRE:
+            mesures.append(courante)
+            courante = []
+        else:
+            courante.append((k, n))
+            k += 1
+    mesures.append(courante)
+    for i, m in enumerate(mesures):
+        octaves = {}
+        for _, n in m:
+            octaves.setdefault(n[0], set()).add(n[1])
+        recoit = i > 0 and bool(mesures[i - 1]) and mesures[i - 1][-1][1][4]
+        if all(len(o) == 1 for o in octaves.values()) and not recoit and not any(n[4] for _, n in m):
+            res += [k for k, _ in m]
+    return set(res)
+
+
+# Les figures de la section : armure, notes écrites, noms attendus dessous, et
+# ce que deux notes doubles font entendre.
+ALTERATIONS = {
+    "l-alterations": (0, "G4 G#4 Gb4 Gx4 Gbb4 Gn4",
+                      ["sol", "sol dièse", "sol bémol", "sol double dièse", "sol double bémol", "sol"]),
+    "l-accidentelle": (0, "F#4 A4 F4 F5 | F4",
+                       ["fa dièse", "la", "fa dièse", "fa", "fa"]),
+    "l-liaison": (0, "G4 F#4~ | F4 E4 F4",
+                  ["sol", "fa dièse", "fa dièse", "mi", "fa"]),
+    "l-armure": (1, "F4 F5 Fn4 F4 | F4 Fx4",
+                 ["fa dièse", "fa dièse", "fa", "fa", "fa dièse", "fa double dièse"]),
+    "l-precaution": (0, "F#4 Fn5! | Fn4?",
+                     ["fa dièse", "fa", "fa"]),
+}
+
+# L'exercice : en fa majeur, des notes à nommer avec leur altération.
+EXERCICE_ALTERATIONS = (-1, "A4 B4 Bn4 B4 C5 | B4 G#4 A4 G4 G5 | Eb5 D5 E5 E4")
+
+
+# ---------------------------------------------------------------------------
 # Vérifications : ce que le texte affirme
 # ---------------------------------------------------------------------------
 def verifier():
@@ -179,6 +298,97 @@ def verifier():
     onze = onze_lignes()
     assert len(onze) == 11 and onze[5] == DO_CENTRAL
     assert all(rang(b) - rang(a) == 2 for a, b in zip(onze, onze[1:]))
+
+    verifier_alterations()
+
+
+def verifier_alterations():
+    # Le demi-ton : un dièse hausse, un bémol baisse d'un demi-ton ; les
+    # doubles, d'un ton ; le bécarre rend la note naturelle.
+    for L in LETTRES:
+        for o in (3, 4, 5):
+            nat = Note(L, 0, o).hauteur
+            assert [Note(L, a, o).hauteur - nat for a in (1, -1, 2, -2, 0)] == [1, -1, 2, -2, 0]
+    # Pas de touche noire entre mi et fa, ni entre si et do : un demi-ton.
+    blanches = [Note(L, 0, 4) for L in LETTRES] + [Note("C", 0, 5)]
+    ecarts = [b.hauteur - a.hauteur for a, b in zip(blanches, blanches[1:])]
+    assert ecarts == [2, 2, 1, 2, 2, 2, 1]
+    # Même son, autre nom : mi dièse et fa, do double dièse et ré.
+    assert Note("E", 1, 4).hauteur == Note("F", 0, 4).hauteur
+    assert Note("C", 2, 4).hauteur == Note("D", 0, 4).hauteur
+    # L'ordre des dièses et des bémols, l'un l'inverse de l'autre.
+    assert [Note(L).nom_fr() for L in ORDRE_DIESES] == ["fa", "do", "sol", "ré", "la", "mi", "si"]
+    assert ORDRE_BEMOLS == ORDRE_DIESES[::-1]
+
+    figures = dict(ALTERATIONS)
+    figures["l-exercice-alterations"] = EXERCICE_ALTERATIONS + (None,)
+    for nom_fig, (armure, texte, noms) in figures.items():
+        notes = ecrit(texte)
+        ecrites = [n for n in notes if n != BARRE]
+        sons = lire(armure, notes)
+        if noms is not None:
+            assert [n.nom_fr() for n in sons] == noms, nom_fig
+        # Chaque signe écrit est exigé par la règle, sauf les signes de
+        # précaution, qu'elle n'exige pas.
+        for n, utile in zip(ecrites, signes_utiles(armure, notes)):
+            if n[3]:
+                assert n[2] is not None and not utile, nom_fig
+            else:
+                assert utile == (n[2] is not None), (nom_fig, n)
+        # Là où chaque lettre ne paraît qu'à une octave, la règle de la classe
+        # Mesure (une altération par lettre jusqu'à la barre, l'armure sinon)
+        # imprime les mêmes signes.
+        m, k, une_octave = Mesure(armure), 0, mesures_d_une_octave(notes)
+        for n in notes:
+            if n == BARRE:
+                m.reset()
+                continue
+            imprime = m.accidental(sons[k]) is not None
+            if k in une_octave:
+                assert imprime == (n[2] is not None and not n[3]), (nom_fig, k)
+            k += 1
+
+    def sons_de(fig):
+        armure, texte, _ = ALTERATIONS[fig]
+        return ecrit(texte), lire(armure, ecrit(texte))
+
+    # Le double dièse fait entendre la, le double bémol fa.
+    _, sons = sons_de("l-alterations")
+    assert sons[3].hauteur == Note("A", 0, 4).hauteur and sons[4].hauteur == Note("F", 0, 4).hauteur
+    # Jusqu'à la barre, à sa seule position : le troisième fa, sans signe, est
+    # dièse ; celui de l'octave au-dessus ne l'est pas ; après la barre non plus.
+    notes, sons = sons_de("l-accidentelle")
+    ecrites = [n for n in notes if n != BARRE]
+    assert ecrites[2][2] is None and sons[2].alt == 1
+    assert ecrites[3][1] != ecrites[0][1] and sons[3].alt == 0
+    # Le premier interligne et la cinquième ligne de la clé de sol.
+    assert lieu(position_de("sol", sons[2])) == "1er interligne"
+    assert lieu(position_de("sol", sons[3])) == "5e ligne"
+    assert notes.index(BARRE) == 4 and sons[4].alt == 0
+    # La liaison prolonge le dièse sur la note liée, et sur elle seule.
+    notes, sons = sons_de("l-liaison")
+    ecrites = [n for n in notes if n != BARRE]
+    assert ecrites[1][4] and ecrites[2][2] is None and sons[2].alt == 1 and sons[4].alt == 0
+    # L'armure vaut à toutes les octaves ; le bécarre la suspend jusqu'à la
+    # barre ; le double dièse la remplace : un demi-ton au-dessus de fa dièse.
+    _, sons = sons_de("l-armure")
+    assert sons[0].octave != sons[1].octave and sons[0].alt == sons[1].alt == 1
+    assert sons[2].alt == sons[3].alt == 0 and sons[4].alt == 1
+    assert sons[5].alt == 2 and sons[5].hauteur - sons[4].hauteur == 1
+    # Les deux bécarres de précaution ne changent rien au son.
+    notes, sons = sons_de("l-precaution")
+    sans = [n if n == BARRE or not n[3] else n[:2] + (None, None, n[4]) for n in notes]
+    assert [n.hauteur for n in lire(0, sans)] == [n.hauteur for n in sons]
+
+    # L'exercice met chaque règle en jeu : l'armure seule, une altération qui
+    # court dans la mesure, une barre qui l'annule, une autre octave.
+    armure, texte = EXERCICE_ALTERATIONS
+    notes = ecrit(texte)
+    ecrites = [n for n in notes if n != BARRE]
+    sons = lire(armure, notes)
+    assert any(n[2] is None and s.alt != 0 for n, s in zip(ecrites, sons))
+    assert any(n[2] is None and s.alt != Mesure(armure).par_armure[s.lettre] for n, s in zip(ecrites, sons))
+    assert len([n for n in notes if n == BARRE]) == 2
 
 
 def onze_lignes():
@@ -310,8 +520,64 @@ def figure_exercice(cle):
 """ % (CLES[cle][0], corps), notes
 
 
+def figure_alterations(armure, texte, noms=None, sons_dessous=None, numeros=False):
+    """
+    Notes écrites telles quelles : un signe forcé là où les données en
+    portent un, aucun ailleurs, quoi que LilyPond aurait choisi. Les noms, s'il
+    y en a, vont dessous ; `sons_dessous` ajoute une ligne plus petite.
+    """
+    notes = ecrit(texte)
+    sons = lire(armure, notes)
+    corps, k = [], 0
+    for n in notes:
+        if n == BARRE:
+            corps.append(r'\bar "|"')
+            continue
+        _, _, signe, precaution, liee = n
+        son = sons[k]
+        k += 1
+        if signe is None:
+            debut, marque = r"\once \omit Accidental ", ""
+        else:
+            debut, marque = "", "?" if precaution == "?" else "!"
+        numero = r"^\markup{\small %d}" % k if numeros else ""
+        corps.append(f"{debut}{son.lily()}{marque}1{'~' if liee else ''}{numero}")
+    paroles = ""
+    if noms:
+        paroles = (r"  \addlyrics { \set ignoreMelismata = ##t "
+                   + " ".join(f'"{x}"' for x in noms) + " }\n")
+    if sons_dessous:
+        paroles += (r"  \addlyrics { \set ignoreMelismata = ##t "
+                    r"\override LyricText.font-size = #-2 "
+                    r"\override LyricText.color = #(x11-color 'grey40) "
+                    + " ".join(f'"{x}"' for x in sons_dessous) + " }\n")
+    cle = r"\key %s \major" % _lily_tonique(armure, "major") if armure else ""
+    # Les noms, longs, s'écartent d'au moins deux espaces de portée ; les
+    # numéros de l'exercice, sur une seule ligne.
+    espacement = (r"\context { \Score \override SpacingSpanner.spacing-increment = #1.5 }"
+                  if numeros else r"\context { \Lyrics \override LyricSpace.minimum-distance = #2 }")
+    return r"""\score {
+  \new Staff {
+    \clef treble
+    %s
+    \omit Staff.TimeSignature
+    \cadenzaOn
+    %s
+    \bar "|."
+  }
+%s  \layout { %s }
+}
+""" % (cle, " ".join(corps), paroles, espacement), sons
+
+
 def ecrire_gravures():
     produits = []
+    for nom_fig, (armure, texte, noms) in ALTERATIONS.items():
+        dessous = ["", "", "", "sonne la", "sonne fa", ""] if nom_fig == "l-alterations" else None
+        contenu, _ = figure_alterations(armure, texte, noms, dessous)
+        produits.append(ecrire(nom_fig, contenu, preambule=PREAMBULE_LECTURE))
+    contenu, _ = figure_alterations(*EXERCICE_ALTERATIONS, numeros=True)
+    produits.append(ecrire("l-exercice-alterations", contenu, preambule=PREAMBULE_LECTURE))
     produits.append(ecrire("l-sol-montee",
                            suite_nommee("sol", gamme_diatonique(DO_CENTRAL, 15)),
                            preambule=PREAMBULE_LECTURE))
@@ -416,6 +682,9 @@ def reponses():
         _, notes = figure_exercice(cle)
         items = ", ".join(f"{i}~:~{nom(n)}" for i, n in enumerate(notes, 1))
         blocs.append(r"\textbf{%s.} %s." % (libelle, items))
+    _, sons = figure_alterations(*EXERCICE_ALTERATIONS, numeros=True)
+    items = ", ".join(f"{i}~:~{n.nom_fr()}" for i, n in enumerate(sons, 1))
+    blocs.append(r"\textbf{Les altérations, en fa majeur.} %s." % items)
     return "\n\n".join(blocs) + "\n"
 
 

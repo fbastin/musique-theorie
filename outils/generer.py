@@ -83,17 +83,19 @@ def ecrire_musicxml():
             f.write(musicxml.partition(titre, desc, entrees))
         produits.append(chemin)
 
-    # Les tétracordes, sur do, pour comparer les quatre types à vue.
+    # Les tétracordes, sur do, pour comparer les quatre types à vue ; chacun
+    # monte, puis redescend : ses intervalles reviennent dans l'ordre inverse.
     entrees = []
     for type_, pas in TETRACORDES.items():
         notes = tetracorde(note_de("C", 4), type_)
-        entrees.append((f"tétracorde {type_}", 0, "major", notes))
+        entrees.append((f"tétracorde {type_}, montant puis descendant", 0, "major",
+                        notes + list(reversed(notes))[1:]))
     chemin = os.path.join(RACINE, "tetracordes.musicxml")
     with open(chemin, "w", encoding="utf-8") as f:
         f.write(musicxml.partition(
             "Tétracordes",
-            "Les cinq types de tétracordes, tous à partir de do, "
-            "pour comparer leurs intervalles à vue.", entrees))
+            "Les cinq types de tétracordes, tous à partir de do, montants puis "
+            "descendants, pour comparer leurs intervalles à vue.", entrees))
     produits.append(chemin)
     return produits
 
@@ -267,6 +269,74 @@ def figure_quatre_tetracordes():
     return ENTETE_PORTEE + corps + PIED_PORTEE
 
 
+# Le nom d'un intervalle de tétracorde, en demi-tons.
+NOM_PAS = {1: "½ ton", 2: "ton", 3: "1 ½ ton"}
+
+
+def figure_tetracordes_sens():
+    """
+    Le tétracorde majeur et le phrygien, l'un au-dessus de l'autre, chacun en
+    montant puis en descendant, le nom de chaque intervalle écrit entre ses
+    deux notes.
+
+    En descendant, les intervalles viennent dans l'ordre inverse : le
+    tétracorde majeur descend comme le phrygien monte, et inversement
+    (vérifié par `verifier_sens`) — sur la figure, en diagonale. Les noms des
+    intervalles sont des paroles, portées par une voix muette dont chaque
+    note tombe à mi-chemin entre deux notes du tétracorde (une croche après
+    chacune). Deux portées plutôt que deux lignes : avec -dcrop, LilyPond
+    serre les lignes d'une gravure sans égard à leur espacement.
+    """
+    portees, paroles_ly = [], []
+    for i, type_ in enumerate(("majeur", "phrygien")):
+        montee = tetracorde(note_de("C", 4), type_)
+        pas = list(TETRACORDES[type_])
+        notes, paroles = [], []
+        for sens, suite, noms in (("en montant", montee, pas),
+                                  ("en descendant", list(reversed(montee)), list(reversed(pas)))):
+            n = [x.lily() + "4" for x in suite]
+            if i == 0:
+                n[0] += '^\\markup \\small \\italic "%s"' % sens
+            notes.append(" ".join(n))
+            paroles += ['"%s"' % NOM_PAS[x] for x in noms]
+        voix = f"pas-{type_}"
+        portees.append(r"""    \new Staff \with { instrumentName = \markup \small \italic "%s" } <<
+      \new Voice {
+        \override TextScript.staff-padding = #2.5
+        \accidentalStyle forget
+        \clef treble
+        \omit Staff.TimeSignature
+        \cadenzaOn
+        \key c \major
+        %s \bar "||" %s \bar "|."
+      }
+      \new NullVoice = "%s" { \cadenzaOn s8 c'4 c'4 c'4 s8 s8 c'4 c'4 c'4 s8 }
+    >>
+    \new Lyrics \with {
+      \override LyricText.font-size = #-2
+      \override LyricText.font-shape = #'italic
+      %% À la même hauteur sous les deux portées.
+      \override VerticalAxisGroup.nonstaff-relatedstaff-spacing =
+        #'((basic-distance . 5.5) (minimum-distance . 5.5) (padding . 0.5) (stretchability . 0))
+    } \lyricsto "%s" { %s }
+""" % (type_, notes[0], notes[1], voix, voix, " ".join(paroles)))
+    return (r"""\score {
+  <<
+""" + "".join(portees) + r"""  >>
+  \layout {
+    indent = 15\mm
+    \context {
+      \Score
+      %% Un espacement proportionnel : les noires à égale distance, et un
+      %% nom d'intervalle, à mi-chemin, entre chaque paire.
+      proportionalNotationDuration = #(ly:make-moment 1/12)
+      \override SpacingSpanner.uniform-stretching = ##t
+    }
+  }
+}
+""")
+
+
 def figure_chaine_quintes():
     """
     Le tétracorde supérieur de do majeur est le tétracorde inférieur de sol.
@@ -418,6 +488,7 @@ def figure_chaine(sens):
 FIGURES = {
     "f-do-majeur": figure_do_majeur,
     "f-quatre-tetracordes": figure_quatre_tetracordes,
+    "f-tetracordes-sens": figure_tetracordes_sens,
     "f-chaine-quintes": figure_chaine_quintes,
     "f-la-mineures": figure_la_mineures,
     "f-seconde-augmentee": figure_seconde_augmentee,
@@ -514,15 +585,17 @@ def ecrire_tables():
 
 def ecrire_table_tetracordes():
     """Le tableau qui porte la thèse : chaque gamme, ses deux tétracordes."""
-    nom_pas = {1: "½ ton", 2: "ton", 3: "1 ½ ton"}
     l = ["%% Produit par outils/generer.py — ne pas modifier à la main.", ""]
-    l += [r"\begin{tabular}{@{}l l l@{}}", r"\toprule",
-          r"\textbf{Tétracorde} & \textbf{Intervalles} & \textbf{Exemple sur do} \\",
+    # Les intervalles se lisent de la note de départ : en descendant, de la
+    # plus aiguë, dans l'ordre inverse.
+    l += [r"\begin{tabular}{@{}l l l l@{}}", r"\toprule",
+          r"\textbf{Tétracorde} & \textbf{En montant} & \textbf{En descendant} & \textbf{Exemple sur do} \\",
           r"\midrule"]
     for type_, pas in TETRACORDES.items():
         notes = tetracorde(note_de("C", 4), type_)
-        inter = " -- ".join(nom_pas[x] for x in pas)
-        l.append(f"{type_} & {inter} & {_notes_txt(notes)} -- {notes[-1].nom_fr()} \\\\")
+        montee = " -- ".join(NOM_PAS[x] for x in pas)
+        descente = " -- ".join(NOM_PAS[x] for x in reversed(pas))
+        l.append(f"{type_} & {montee} & {descente} & {_notes_txt(notes)} -- {notes[-1].nom_fr()} \\\\")
     l += [r"\bottomrule", r"\end{tabular}", ""]
 
     l += ["", r"\begin{tabular}{@{}l l l@{}}", r"\toprule",
@@ -683,6 +756,25 @@ def lire_armures():
 
         lignes[armure] = d
     return lignes
+
+
+def verifier_sens():
+    """
+    Ce que le guide dit des tétracordes lus en descendant : leurs intervalles
+    viennent dans l'ordre inverse ; le majeur descend comme le phrygien monte,
+    et le phrygien comme le majeur ; le mineur et l'harmonique, symétriques,
+    se lisent de même dans les deux sens. Les notes descendantes, comptées
+    de la plus aiguë, redonnent la suite inversée.
+    """
+    inverse = {t: tuple(reversed(p)) for t, p in TETRACORDES.items()}
+    assert inverse["majeur"] == TETRACORDES["phrygien"], "majeur descendant ≠ phrygien montant"
+    assert inverse["phrygien"] == TETRACORDES["majeur"], "phrygien descendant ≠ majeur montant"
+    for t in ("mineur", "harmonique"):
+        assert inverse[t] == TETRACORDES[t], f"le tétracorde {t} n'est pas symétrique"
+    for t, pas in TETRACORDES.items():
+        notes = list(reversed(tetracorde(note_de("C", 4), t)))
+        ecarts = tuple(a.hauteur - b.hauteur for a, b in zip(notes, notes[1:]))
+        assert ecarts == inverse[t], f"{t} : {ecarts} en descendant"
 
 
 def verifier_parentes():
@@ -980,6 +1072,7 @@ def ecrire_musicxml_autres():
 
 
 if __name__ == "__main__":
+    verifier_sens()
     verifier_parentes()
     verifier_autres_gammes()
     quoi = set(a for a in sys.argv[1:])
